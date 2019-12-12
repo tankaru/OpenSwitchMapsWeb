@@ -1,2 +1,2 @@
 # OpenSwitchMapWeb
-[TEST] Web version of OpenSwitchMap.
+[TEST] Web version of OpenSwitchMaps.
