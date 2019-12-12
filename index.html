@@ -6,7 +6,7 @@
   <span id="showurl"></span>
 <script>
   let elementUrl = document.getElementById("showurl");
-  elementUrl.innerHTML = location.href.match(/#(.*)/);
+  elementUrl.innerHTML = location.href.match(/#(.*)$/)[1];
 
 </script>
 </body>
