@@ -3,14 +3,7 @@
 </head>
 <body>
   <h1>OpenSwitchMaps Web version test</h1>
-  <h2>How to use</h2>
-  <ol>
-    <li>Bookmark this bookmarklet</li>
-      <code>javascript:(function(){ window.location.href="http://htmlpreview.github.io/?https://github.com/tankaru/OpenSwitchMapsWeb/blob/master/index.html#"+location.href;})();</code>
-    <li>Open Map service (now supports only Google maps and OpenStreetMap)</li>
-    <li>Open saved Bookmarklet</li>
-    <li>You will move to a web page. And you will get links to Google maps and OpenStreetMap</li>
-  </ol>
+
     <h2>Map info</h2>
   <ul>
     <li>Prev URL: <span id="showurl"></span></li>
@@ -19,11 +12,20 @@
     <li>Zoom: <span id="zoom"><span></li>
   </ul>
   
-  <h2>Switch to...</h2>
+  <h2>Switch to another map service ...</h2>
   <ul>
     <li><a id="googlemaps" href="https://www.google.com/maps/">Google Maps</a></li>
     <li><a id="openstreetmap" href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
   </ul>
+      
+  <h2>How to use</h2>
+  <ol>
+    <li>Bookmark this bookmarklet</li>
+      <code>javascript:(function(){ window.location.href="http://htmlpreview.github.io/?https://github.com/tankaru/OpenSwitchMapsWeb/blob/master/index.html#"+location.href;})();</code>
+    <li>Open Map service (now supports only Google maps and OpenStreetMap)</li>
+    <li>Open saved Bookmarklet</li>
+    <li>You will move to a web page. And you will get links to Google maps and OpenStreetMap</li>
+  </ol>
 <script>
     function getLatLonZoom(url) {
       let match;
