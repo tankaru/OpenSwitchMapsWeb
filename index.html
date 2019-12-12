@@ -13,7 +13,7 @@
   
   <h2>Switch to...</h2>
   <ul>
-    <li><a id="google" href="https://www.google.com/maps/">Google Maps</a></li>
+    <li><a id="googlemaps" href="https://www.google.com/maps/">Google Maps</a></li>
     <li><a id="openstreetmap" href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
   </ul>
 <script>
@@ -45,6 +45,9 @@
   document.getElementById("lat").innerHTML = lat;
   document.getElementById("lon").innerHTML = lon;
   document.getElementById("zoom").innerHTML = zoom;
+  
+  document.getElementById("googlemaps").setAttribute("href",'https://www.google.com/maps/@' + lat + ',' + lon + ',' + zoom + 'z');
+  document.getElementById("openstreetmap").setAttribute("href",'https://www.openstreetmap.org/#map=' + zoom + '/' + lat + '/' + lon);
   
   
 
