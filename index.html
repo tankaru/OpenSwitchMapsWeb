@@ -17,7 +17,7 @@
     <li><a id="openstreetmap" href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
   </ul>
 <script>
-    getLatLonZoom(url) {
+    function getLatLonZoom(url) {
       let match;
       if (match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})[.z]/)) {
         const [, lat, lon, zoom] = match;
