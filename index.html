@@ -17,34 +17,13 @@
     <li><a id="openstreetmap" href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
   </ul>
 <script>
-    function getLatLonZoom(url) {
-      let match;
-      if (match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})[.z]/)) {
-        const [, lat, lon, zoom] = match;
-        return [lat, lon, zoom];
-      } else if (match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9.]*)[m]/)) {
-        let [, lat, lon, zoom] = match;
-        zoom = Math.round(-1.4436 * Math.log(zoom) + 26.871);
-        return [lat, lon, zoom];
-      } else if (match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),([0-9]*)[a],[0-9.]*y/)) {
-        let [, lat, lon, zoom] = match;
-        zoom = Math.round(-1.44 * Math.log(zoom) + 27.5);
-        return [lat, lon, zoom];
-      } else if (match = url.match(/www\.openstreetmap\.org.*map=(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/)) {
-        const [, zoom, lat, lon] = match;
-        return [lat, lon, zoom];
-      }
-    }
-  
+
   let elementUrl = document.getElementById("showurl");
   let prevUrls = location.href.match(/#(.*)$/);
   let prevUrl = prevUrls[1];
   elementUrl.innerHTML = prevUrl;
   
-  let [lat, lon, zoom] = getLatLonZoom(prevUrl);
-  document.getElementById("lat").innerHTML = lat;
-  document.getElementById("lon").innerHTML = lon;
-  document.getElementById("zoom").innerHTML = zoom;
+
   
   
 
