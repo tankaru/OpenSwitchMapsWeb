@@ -8,6 +8,7 @@
 <script>
   let elementUrl = document.getElementById("showurl");
   let prevUrl = location.href.match(/#(.*)$/);
+  alert(prevUrl);
   elementUrl.innerHTML = prevUrl[1];
 
 </script>
