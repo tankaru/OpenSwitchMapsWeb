@@ -3,13 +3,25 @@
 </head>
 <body>
   <h1>OpenSwitchMaps Web version test</h1>
-
-  <span id="showurl"></span>
+  <h2>Map info</h2>
+  <ul>
+    <li>Prev URL: <span id="showurl"></span></li>
+    <li>Lat: </li>
+    <li>Lon: </li>
+    <li>Zoon: </li>
+  </ul>
+  
+  <h2>Switch to...</h2>
+  <ul>
+    <li><a id="google" href="https://www.google.com/maps/">Google Maps</a></li>
+    <li><a id="openstreetmap" href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
+  </ul>
 <script>
   let elementUrl = document.getElementById("showurl");
   let prevUrl = location.href.match(/#(.*)$/);
-  alert(prevUrl);
   elementUrl.innerHTML = prevUrl[1];
+  
+  
 
 </script>
 </body>
