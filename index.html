@@ -1,5 +1,19 @@
+ 
 <html>
 <head>
+      <style>
+		.maps {
+            display: table;
+        }
+		ul.mainmaps{
+            display: table-cell;
+            white-space: nowrap;
+        }
+		ul.mainmaps li{
+			list-style: none;
+		}
+		
+      </style>
 </head>
 <body>
   <h1>OpenSwitchMaps Web version test</h1>
@@ -13,12 +27,14 @@
   </ul>
   
   <h2>Switch to another map service ...</h2>
-  <ul class="maps">
-    <li><a id="googlemaps" href="https://www.google.com/maps/">Google Maps</a></li>
-    <li><a id="openstreetmap" href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
-    <li><a id="gsimap" href="https://maps.gsi.go.jp/">地理院地図</a></li>
-    <li><a id="mapillary" href="https://www.mapillary.com/app/">Mapillary</a></li>
+  <div class="maps">
+  <ul class="mainmaps">
+    <li><img src="http://www.google.com/s2/favicons?domain=www.google.com"><a id="googlemaps" href="https://www.google.com/maps/">Google Maps</a></li>
+    <li><img src="http://www.google.com/s2/favicons?domain=www.openstreetmap.org"><a id="openstreetmap" href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
+    <li><img src="http://www.google.com/s2/favicons?domain=maps.gsi.go.jp"><a id="gsimap" href="https://maps.gsi.go.jp/">地理院地図</a></li>
+    <li><img src="http://www.google.com/s2/favicons?domain=www.mapillary.com"><a id="mapillary" href="https://www.mapillary.com/app/">Mapillary</a></li>
   </ul>
+  </div>
       
   <h2>How to use</h2>
   <ol>
@@ -70,14 +86,8 @@
   document.getElementById("mapillary").setAttribute("href",'https://www.mapillary.com/app/?lat=' + lat + '&lng=' + lon + '&z=' + zoom);
   
   
-
 </script>
-      <style>
-          .maps {
-            display: table-cell;
-            white-space: nowrap;
-        }
-      </style>
+
       
 </body>
 </html>
