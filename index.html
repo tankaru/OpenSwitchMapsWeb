@@ -20,7 +20,8 @@
 
     <h2>Map info</h2>
   <ul>
-    <li>Prev URL: <i><span id="showurl"></span></i></li>
+    <li>Address: <i><span id="address"></span></i></li>
+		<li>Prev URL: <i><span id="showurl"></span></i></li>
     <li>Lat: <i><span id="lat"><span></i></li>
     <li>Lon: <i><span id="lon"><span></i></li>
     <li>Zoom: <i><span id="zoom"><span></i></li>
@@ -45,6 +46,17 @@
     <li>You will move to a web page(here). And you will get links to jump to Google maps and OpenStreetMap</li>
   </ol>
 <script>
+    function getAddress(lat, lon){
+			var request = new XMLHttpRequest();
+			request.open('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1', true);
+			request.responseType = 'json';
+			request.onload = function () {
+				var data = this.response;
+				return data.display_name;
+			};
+			request.send();
+		}
+	
     function getLatLonZoom(url) {
       let match;
       if (match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})[.z]/)) {
@@ -76,6 +88,7 @@
   elementUrl.innerHTML = prevUrl;
   
   let [lat, lon, zoom] = getLatLonZoom(prevUrl);
+  document.getElementById("address").innerHTML = getAddress(lat,lon);	
   document.getElementById("lat").innerHTML = lat;
   document.getElementById("lon").innerHTML = lon;
   document.getElementById("zoom").innerHTML = zoom;
