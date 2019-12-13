@@ -16,6 +16,8 @@
   <ul>
     <li><a id="googlemaps" href="https://www.google.com/maps/">Google Maps</a></li>
     <li><a id="openstreetmap" href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
+    <li><a id="gsimap" href="https://maps.gsi.go.jp/">地理院地図</a></li>
+    <li><a id="mapillary" href="https://www.mapillary.com/app/">Mapillary</a></li>
   </ul>
       
   <h2>How to use</h2>
@@ -43,8 +45,14 @@
       } else if (match = url.match(/www\.openstreetmap\.org.*map=(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/)) {
         const [, zoom, lat, lon] = match;
         return [lat, lon, zoom];
+      } else if (match = url.match(/maps\.gsi\.go\.jp.*#(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/)) {
+        const [, zoom, lat, lon] = match;
+        return [lat, lon, zoom];
+      } else if (match = url.match(/www\.mapillary\.com.*lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&z=(\d{1,2})/)) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, zoom];
       }
-    }
+  }
   
   let elementUrl = document.getElementById("showurl");
   let prevUrls = location.href.match(/#(.*)$/);
@@ -58,6 +66,8 @@
   
   document.getElementById("googlemaps").setAttribute("href",'https://www.google.com/maps/@' + lat + ',' + lon + ',' + zoom + 'z');
   document.getElementById("openstreetmap").setAttribute("href",'https://www.openstreetmap.org/#map=' + zoom + '/' + lat + '/' + lon);
+  document.getElementById("gsimap").setAttribute("href",'https://maps.gsi.go.jp/#' + zoom + '/' + lat + '/' + lon + '/');
+  document.getElementById("mapillary").setAttribute("href",'https://www.mapillary.com/app/?lat=' + lat + '&lng=' + lon + '&z=' + zoom);
   
   
 
