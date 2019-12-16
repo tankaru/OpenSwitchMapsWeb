@@ -6,12 +6,20 @@
 	      }
 		#maps {
             display: table;
-        }
-		ul#mainmaps{
-            display: table-cell;
+			}
+		ul.submaps{
+            display: inline-block;
+			vertical-align: top;
             white-space: nowrap;
+
         }
-		ul#mainmaps li{
+		.title{
+			background-color: #eee;
+			font-weight: bold;
+			font-size: larger;
+			text-align: center;
+		}
+		ul.submaps li{
 			list-style: none;
 		}
 		
@@ -31,9 +39,7 @@
 <div id="results">
   <h2>Switch to another map service</h2>
   <div id="maps">
-  <ul id="mainmaps">
 
-  </ul>
   </div>
 </div>      
   <h2>How to use</h2>
@@ -45,6 +51,7 @@
     <li>Open saved Bookmarklet</li>
     <li>You will move to a web page(here). And you will get links to jump to other map service.</li>
   </ol>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.9/lodash.min.js"></script>
 <script>
 
 const MAIN_CATEGORY = "Main maps";
@@ -647,11 +654,32 @@ else {
   document.getElementById("lon").innerHTML = lon;
   document.getElementById("zoom").innerHTML = zoom;
 
-  var maplist = "";
+  let columns = _.groupBy(maps, 'category');
+ 
+  let maplist = "";
+  
+  let categories = Object.keys(columns);
+
+  for (let category of categories){
+	  maplist += '<ul class="submaps"><li class="title">' + category + '</li>';
+	  let mapsublist = columns[category];
+  //alert(category);	  
+	    for (let map of mapsublist){
+			maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '">' + map.name + '</a></li>';
+		}
+		maplist += '</ul>';
+  }
+  
+
+  /*
+  for (let column of columns)
+  
+  let maplist = "";
   for (let map of maps){
 	maplist = maplist + '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '">' + map.name + '</li>';
   };
-  document.getElementById("mainmaps").innerHTML = "<ul>"+ maplist + "</ul>";
+  */
+  document.getElementById("maps").innerHTML =  maplist;
 
   
   
