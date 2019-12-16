@@ -26,7 +26,7 @@
       </style>
 </head>
 <body>
-  <h1>[TEST]OpenSwitchMaps Web 12162120</h1>
+  <h1>[TEST]OpenSwitchMaps Web 12162138</h1>
 
     <h2>Location info</h2>
   <ul>
@@ -51,8 +51,7 @@
     <li>Open saved Bookmarklet</li>
     <li>You will move to a web page(here). And you will get links to jump to other map service.</li>
   </ol>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.9/lodash.min.js"></script>
 <script>
 
 const MAIN_CATEGORY = "Main maps";
@@ -603,7 +602,13 @@ const maps = [{
  */
 ];
 
-
+//https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
+function groupBy(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
     function setAddress(lat, lon){
 			var request = new XMLHttpRequest();
 			request.open('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1', true);
@@ -655,8 +660,8 @@ else {
   document.getElementById("lon").innerHTML = lon;
   document.getElementById("zoom").innerHTML = zoom;
 
- // let columns = _.groupBy(maps, 'category');
-
+  let columns = groupBy(maps, 'category');
+ 
   let maplist = "";
   
   let categories = Object.keys(columns);
