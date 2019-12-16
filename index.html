@@ -26,7 +26,7 @@
       </style>
 </head>
 <body>
-  <h1>[TEST]OpenSwitchMaps Web 12162105</h1>
+  <h1>[TEST]OpenSwitchMaps Web 12162106</h1>
 
     <h2>Location info</h2>
   <ul>
@@ -653,9 +653,9 @@ else {
   document.getElementById("lat").innerHTML = lat;
   document.getElementById("lon").innerHTML = lon;
   document.getElementById("zoom").innerHTML = zoom;
-
+ alert("ga");
   let columns = _.groupBy(maps, 'category');
- alert(columns);
+ alert("hoge");
   let maplist = "";
   
   let categories = Object.keys(columns);
