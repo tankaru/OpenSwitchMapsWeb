@@ -9,6 +9,20 @@
 	      body {
 		      font-family: sans-serif;
 	      }
+		  h1{
+			text-align: center;
+			font-size: 120%;
+		  }
+		  #location, #description{
+			font-size: small;
+		  }
+		  h2 {
+			margin: 0px;
+		  }
+		  ul, ol {
+			margin: 0px;
+		  }
+			
 		#maps {
             display: table;
 			}
@@ -26,34 +40,38 @@
 		}
 		ul.submaps li{
 			list-style: none;
+			margin: 5px;
 		}
       </style>
 </head>
 <body>
-  <h1>[TEST]OpenSwitchMaps Web</h1>
-
+  <h1>🗺️OpenSwitchMaps Web🗺️</h1>
+	<div id="location">
     <h2>Location info</h2>
   <ul>
     <li>Address: <i><span id="address"></span></i></li>
-	<li>Prev URL: <i><span id="showurl"></span></i></li>
+	<li>URL: <i><span id="showurl"></span></i></li>
     <li>Lat: <i><span id="lat"><span></i>, Lon: <i><span id="lon"><span></i>, Zoom: <i><span id="zoom"><span></i></li>
   </ul>
+  </div>
 <div id="results">
-  <h2>Switch to another map service</h2>
+  <h2>Switch to ...</h2>
   <div id="maps">
 
   </div>
-</div>      
+</div>  
+	<div id="description">
   <h2>How to use</h2>
   <ol>
-    <li>Drag following link to your bookmark bar: <a href="javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();">OpenSwitchMaps Web</a> OR bookmark following bookmarklet</li>
+    <li>Drag following link to your bookmark bar: <a href="javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();">OpenSwitchMaps Web</a> OR Bookmark following bookmarklet</li>
 	
       <code>javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();</code>
-    <li>Open Map service</li>
-    <li>Open saved Bookmarklet</li>
+    <li>Open a map service</li>
+    <li>Open saved bookmarklet</li>
     <li>You will move to a web page(here). And you will get links to jump to other map service.</li>
   </ol>
 <p>Comments and bug reports are welcome at <a href="https://github.com/tankaru/OpenSwitchMapsWeb">Github</a>.</p>
+</div>
 <script>
 
 const MAIN_CATEGORY = "Main maps";
