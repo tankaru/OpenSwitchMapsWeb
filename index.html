@@ -469,6 +469,40 @@ const maps = [{
     },
 
   },
+
+  {
+    name: "OSM.in",
+    category: OSM_LOCAL_CATEGORY,
+    domain: "openstreetmap.in",
+    getUrl(lat, lon, zoom) {
+      return 'https://openstreetmap.in/demo/#' + zoom + '/' + lat + '/' + lon ;
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/openstreetmap\.in\/demo\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        const [, zoom, lat, lon] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },
+
+  {
+    name: "OSM.cl",
+    category: OSM_LOCAL_CATEGORY,
+    domain: "openstreetmap.cl",
+    getUrl(lat, lon, zoom) {
+      return 'https://www.openstreetmap.cl/#' + zoom + '/' + lat + '/' + lon;
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/openstreetmap\.cl\/#(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        let [, zoom, lat, lon] = match;
+		if (Number(lon) < -180) lon = Number(lon)+360;
+        return [lat, lon, zoom];
+      }
+    },
+  },
+  
   {
     name: "IGN Géoportail (FR)",
     category: LOCAL_CATEGORY,
@@ -728,6 +762,16 @@ const maps = [{
     },
   },
 
+  {
+    name: "OpenRailwayMap",
+    category: OTHER_CATEGORY,
+    domain: "openrailwaymap.org",
+    getUrl(lat, lon, zoom) {
+      return 'https://www.openrailwaymap.org/?lat=' + lat + '&lon=' + lon + '&zoom=' + zoom;
+    },
+
+  },
+  
   {
     name: "聖地巡礼マップ(Anime location)",
     category: SPECIAL_CATEGORY,
