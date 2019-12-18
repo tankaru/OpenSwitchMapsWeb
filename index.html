@@ -85,6 +85,18 @@ const LOCAL_CATEGORY = "Local maps";
 const OSM_LOCAL_CATEGORY = "OSM local maps";
 const APP_CATEGORY = "External App";
 
+function setLocalwikiAddress(lat, lon){
+	let request = new XMLHttpRequest();
+	request.open('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1', true);
+	request.responseType = 'json';
+	request.onload = function () {
+		let data = this.response;
+		document.getElementById('Localwiki').setAttribute('href','https://localwiki.org/_search/?q=' + data.display_name);
+	};
+	request.send();
+}
+
+
 function bboxToLatLonZoom(minlon, minlat, maxlon, maxlat) {
 	const lon = (Number(minlon) + Number(maxlon))/2.0;
 	const lat = (Number(minlat) + Number(maxlat))/2.0;
@@ -698,6 +710,64 @@ const maps = [{
       }
     },
   },
+
+  {
+    name: "OSM Buildings",
+    category: OTHER_CATEGORY,
+    domain: "osmbuildings.org",
+    getUrl(lat, lon, zoom) {
+      return 'https://osmbuildings.org/?lat=' + lat + '&lon=' + lon + '&zoom=' + zoom + '&tilt=30';
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/osmbuildings\.org\/\?lat=(-?\d[0-9.]*)&lon=(-?\d[0-9.]*)&zoom=(\d[0-9.]*)/);
+      if (match) {
+        let [, zoom, lat, lon] = match;
+		zoom = Math.round(Number(zoom));
+        return [lat, lon, zoom];
+      }
+    },
+  },
+
+  {
+    name: "聖地巡礼マップ(Anime location)",
+    category: SPECIAL_CATEGORY,
+    domain: "seichimap.jp",
+    getUrl(lat, lon, zoom) {
+      return 'https://seichimap.jp/spots?order=nearer&lat=' + lat + '&lng=' + lon ;
+    },
+
+  },
+
+  {
+    name: "OpenAerialMap",
+    category: SPECIAL_CATEGORY,
+    domain: "openaerialmap.org",
+    getUrl(lat, lon, zoom) {
+      return 'https://map.openaerialmap.org/#/' + lon + ',' + lat + ',' + zoom;
+    },
+
+  },
+  
+  {
+    name: "地質図Navi (JP)",
+    category: SPECIAL_CATEGORY,
+    domain: "gbank.gsj.jp",
+    getUrl(lat, lon, zoom) {
+      return 'https://gbank.gsj.jp/geonavi/geonavi.php#' + zoom + ',' + lat + ',' + lon;
+    },
+
+  },
+  
+  {
+    name: "Localwiki",
+    category: SPECIAL_CATEGORY,
+    domain: "localwiki.org",
+    getUrl(lat, lon, zoom) {
+		setLocalwikiAddress(lat, lon);
+      return 'https://localwiki.org/';
+    },
+
+  },
   
   {
     name: "Open JOSM",
@@ -821,7 +891,7 @@ else {
   //alert(category);	  
 	    for (let map of mapsublist){
 			if (map.hasOwnProperty('getUrl')) {
-				maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '">' + map.name + '</a></li>';
+				maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '">' + map.name + '</a></li>';
 			}
 		}
 		maplist += '</ul>';
