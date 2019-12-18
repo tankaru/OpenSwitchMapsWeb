@@ -763,6 +763,22 @@ const maps = [{
   },
 
   {
+    name: "openrouteservice",
+    category: OTHER_CATEGORY,
+    domain: "openrouteservice.org",
+    getUrl(lat, lon, zoom) {
+      return 'https://maps.openrouteservice.org/directions?n1=' + lat + '&n2=' + lon + '&n3=' + zoom;
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/maps\.openrouteservice\.org\/directions\?n1=(-?\d[0-9.]*)&n2=(-?\d[0-9.]*)&n3=(\d{1,2})/);
+      if (match) {
+        let [, lat, lon, zoom] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  },
+
+  {
     name: "OpenRailwayMap",
     category: OTHER_CATEGORY,
     domain: "openrailwaymap.org",
@@ -847,6 +863,23 @@ const maps = [{
 
   },  
 
+  
+  {
+    name: "mapbox Cartogram",
+    category: SPECIAL_CATEGORY,
+    domain: "mapbox.com",
+    getUrl(lat, lon, zoom) {
+      return 'https://apps.mapbox.com/cartogram/#' + zoom + '/' + lat + '/' + lon;
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/apps\.mapbox\.com\/cartogram\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        let [, zoom, lat, lon] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },
+  
   {
     name: "map.orhyginal",
     category: SPECIAL_CATEGORY,
