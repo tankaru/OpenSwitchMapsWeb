@@ -506,7 +506,7 @@ const maps = [{
       const match = url.match(/openstreetmap\.in\/demo\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
       if (match) {
         const [, zoom, lat, lon] = match;
-        return [lat, lon, Math.round(Number(zoom))];
+        return [lat, normalizeLon(lon), Math.round(Number(zoom))];
       }
     },
   },
@@ -523,8 +523,7 @@ const maps = [{
       const match = url.match(/openstreetmap\.cl\/#(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
       if (match) {
         let [, zoom, lat, lon] = match;
-		if (Number(lon) < -180) lon = Number(lon)+360;
-        return [lat, lon, zoom];
+        return [lat, normalizeLon(lon), zoom];
       }
     },
   },
@@ -1031,7 +1030,17 @@ function groupBy(xs, key) {
 			};
 			request.send();
 		}
-	
+
+function normalizeLon(lon){
+	lon = Number(lon);
+	lon = lon % 360;
+	lon += 360;
+	lon = lon % 360;
+	if(lon > 180) lon -= 360;
+	return lon;
+}
+
+		
 function getLatLonZoom(url, maps) {
 	for (let map of maps){
 		if (map.hasOwnProperty('getLatLonZoom')){
