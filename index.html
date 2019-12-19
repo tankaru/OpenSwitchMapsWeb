@@ -920,7 +920,8 @@ const maps = [{
       return 'https://www.waze.com/ja/editor?lon=' + lon + '&lat=' + lat + '&zoom=5';
     },
 
-  },    {
+  },
+  {
     name: "map.orhyginal",
     category: SPECIAL_CATEGORY,
     domain: "orhyginal.fr",
@@ -935,7 +936,22 @@ const maps = [{
       }
     },
   },
-
+  {
+    name: "here maps",
+    category: OTHER_CATEGORY,
+    domain: "here.com",
+    getUrl(lat, lon, zoom) {
+      return 'https://wego.here.com/?map=' + lat + ',' + lon + ',' + zoom + ',normal';
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/wego\.here\.com\/\?map=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9]*)/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  },
+  
 ];
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
