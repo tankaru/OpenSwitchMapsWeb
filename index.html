@@ -10,6 +10,11 @@
 	      body {
 		      font-family: sans-serif;
 	      }
+		  strong {
+			font-weight: bold;
+			color: red;
+		  }
+		  
 		  h1{
 			font-size: 120%;
 		  }
@@ -22,6 +27,7 @@
 		  ul, ol {
 			margin: 0px;
 		  }
+		  
 			
 		#maps {
             display: table;
@@ -58,7 +64,7 @@ You can jump to another map service keeping the location and the zoom level</p>
  
   <h2>How to use</h2>
   <ol>
-    <li>First, add a bookmark(bookmarklet) to your browser: Drag following link to your bookmark bar: <a href="javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();">OpenSwitchMaps Web</a> OR bookmark following text(bookmarklet)</li>
+    <li><strong>First, add a bookmark(bookmarklet) to your browser</strong>: Drag following link to your bookmark bar: <a href="javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();">OpenSwitchMaps Web</a> OR bookmark following text(bookmarklet)</li>
 	
       <code>javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();</code>
     <li>Open a map service, for example <a href="https://www.openstreetmap.org">OpenStreetMap</a></li>
@@ -71,8 +77,8 @@ You can jump to another map service keeping the location and the zoom level</p>
     <h2>Location info</h2>
   <ul>
     <li>URL: <i><span id="showurl"></span></i></li>
-    <li>Address: <i><span id="address"></span></i></li>
     <li>Lat: <i><span id="lat"><span></i>, Lon: <i><span id="lon"><span></i>, Zoom: <i><span id="zoom"><span></i></li>
+    <li>Address: <i><span id="address"></span></i></li>
   </ul>
   </div>
 
@@ -525,33 +531,28 @@ const maps = [{
       return 'https://www.geoportail.gouv.fr/carte?c=' + lon + ',' + lat + '&z=' + zoom + '&l0=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN25TOUR.CV::GEOPORTAIL:OGC:WMTS(1)&permalink=yes';
     },
   },
+  {
+    name: "Satellite Tracker 3D",
+    category: SPECIAL_CATEGORY,
+    domain: "stdkmd.net",
+    getUrl(lat, lon, zoom) {
+		const d = Math.round(Math.exp((Number(zoom) - 17.7)/(-1.4)));
+      return 'https://stdkmd.net/sat/?cr=' + d + '&lang=en&ll=' + lat + '%2C' + lon ;
+    },
 
+  },  
   {
-    name: "flightradar24",
+    name: "earth",
     category: SPECIAL_CATEGORY,
-    domain: "flightradar24.com",
+    domain: "earth.nullschool.net",
     getUrl(lat, lon, zoom) {
-      return 'https://www.flightradar24.com/' + Math.round(lat * 100) / 100 + ',' + Math.round(lon * 100) / 100 + '/' + Math.round(zoom);
+      return 'https://earth.nullschool.net/#current/wind/surface/level/orthographic=' + lon + ',' + lat + ',' + 11.1 * zoom ** 3.12;
     },
     getLatLonZoom(url) {
-      const match = url.match(/flightradar24\.com.*\/(-?\d[0-9.]*),(-?\d[0-9.]*)\/(\d{1,2})/);
+      const match = url.match(/earth\.nullschool\.net.*orthographic=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9]*)/);
       if (match) {
-        const [, lat, lon, zoom] = match;
-        return [lat, lon, zoom];
-      }
-    },
-  },
-  {
-    name: "MarineTraffic",
-    category: SPECIAL_CATEGORY,
-    domain: "marinetraffic.com",
-    getUrl(lat, lon, zoom) {
-      return 'https://www.marinetraffic.com/en/ais/home/centerx:' + lon + '/centery:' + lat + '/zoom:' + zoom;
-    },
-    getLatLonZoom(url) {
-      const match = url.match(/www\.marinetraffic\.com.*centerx:(-?\d[0-9.]*)\/centery:(-?\d[0-9.]*)\/zoom:(\d{1,2})/);
-      if (match) {
-        const [, lon, lat, zoom] = match;
+        let [, lon, lat, zoom] = match;
+        zoom = Math.round((zoom / 11.1) ** (1 / 3.12));
         return [lat, lon, zoom];
       }
     },
@@ -572,21 +573,54 @@ const maps = [{
     },
   },
   {
-    name: "earth",
+    name: "flightradar24",
     category: SPECIAL_CATEGORY,
-    domain: "earth.nullschool.net",
+    domain: "flightradar24.com",
     getUrl(lat, lon, zoom) {
-      return 'https://earth.nullschool.net/#current/wind/surface/level/orthographic=' + lon + ',' + lat + ',' + 11.1 * zoom ** 3.12;
+      return 'https://www.flightradar24.com/' + Math.round(lat * 100) / 100 + ',' + Math.round(lon * 100) / 100 + '/' + Math.round(zoom);
     },
     getLatLonZoom(url) {
-      const match = url.match(/earth\.nullschool\.net.*orthographic=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9]*)/);
+      const match = url.match(/flightradar24\.com.*\/(-?\d[0-9.]*),(-?\d[0-9.]*)\/(\d{1,2})/);
       if (match) {
-        let [, lon, lat, zoom] = match;
-        zoom = Math.round((zoom / 11.1) ** (1 / 3.12));
+        const [, lat, lon, zoom] = match;
         return [lat, lon, zoom];
       }
     },
   },
+  {
+    name: "Traze",
+    category: SPECIAL_CATEGORY,
+    domain: "traze.app",
+    getUrl(lat, lon, zoom) {
+      return 'https://traze.app/#/@' + lat + ',' + lon + ',' + zoom ;
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/traze\.app\/#\/@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})/);
+      if (match) {
+        let [, lat, lon, zoom] = match;
+        return [lat, lon, Math.round(zoom)];
+      }
+    },
+
+  },  
+
+  {
+    name: "MarineTraffic",
+    category: SPECIAL_CATEGORY,
+    domain: "marinetraffic.com",
+    getUrl(lat, lon, zoom) {
+      return 'https://www.marinetraffic.com/en/ais/home/centerx:' + lon + '/centery:' + lat + '/zoom:' + zoom;
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/www\.marinetraffic\.com.*centerx:(-?\d[0-9.]*)\/centery:(-?\d[0-9.]*)\/zoom:(\d{1,2})/);
+      if (match) {
+        const [, lon, lat, zoom] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  },
+
+
   {
     name: "CyclOSM",
     category: OTHER_CATEGORY,
@@ -668,32 +702,7 @@ const maps = [{
       }
     },
   },  
-  {
-    name: "Satellite Tracker 3D",
-    category: SPECIAL_CATEGORY,
-    domain: "stdkmd.net",
-    getUrl(lat, lon, zoom) {
-		const d = Math.round(Math.exp((Number(zoom) - 17.7)/(-1.4)));
-      return 'https://stdkmd.net/sat/?cr=' + d + '&lang=en&ll=' + lat + '%2C' + lon ;
-    },
 
-  },  
-  {
-    name: "Traze",
-    category: SPECIAL_CATEGORY,
-    domain: "traze.app",
-    getUrl(lat, lon, zoom) {
-      return 'https://traze.app/#/@' + lat + ',' + lon + ',' + zoom ;
-    },
-    getLatLonZoom(url) {
-      const match = url.match(/traze\.app\/#\/@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})/);
-      if (match) {
-        let [, lat, lon, zoom] = match;
-        return [lat, lon, Math.round(zoom)];
-      }
-    },
-
-  },  
 
   {
     name: "uMap",
@@ -893,8 +902,25 @@ const maps = [{
       }
     },
   },
-  
+
   {
+    name: "waze",
+    category: OTHER_CATEGORY,
+    domain: "waze.com",
+    getUrl(lat, lon, zoom) {
+      return 'https://www.waze.com/ul?ll=' + lat + '%2C' + lon + '&navigate=yes&zoom=' + zoom;
+    },
+
+  },  
+  {
+    name: "Open waze map editor",
+    category: APP_CATEGORY,
+    domain: "waze.com",
+    getUrl(lat, lon, zoom) {
+      return 'https://www.waze.com/ja/editor?lon=' + lon + '&lat=' + lat + '&zoom=5';
+    },
+
+  },    {
     name: "map.orhyginal",
     category: SPECIAL_CATEGORY,
     domain: "orhyginal.fr",
@@ -962,7 +988,7 @@ if (prevUrls) {
   }
     if (isNaN(lat)) {
       [lat, lon, zoom] = [0, 0, 4];
-	document.getElementById("sorry").innerHTML = "<b><i>Sorry, this URL is not supported. Sample links are shown here.</i></b>";
+	document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported. Sample links are shown here.</strong>";
     }
 
 
