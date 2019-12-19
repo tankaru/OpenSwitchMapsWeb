@@ -940,6 +940,9 @@ let latlonzoom = getLatLonZoom(testurl, maps);
   let elementUrl = document.getElementById("showurl");
   let prevUrls = location.href.match(/#(.*)$/);
   let prevUrl = prevUrls[1];
+if (prevUrl) {
+  document.getElementById("description").style.display = "none";
+}
   elementUrl.innerHTML = prevUrl;
   
   let latlonzoom = getLatLonZoom(prevUrl, maps);
@@ -950,7 +953,8 @@ if (latlonzoom){
 	[lat, lon, zoom] = latlonzoom;
 }
 else {
-	document.getElementById("results").innerHTML = "<b><i>Sorry, this URL is not supported</i></b>";
+ [lat, lon, zoom] = [40.69, -74, 17];
+	document.getElementById("results").innerHTML = "<b><i>Sorry, this URL is not supported. Sample links are shown here.</i></b>";
 }
 
 
