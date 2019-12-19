@@ -30,6 +30,7 @@
             display: inline-block;
 			vertical-align: top;
             white-space: nowrap;
+			padding: 0 0 0 20px;
 
         }
 		.title{
@@ -41,6 +42,10 @@
 		ul.submaps li{
 			list-style: none;
 			margin: 5px;
+		}
+		img {
+			padding: 0px 5px;
+			vertical-align: middle;
 		}
       </style>
 </head>
@@ -963,7 +968,7 @@ else {
   let categories = Object.keys(columns);
 
   for (let category of categories){
-	  maplist += '<ul class="submaps"><li class="title">' + category + '</li>';
+	  maplist += '<ul class="submaps" id="' + category + '"><li class="title">' + category + '</li>';
 	  let mapsublist = columns[category];
   //alert(category);	  
 	    for (let map of mapsublist){
