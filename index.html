@@ -944,8 +944,9 @@ let latlonzoom = getLatLonZoom(testurl, maps);
 
   let elementUrl = document.getElementById("showurl");
   let prevUrls = location.href.match(/#(.*)$/);
+
+if (prevUrls) {
   let prevUrl = prevUrls[1];
-if (prevUrl) {
   document.getElementById("description").style.display = "none";
   elementUrl.innerHTML = prevUrl;
   let latlonzoom;
