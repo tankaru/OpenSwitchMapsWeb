@@ -93,7 +93,7 @@ You can jump to another map service keeping the location and the zoom level</p>
 
 
   <p>Comments and bug reports are welcome at <a href="https://github.com/tankaru/OpenSwitchMapsWeb">Github</a>.</p>
-  <p>Address data is provided from <a href="https://operations.osmfoundation.org/policies/nominatim/">Nominatim</a>.</p>
+  <p>Address data is obtained from <a href="https://operations.osmfoundation.org/policies/nominatim/">Nominatim</a>.</p>
 
 <script>
 
@@ -446,6 +446,7 @@ const maps = [{
     name: "OSM.de",
     category: OSM_LOCAL_CATEGORY,
     domain: "www.openstreetmap.de",
+	description: "OpenStreetMap German local chapter",
     getUrl(lat, lon, zoom) {
       return 'https://www.openstreetmap.de/karte.html?zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
     },
@@ -454,6 +455,7 @@ const maps = [{
     name: "OSM.ru",
     category: OSM_LOCAL_CATEGORY,
     domain: "openstreetmap.ru",
+	description: "OpenStreetMap Russia local chapter",
     getUrl(lat, lon, zoom) {
       return 'https://openstreetmap.ru/#map=' + zoom + '/' + lat + '/' + lon;
     },
@@ -469,6 +471,7 @@ const maps = [{
     name: "OSM.jp",
     category: OSM_LOCAL_CATEGORY,
     domain: "openstreetmap.jp",
+	description: "OpenStreetMap Japan local chapter",
     getUrl(lat, lon, zoom) {
       return 'https://openstreetmap.jp/map#zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
     },
@@ -484,6 +487,7 @@ const maps = [{
     name: "OSM.ch",
     category: OSM_LOCAL_CATEGORY,
     domain: "openstreetmap.ch",
+	description: "OpenStreetMap Switzerland local chapter",
     getUrl(lat, lon, zoom) {
       return 'https://www.openstreetmap.ch/?zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
     },
@@ -494,6 +498,7 @@ const maps = [{
     name: "OSM.in",
     category: OSM_LOCAL_CATEGORY,
     domain: "openstreetmap.in",
+	description: "OpenStreetMap India local chapter",
     getUrl(lat, lon, zoom) {
       return 'https://openstreetmap.in/demo/#' + zoom + '/' + lat + '/' + lon ;
     },
@@ -510,6 +515,7 @@ const maps = [{
     name: "OSM.cl",
     category: OSM_LOCAL_CATEGORY,
     domain: "openstreetmap.cl",
+	description: "OpenStreetMap Chile local chapter",
     getUrl(lat, lon, zoom) {
       return 'https://www.openstreetmap.cl/#' + zoom + '/' + lat + '/' + lon;
     },
@@ -812,9 +818,10 @@ const maps = [{
   },
   
   {
-    name: "聖地巡礼マップ(Anime location)",
+    name: "聖地巡礼マップ",
     category: SPECIAL_CATEGORY,
     domain: "seichimap.jp",
+	description: "Anime location search",
     getUrl(lat, lon, zoom) {
       return 'https://seichimap.jp/spots?order=nearer&lat=' + lat + '&lng=' + lon ;
     },
@@ -856,6 +863,7 @@ const maps = [{
     name: "Open JOSM",
     category: APP_CATEGORY,
     domain: "josm.openstreetmap.de",
+	description: "OpenStreetMap desktop editor",
     getUrl(lat, lon, zoom) {
 		let z = Number(zoom);
 		if ( z < 18 ) z = 18;
@@ -868,6 +876,7 @@ const maps = [{
     name: "Open iD editor",
     category: APP_CATEGORY,
     domain: "ideditor.com/",
+	description: "OpenStreetMap online editor",
     getUrl(lat, lon, zoom) {
 		let z = Number(zoom);
 		if ( z < 18 ) z = 18;
@@ -891,6 +900,7 @@ const maps = [{
     name: "mapbox Cartogram",
     category: SPECIAL_CATEGORY,
     domain: "mapbox.com",
+	description: "Create colorful map from your photo",
     getUrl(lat, lon, zoom) {
       return 'https://apps.mapbox.com/cartogram/#' + zoom + '/' + lat + '/' + lon;
     },
@@ -907,6 +917,7 @@ const maps = [{
     name: "waze",
     category: OTHER_CATEGORY,
     domain: "waze.com",
+	description: "Crowdsourced navigater",
     getUrl(lat, lon, zoom) {
       return 'https://www.waze.com/ul?ll=' + lat + '%2C' + lon + '&navigate=yes&zoom=' + zoom;
     },
@@ -925,6 +936,7 @@ const maps = [{
     name: "map.orhyginal",
     category: SPECIAL_CATEGORY,
     domain: "orhyginal.fr",
+	description: "Portal of many map services",
     getUrl(lat, lon, zoom) {
       return 'http://map.orhyginal.fr/#' + zoom + '/' + lat + '/' + lon;
     },
@@ -951,7 +963,55 @@ const maps = [{
       }
     },
   },
-  
+  {
+    name: "wikimapia",
+    category: OTHER_CATEGORY,
+    domain: "wikimapia.org",
+    getUrl(lat, lon, zoom) {
+      return 'https://wikimapia.org/#lat=' + lat + '&lon=' + lon + '&z=' + zoom;
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/wikimapia\.org\/#.*&lat=(-?\d[0-9.]*)&lon=(-?\d[0-9.]*)&z=(\d{1,2})/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  },
+
+    {
+    name: "Copernix",
+    category: OTHER_CATEGORY,
+    domain: "copernix.io",
+	description: "POIs from Wikipedia",
+    getUrl(lat, lon, zoom) {
+      return 'https://copernix.io/#?where=' + lon + ',' + lat + ',' + zoom + '&?query=&?map_type=roadmap';
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/copernix\.io\/#\?where=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})/);
+      if (match) {
+        const [, lon, lat, zoom] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  },
+
+    {
+    name: "Zoom Earth",
+    category: OTHER_CATEGORY,
+    domain: "zoom.earth",
+	description: "Historic and live satellite images",
+    getUrl(lat, lon, zoom) {
+      return 'https://zoom.earth/#view=' + lat + ',' + lon + ',' + zoom + 'z';
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/zoom\.earth\/#view=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})z/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  },
 ];
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
@@ -1026,7 +1086,9 @@ if (prevUrls) {
   //alert(category);	  
 	    for (let map of mapsublist){
 			if (map.hasOwnProperty('getUrl')) {
-				maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '">' + map.name + '</a></li>';
+				let tooltip = "";
+				if (map.hasOwnProperty('description')) tooltip = ' title="' + map.description + '" ';
+				maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '"'+ tooltip + '>' + map.name + '</a></li>';
 			}
 		}
 		maplist += '</ul>';
