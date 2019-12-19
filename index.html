@@ -51,35 +51,44 @@
 </head>
 <body>
   <h1>🗺️OpenSwitchMaps Web🗺️</h1>
-	<div id="location">
+
+<div id="description">
+<p>OpenSwitchMaps helps you to switch between map services, such as Google maps, OpwnStreetMap, Bing map and so on.
+You can jump to another map service keeping the location and the zoom level</p>
+ 
+  <h2>How to use</h2>
+  <ol>
+    <li>First, add a bookmark(bookmarklet) to your browser: Drag following link to your bookmark bar: <a href="javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();">OpenSwitchMaps Web</a> OR bookmark following text(bookmarklet)</li>
+	
+      <code>javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();</code>
+    <li>Open a map service, for example <a href="https://www.openstreetmap.org">OpenStreetMap</a></li>
+    <li>Open saved bookmarklet</li>
+    <li>You will move to a web page(here). And you will get links to jump to other map service.</li>
+  </ol>
+
+</div>
+<div id="location">
     <h2>Location info</h2>
   <ul>
+    <li>URL: <i><span id="showurl"></span></i></li>
     <li>Address: <i><span id="address"></span></i></li>
-	<li>URL: <i><span id="showurl"></span></i></li>
     <li>Lat: <i><span id="lat"><span></i>, Lon: <i><span id="lon"><span></i>, Zoom: <i><span id="zoom"><span></i></li>
   </ul>
   </div>
+
+  <span id="sorry"></span>
+
 <div id="results">
   <h2>Switch to ...</h2>
   <div id="maps">
 
   </div>
 </div>  
-	<div id="description">
-  <h2>How to use</h2>
-  <ol>
-    <li>Drag following link to your bookmark bar: <a href="javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();">OpenSwitchMaps Web</a> OR Bookmark following bookmarklet</li>
-	
-      <code>javascript:(function(){ window.location.href='https://tankaru.github.io/OpenSwitchMapsWeb/index.html#'+location.href;})();</code>
-    <li>Open a map service</li>
-    <li>Open saved bookmarklet</li>
-    <li>You will move to a web page(here). And you will get links to jump to other map service.</li>
-  </ol>
+
 
   <p>Comments and bug reports are welcome at <a href="https://github.com/tankaru/OpenSwitchMapsWeb">Github</a>.</p>
   <p>Address data is provided from <a href="https://operations.osmfoundation.org/policies/nominatim/">Nominatim</a>.</p>
 
-</div>
 <script>
 
 const MAIN_CATEGORY = "Main maps";
@@ -940,19 +949,21 @@ let latlonzoom = getLatLonZoom(testurl, maps);
 
   let elementUrl = document.getElementById("showurl");
   let prevUrls = location.href.match(/#(.*)$/);
+
+if (prevUrls) {
   let prevUrl = prevUrls[1];
+  document.getElementById("description").style.display = "none";
   elementUrl.innerHTML = prevUrl;
-  
-  let latlonzoom = getLatLonZoom(prevUrl, maps);
-
-
-
-if (latlonzoom){
-	[lat, lon, zoom] = latlonzoom;
-}
-else {
-	document.getElementById("results").innerHTML = "<b><i>Sorry, this URL is not supported</i></b>";
-}
+  let latlonzoom;
+  latlonzoom = getLatLonZoom(prevUrl, maps);
+    if (latlonzoom){
+      [lat, lon, zoom] = latlonzoom;
+    }
+  }
+    if (isNaN(lat)) {
+      [lat, lon, zoom] = [40.69, -74, 17];
+	document.getElementById("sorry").innerHTML = "<b><i>Sorry, this URL is not supported. Sample links are shown here.</i></b>";
+    }
 
 
 
