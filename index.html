@@ -59,7 +59,7 @@
   <h1>🗺️OpenSwitchMaps Web🗺️</h1>
 
 <div id="description">
-<p>OpenSwitchMaps helps you to switch between map services, such as Google maps, OpwnStreetMap, Bing map and so on.
+<p>OpenSwitchMaps helps you to switch between map services, such as Google maps, OpenStreetMap, Bing map and so on.
 You can jump to another map service keeping the location and the zoom level</p>
  
   <h2>How to use</h2>
@@ -102,8 +102,9 @@ const UTILITY_CATEGORY = "Utilities";
 const OTHER_CATEGORY = "Other maps";
 const SPECIAL_CATEGORY = "Specials";
 const LOCAL_CATEGORY = "Local maps";
-const OSM_LOCAL_CATEGORY = "OSM local maps";
+const OSM_LOCAL_CATEGORY = "OSM local chapter";
 const APP_CATEGORY = "External App";
+const PORTAL_CATEGORY = "Map potal";
 
 function setLocalwikiAddress(lat, lon){
 	let request = new XMLHttpRequest();
@@ -179,6 +180,7 @@ const maps = [{
     name: "Mapillary",
     category: MAIN_CATEGORY,
     domain: "www.mapillary.com",
+	description: "Crowdsourced street-level imagery available as CC BY-SA",
     getUrl(lat, lon, zoom) {
       return 'https://www.mapillary.com/app/?lat=' + lat + '&lng=' + lon + '&z=' + zoom;
     },
@@ -194,6 +196,7 @@ const maps = [{
     name: "地理院地図",
     category: MAIN_CATEGORY,
     domain: "maps.gsi.go.jp",
+	description: "Japanese official map",
     getUrl(lat, lon, zoom) {
       return 'https://maps.gsi.go.jp/#' + zoom + '/' + lat + '/' + lon + '/';
     },
@@ -209,6 +212,7 @@ const maps = [{
     name: "OpenStreetCam",
     category: MAIN_CATEGORY,
     domain: "openstreetcam.org",
+	description: "Crowdsourced street-level imagery available as CC BY-SA",
     getUrl(lat, lon, zoom) {
       return 'https://openstreetcam.org/map/@' + lat + ',' + lon + ',' + zoom + 'z';
     },
@@ -224,6 +228,7 @@ const maps = [{
     name: "F4map",
     category: MAIN_CATEGORY,
     domain: "f4map.com",
+	description: "Dynamic 3D map",
     getUrl(lat, lon, zoom) {
       return 'https://demo.f4map.com/#lat=' + lat + '&lon=' + lon + '&zoom=' + zoom;
     },
@@ -254,6 +259,7 @@ const maps = [{
     name: "Qwant Maps",
     category: MAIN_CATEGORY,
     domain: "qwant.com",
+	description: "Vector map based on OpenStreetMap data",
     getUrl(lat, lon, zoom) {
       return 'https://www.qwant.com/maps/#map=' + zoom + '/' + lat + '/' + lon;
     },
@@ -277,6 +283,7 @@ const maps = [{
     name: "Overpass-turbo",
     category: UTILITY_CATEGORY,
     domain: "overpass-turbo.eu",
+	description: "Power search tool for OpenStreetMap data",
     getUrl(lat, lon, zoom) {
       return 'http://overpass-turbo.eu/?Q=&C=' + lat + ';' + lon + ';' + zoom;
     },
@@ -285,6 +292,7 @@ const maps = [{
     name: "Osmose",
     category: UTILITY_CATEGORY,
     domain: "osmose.openstreetmap.fr",
+	description: "OpenStreetMap QA tool",
     getUrl(lat, lon, zoom) {
       return 'http://osmose.openstreetmap.fr/map/#zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
     },
@@ -300,6 +308,7 @@ const maps = [{
     name: "KeepRight",
     category: UTILITY_CATEGORY,
     domain: "www.keepright.at",
+	description: "OpenStreetMap QA tool",
     getUrl(lat, lon, zoom) {
       if (Number(zoom) > 18) zoom = 18;
       return 'https://www.keepright.at/report_map.php?zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
@@ -309,6 +318,7 @@ const maps = [{
     name: "OSM Inspector",
     category: UTILITY_CATEGORY,
     domain: "tools.geofabrik.de",
+	description: "OpenStreetMap QA tool",
     getUrl(lat, lon, zoom) {
       if (Number(zoom) > 18) zoom = 18;
       return 'http://tools.geofabrik.de/osmi/?view=geometry&lon=' + lon + '&lat=' + lat + '&zoom=' + zoom;
@@ -318,6 +328,7 @@ const maps = [{
     name: "Who did it?",
     category: UTILITY_CATEGORY,
     domain: "simon04.dev.openstreetmap.org",
+	description: "OpenStreetMap QA tool",
     getUrl(lat, lon, zoom) {
       if (Number(zoom) > 18) zoom = 18;
       if (Number(zoom) < 12) zoom = 12;
@@ -328,6 +339,7 @@ const maps = [{
     name: "Map compare",
     category: UTILITY_CATEGORY,
     domain: "tools.geofabrik.de",
+	description: "Compare maps side-by-side",
     getUrl(lat, lon, zoom) {
       return 'http://tools.geofabrik.de/mc/#' + zoom + '/' + lat + '/' + lon;
     },
@@ -343,6 +355,7 @@ const maps = [{
     name: "Multimapas",
     category: UTILITY_CATEGORY,
     domain: "javier.jimenezshaw.com",
+	description: "Compare maps by overlay",
     getUrl(lat, lon, zoom) {
       return 'http://javier.jimenezshaw.com/mapas/mapas.html?z=' + zoom + '&c=' + lat + ',' + lon;
     },
@@ -359,6 +372,7 @@ const maps = [{
     name: "Waymarked Trails",
     category: OTHER_CATEGORY,
     domain: "hiking.waymarkedtrails.org",
+	description: "Show hiking, cycling, ski routes",
     getUrl(lat, lon, zoom) {
       return 'https://hiking.waymarkedtrails.org/#?map=' + zoom + '!' + lat + '!' + lon;
     },
@@ -374,6 +388,7 @@ const maps = [{
     name: "BigMap 2",
     category: UTILITY_CATEGORY,
     domain: "osmz.ru",
+	description: "Obtain a composed big map image",
     getUrl(lat, lon, zoom) {
       return 'http://bigmap.osmz.ru/index.html#map=' + zoom + '/' + lat + '/' + lon;
     },
@@ -382,6 +397,7 @@ const maps = [{
     name: "Pic4Carto",
     category: UTILITY_CATEGORY,
     domain: "pavie.info",
+	description: "OpenStreetMap editor using open street level photos",
     getUrl(lat, lon, zoom) {
       return 'http://projets.pavie.info/pic4carto/index.html?#' + zoom + '/' + lat + '/' + lon;
     },
@@ -399,6 +415,7 @@ const maps = [{
     name: "JapanMapCompare",
     category: UTILITY_CATEGORY,
     domain: "mapcompare.jp",
+	description: "Compare maps side-by-side",
     getUrl(lat, lon, zoom) {
       return 'https://mapcompare.jp/3/' + zoom + '/' + lat + '/' + lon + '/osm/gRoad/mapSatellite';
     },
@@ -933,7 +950,7 @@ const maps = [{
   },
   {
     name: "map.orhyginal",
-    category: SPECIAL_CATEGORY,
+    category: PORTAL_CATEGORY,
     domain: "orhyginal.fr",
 	description: "Portal of many map services",
     getUrl(lat, lon, zoom) {
@@ -1011,6 +1028,18 @@ const maps = [{
       }
     },
   },
+  {
+    name: "GeoHack",
+    category: PORTAL_CATEGORY,
+    domain: "wmflabs.org",
+	description: "Map links for Wikipedia articles",
+    getUrl(lat, lon, zoom) {
+		//https://www.mediawiki.org/wiki/GeoHack
+      return 'https://tools.wmflabs.org/geohack/geohack.php?params=' + lat + '_N_' + lon + '_E_scale:' + Math.round(100000 * Math.pow(2, 12 - Number(zoom)));
+    },
+
+  },
+  
 ];
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
@@ -1061,20 +1090,26 @@ let latlonzoom = getLatLonZoom(testurl, maps);
   let elementUrl = document.getElementById("showurl");
   let prevUrls = location.href.match(/#(.*)$/);
 
-if (prevUrls) {
-  let prevUrl = prevUrls[1];
-  document.getElementById("description").style.display = "none";
-  elementUrl.innerHTML = prevUrl;
-  let latlonzoom;
-  latlonzoom = getLatLonZoom(prevUrl, maps);
-    if (latlonzoom){
-      [lat, lon, zoom] = latlonzoom;
-    }
-  }
-    if (isNaN(lat)) {
-      [lat, lon, zoom] = [0, 0, 4];
+  if (prevUrls) {
+    let prevUrl = prevUrls[1];
+    document.getElementById("description").style.display = "none";
+    elementUrl.innerHTML = prevUrl;
+    let latlonzoom;
+    latlonzoom = getLatLonZoom(prevUrl, maps);
+	if (latlonzoom){
+	  [lat, lon, zoom] = latlonzoom;
+	}
+	else {
+		[lat, lon, zoom] = [0, 0, 4];
 	document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported. Sample links are shown here.</strong>";
-    }
+	}
+  }
+  else {
+	[lat, lon, zoom] = [0, 0, 4];
+	document.getElementById("sorry").innerHTML = "<strong>Install above bookmarklet first.</strong> Sample links are shown here.";
+  }
+  
+
 
 
 
