@@ -1070,8 +1070,9 @@ const maps = [
     },
     getLatLonZoom(url) {
       let match;
-      if (match = url.match(/earth\.google\.com\/web\/@(-?\d[0-9.]*),(-?\d[0-9.]*),(-?\d[0-9.]*)a,(-?\d[0-9.]*)d/)) {
-        const [, lat, lon, , zoom] = match;
+      match = url.match(/earth\.google\.com\/web\/@(-?\d[0-9.]*),(-?\d[0-9.]*),(-?\d[0-9.]*)a,(-?\d[0-9.]*)d/);
+	  if (match) {
+        let [, lat, lon, , zoom] = match;
         zoom = Math.round(-1.44 * Math.log(zoom) + 27);
         return [lat, lon, zoom];
 	  }
