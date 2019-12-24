@@ -1099,6 +1099,22 @@ const maps = [
 
     },
   },
+
+  {
+    name: "OpenGeofiction",
+    category: SPECIAL_CATEGORY,
+    domain: "opengeofiction.net",
+    getUrl(lat, lon, zoom) {
+      return 'https://opengeofiction.net/#map=' + zoom + '/' + lat + '/' + lon;
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/opengeofiction\.net.*map=(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        const [, zoom, lat, lon] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  },
   
 ];
 
