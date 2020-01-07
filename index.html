@@ -1180,7 +1180,13 @@ const maps = [
       return 'https://firms.modaps.eosdis.nasa.gov/map/#z:' + zoom + ';c:' + lon + ',' + lat;
 
     },
-
+    getLatLonZoom(url) {
+      const match = url.match(/firms\.modaps\.eosdis\.nasa\.gov\/map\/#z:(\d{1,2});c:(-?\d[0-9.]*),(-?\d[0-9.]*)/);
+      if (match) {
+        const [, zoom, lon, lat] = match;
+        return [lat, lon, zoom];
+      }
+    },
   },	
   
   {//https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=17.60/38.00488/140.85905
