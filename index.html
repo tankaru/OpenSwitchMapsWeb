@@ -921,6 +921,26 @@ const maps = [
 
   },  
 
+  {//https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=17.60/38.00488/140.85905
+    name: "Launch RapiD editor",
+    category: APP_CATEGORY,
+    domain: "mapwith.ai",
+	description: "Facebook AI assisted OSM editor",
+    getUrl(lat, lon, zoom) {
+      return 'https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=' + zoom + '/' + lat + '/' + lon ;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/mapwith\.ai\/rapid.*&map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        const [, zoom, lat, lon] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },
+
+  
+  
   {
     name: "Apple maps (for Apple device)",
     category: APP_CATEGORY,
@@ -1191,23 +1211,6 @@ const maps = [
     },
   },	
   
-  {//https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=17.60/38.00488/140.85905
-    name: "Launch RapiD editor",
-    category: APP_CATEGORY,
-    domain: "mapwith.ai",
-	description: "Facebook AI assisted OSM editor",
-    getUrl(lat, lon, zoom) {
-      return 'https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=' + zoom + '/' + lat + '/' + lon ;
-
-    },
-    getLatLonZoom(url) {
-      const match = url.match(/mapwith\.ai\/rapid.*&map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
-      if (match) {
-        const [, zoom, lat, lon] = match;
-        return [lat, lon, Math.round(Number(zoom))];
-      }
-    },
-  },
   
 ];
 
