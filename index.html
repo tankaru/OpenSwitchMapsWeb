@@ -1133,6 +1133,61 @@ const maps = [
       }
     },
   },
+
+  {
+    name: "Twitter",
+    category: SPECIAL_CATEGORY,
+    domain: "twitter.com",
+	description: "Twitter location based search",
+    getUrl(lat, lon, zoom) {
+      return 'https://twitter.com/search?q=geocode%3A' + lat + '%2C' + lon + '%2C5km';
+	  //5km should be modified based on zoom level
+    },
+
+  },
+  
+  {
+    name: "flickr",
+    category: SPECIAL_CATEGORY,
+    domain: "flickr.com",
+	description: "Geotagged image search",
+    getUrl(lat, lon, zoom) {
+      return 'https://www.flickr.com/map?&fLat=' + lat + '&fLon=' + lon + '&zl=' + zoom;
+
+    },
+
+  },
+  
+  {//http://osm-analytics.org/#/show/bbox:136.68676,34.81081,137.11142,34.93364/buildings/recency
+    name: "OpenStreetMap Analytics",
+    category: UTILITY_CATEGORY,
+    domain: "osm-analytics.org",
+	description: "Analyse when/who edited the OSM data in a specific region",
+    getUrl(lat, lon, zoom) {
+	  [minlon, minlat, maxlon, maxlat] = latLonZoomToBbox(lat, lon, zoom);
+      return 'http://osm-analytics.org/#/show/bbox:' + minlon + ',' + minlat + ',' + maxlon + ',' + maxlat + '/buildings/recency';
+
+    },
+
+  },
+  
+  {//https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=17.60/38.00488/140.85905
+    name: "RapiD editor",
+    category: APP_CATEGORY,
+    domain: "mapwith.ai",
+	description: "Facebook AI assisted OSM editor",
+    getUrl(lat, lon, zoom) {
+      return 'https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=' + zoom + '/' + lat + '/' + lon ;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/mapwith\.ai\/rapid.*&map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        const [, zoom, lat, lon] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },
   
 ];
 
