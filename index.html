@@ -1177,7 +1177,9 @@ const maps = [
     domain: "nasa.gov",
 	description: "Realtime fire information of satellite observation",
     getUrl(lat, lon, zoom) {
-      return 'https://firms.modaps.eosdis.nasa.gov/map/#z:' + zoom + ';c:' + lon + ',' + lat;
+		let z = Number(zoom);
+		if ( z > 14 ) z = 14;		
+      return 'https://firms.modaps.eosdis.nasa.gov/map/#z:' + z + ';c:' + lon + ',' + lat;
 
     },
     getLatLonZoom(url) {
