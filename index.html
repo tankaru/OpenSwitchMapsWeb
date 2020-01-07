@@ -1170,6 +1170,18 @@ const maps = [
     },
 
   },
+
+  {//https://firms.modaps.eosdis.nasa.gov/map/#z:9;c:139.9,35.7;d:2020-01-06..2020-01-07
+    name: "FIRMS",
+    category: SPECIAL_CATEGORY,
+    domain: "nasa.gov",
+	description: "Realtime fire information of satellite observation",
+    getUrl(lat, lon, zoom) {
+      return 'https://firms.modaps.eosdis.nasa.gov/map/#z:' + zoom + ';c:' + lon + ',' + lat;
+
+    },
+
+  },	
   
   {//https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=17.60/38.00488/140.85905
     name: "Launch RapiD editor",
