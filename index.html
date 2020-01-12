@@ -503,7 +503,7 @@ const maps = [
     domain: "openstreetmap.jp",
 	description: "OpenStreetMap Japan local chapter",
     getUrl(lat, lon, zoom) {
-      return 'https://openstreetmap.jp/map#zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
+      return 'https://openstreetmap.jp/map#zoom=' + Math.min(Number(zoom),17) + '&lat=' + lat + '&lon=' + lon;
     },
     getLatLonZoom(url) {
       const match = url.match(/openstreetmap\.jp\/map#zoom=(\d{1,2})&lat=(-?\d[0-9.]*)&lon=(-?\d[0-9.]*)/);
