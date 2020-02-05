@@ -1210,8 +1210,34 @@ const maps = [
       }
     },
   },	
-  
-  
+  {//https://www.openstreetbrowser.org/#map=16/35.3512/139.5310
+    name: "OpenStreetBrowser",
+    category: OTHER_CATEGORY,
+    domain: "openstreetbrowser.org",
+	description: "OSM POI viewer",
+    getUrl(lat, lon, zoom) {
+      return 'https://www.openstreetbrowser.org/#map=' + zoom + '/' + lat + '/' + lon;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/www\.openstreetbrowser\.org\/#map=(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        const [, zoom, lat, lon] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  },  
+  {//https://map.meurisse.org/?lon=139.642839&lng=139.642839&lat=35.520631&zoom=14
+    name: "Distance calculator",
+    category: OTHER_CATEGORY,
+    domain: "meurisse.org",
+	description: "Distance calculator on OSM map",
+    getUrl(lat, lon, zoom) {	
+      return 'https://map.meurisse.org/?lon=' + lon + '&lng=' + lon + '&lat=' + lat + '&zoom=' + zoom;
+
+    },
+
+  },   
 ];
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
