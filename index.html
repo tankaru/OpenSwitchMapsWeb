@@ -1256,7 +1256,25 @@ const maps = [
       }
     },
   }, 
+  {//https://en.mapy.cz/zakladni?x=139.7624242&y=35.6819532&z=16
+    name: "MAPY.CZ",
+    category: OTHER_CATEGORY,
+    domain: "mapy.cz",
+	description: "",
+    getUrl(lat, lon, zoom) {
+      return 'https://en.mapy.cz/zakladni?x=' + lon + '&y=' + lat + '&z=' + zoom;
 
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/mapy\.cz\/zakladni\?x=(-?\d[0-9.]*)&y=(-?\d[0-9.]*)&z=(\d{1,2})/);
+
+      if (match) {
+        const [, lon, lat, zoom] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  }, 
+  
 ];
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
