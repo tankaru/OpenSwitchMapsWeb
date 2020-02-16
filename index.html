@@ -1238,6 +1238,25 @@ const maps = [
     },
 
   },   
+  {
+    name: "Kontur",
+    category: UTILITY_CATEGORY,
+    domain: "disaster.ninja",
+	description: "The most active OSM contributor",
+    getUrl(lat, lon, zoom) {
+      return 'https://disaster.ninja/live/#overlays=bivariate-custom_kontur_openstreetmap_quantity,osm-users;id=GDACS_TC_1000654_2;position=' + lon + ',' + lat + ';zoom=' + zoom;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/disaster\.ninja\/live\/#.*position=(-?\d[0-9.]*),(-?\d[0-9.]*);zoom=(\d{1,2})/);
+
+      if (match) {
+        const [, lon, lat, zoom] = match;
+        return [lat, lon, zoom];
+      }
+    },
+  }, 
+
 ];
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
