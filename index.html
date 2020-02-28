@@ -1284,7 +1284,7 @@ const maps = [
 
     },
     getLatLonZoom(url) {
-      const match = url.match(/maptiler.*(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      const match = url.match(/maptiler.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 
       if (match) {
         const [, zoom, lon, lat] = match;
