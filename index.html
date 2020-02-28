@@ -1233,7 +1233,7 @@ const maps = [
     domain: "meurisse.org",
 	description: "Distance calculator on OSM map",
     getUrl(lat, lon, zoom) {	
-      return 'https://map.meurisse.org/?lon=' + lon + '&lng=' + lon + '&lat=' + lat + '&zoom=' + zoom;
+      return 'https://map.meurisse.org/?lon=' + lon + '&lng=' + lon + '&lat=' + lat + '&zoom=' + Math.min(Number(zoom),18);
 
     },
 
