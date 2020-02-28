@@ -1274,7 +1274,24 @@ const maps = [
       }
     },
   }, 
-  
+  {//https://www.maptiler.com/maps/#streets//vector/12.82/139.62724/35.44413
+    name: "maptiler",
+    category: OTHER_CATEGORY,
+    domain: "maptiler.com",
+	description: "vextor map provider",
+    getUrl(lat, lon, zoom) {
+      return 'https://www.maptiler.com/maps/#streets//vector/' + zoom + '/' + lon + '/' + lat;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/maptiler.(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+
+      if (match) {
+        const [, zoom, lon, lat] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  }, 
 ];
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
