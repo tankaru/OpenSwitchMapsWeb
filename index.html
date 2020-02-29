@@ -1229,7 +1229,7 @@ const maps = [
   },  
   {//https://map.meurisse.org/?lon=139.642839&lng=139.642839&lat=35.520631&zoom=14
     name: "Distance calculator",
-    category: OTHER_CATEGORY,
+    category: UTILITY_CATEGORY,
     domain: "meurisse.org",
 	description: "Distance calculator on OSM map",
     getUrl(lat, lon, zoom) {	
@@ -1289,6 +1289,24 @@ const maps = [
       if (match) {
         const [, zoom, lon, lat] = match;
         return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  }, 
+  {//https://gribrouillon.fr/#15/35.4484/139.6179
+    name: "Gribrouillon",
+    category: SPECIAL_CATEGORY,
+    domain: "gribrouillon.fr",
+	description: "Draw on a map and share it",
+    getUrl(lat, lon, zoom) {
+      return 'https://gribrouillon.fr/#' + zoom + '/' + lat + '/' + lon;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/gribrouillon\.fr\/.*(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+
+      if (match) {
+        const [, zoom, lat, lon] = match;
+        return [lat, lon, zoom];
       }
     },
   }, 
