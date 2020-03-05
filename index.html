@@ -1310,6 +1310,23 @@ const maps = [
       }
     },
   }, 
+  {//https://www.strava.com/heatmap#9.41/139.72884/35.84051/hot/all
+    name: "STRAVA",
+    category: SPECIAL_CATEGORY,
+    domain: "strava.com",
+	description: "Heatmap of athletes activities",
+    getUrl(lat, lon, zoom) {	
+      return 'https://www.strava.com/heatmap#' + zoom + '/' + lon + '/' + lat + '/hot/all';
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/www\.strava\.com\/heatmap#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/;
+      if (match) {
+        const [, zoom, lon, lat] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },
 ];
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
