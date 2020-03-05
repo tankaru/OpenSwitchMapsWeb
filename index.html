@@ -1320,7 +1320,7 @@ const maps = [
 
     },
     getLatLonZoom(url) {
-      const match = url.match(/www\.strava\.com\/heatmap#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/;
+      const match = url.match(/www\.strava\.com\/heatmap#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
       if (match) {
         const [, zoom, lon, lat] = match;
         return [lat, lon, Math.round(Number(zoom))];
