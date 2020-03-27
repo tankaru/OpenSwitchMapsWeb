@@ -100,10 +100,11 @@ You can jump to another map service keeping the location and the zoom level</p>
   </div>
 </div>  
 
-
-  <p>Comments and bug reports are welcome at <a href="https://github.com/tankaru/OpenSwitchMapsWeb">Github</a>.</p>
-  <p>Address data is obtained from <a href="https://operations.osmfoundation.org/policies/nominatim/">Nominatim</a>.</p>
-
+<ul>
+  <li>Go to <a href="https://tankaru.github.io/OpenSwitchMapsWeb/index.html">Instruction page</a> to add bookmarklet.
+  <li>Comments and bug reports are welcome at <a href="https://github.com/tankaru/OpenSwitchMapsWeb">Github</a>.
+  <li>Address data is obtained from <a href="https://operations.osmfoundation.org/policies/nominatim/">Nominatim</a>.
+</ul>
 <script>
 
 const MAIN_CATEGORY = "Main maps";
@@ -1323,6 +1324,23 @@ const maps = [
       const match = url.match(/www\.strava\.com\/heatmap#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
       if (match) {
         const [, zoom, lon, lat] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },
+  {//https://www.peakfinder.org/?lat=46.6052&lng=8.3217&azi=0&zoom=4&ele=1648
+    name: "PeakFinder",
+    category: SPECIAL_CATEGORY,
+    domain: "peakfinder.org",
+	description: "Mountain view map",
+    getUrl(lat, lon, zoom) {	
+      return 'https://www.peakfinder.org/?lat=' + lat + '&lng=' + lon + '&azi=0&zoom=' + zoom;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/www\.peakfinder\.org\/.*s\?lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&azi=[0-9]*&zoom=(\d[0-9.]*)/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
         return [lat, lon, Math.round(Number(zoom))];
       }
     },
