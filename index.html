@@ -1338,7 +1338,7 @@ const maps = [
 
     },
     getLatLonZoom(url) {
-      const match = url.match(/www\.peakfinder\.org\/.*s\?lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&azi=[0-9]*&zoom=(\d[0-9.]*)/);
+      const match = url.match(/www\.peakfinder\.org\/.*\?lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&azi=[0-9]*&zoom=(\d[0-9.]*)/);
       if (match) {
         const [, lat, lon, zoom] = match;
         return [lat, lon, Math.round(Number(zoom))];
