@@ -1206,5 +1206,22 @@ const maps = [
       }
     },
   },
+  {//https://resultmaps.neis-one.org/osm-change-tiles#14/35.6726/139.7576
+    name: "Latest OSM Edits per Tile",
+    category: UTILITY_CATEGORY,
+    domain: "neis-one.org",
+	description: "Latest OpenStreetMap Edits per Tile",
+    getUrl(lat, lon, zoom) {	
+      return 'https://resultmaps.neis-one.org/osm-change-tiles#' + zoom + '/' + lat + '/' + lon;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/resultmaps\.neis-one\.org\/osm-change-tiles#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },
 ];
 
