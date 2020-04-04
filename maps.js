@@ -1218,7 +1218,7 @@ const maps = [
     getLatLonZoom(url) {
       const match = url.match(/resultmaps\.neis-one\.org\/osm-change-tiles#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
       if (match) {
-        const [, lat, lon, zoom] = match;
+        const [, zoom, lat, lon] = match;
         return [lat, lon, Math.round(Number(zoom))];
       }
     },
