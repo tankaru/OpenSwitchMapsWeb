@@ -1223,5 +1223,16 @@ const maps = [
       }
     },
   },
+  {//https://www.viamichelin.com/web/maps?position=35;135.8353;12
+    name: "ViaMichelin",
+    category: OTHER_CATEGORY,
+    domain: "viamichelin.com",
+	description: "Michelin Travel map",
+    getUrl(lat, lon, zoom) {	
+      return 'https://www.viamichelin.com/web/maps?position=' + lat + ';' + lon + ';' + zoom;
+
+    },
+
+  },
 ];
 
