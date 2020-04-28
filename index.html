@@ -120,25 +120,6 @@ function setLocalwikiAddress(lat, lon){
 }
 
 
-function bboxToLatLonZoom(minlon, minlat, maxlon, maxlat) {
-	const lon = (Number(minlon) + Number(maxlon))/2.0;
-	const lat = (Number(minlat) + Number(maxlat))/2.0;
-	const part = (Number(maxlat) - Number(minlat))/360.0;
-	const zoom = Math.log(part)/Math.log(0.5); //0.5^zoom=part
-	return [lat, lon, zoom];
-
-}
-
-function latLonZoomToBbox(lat, lon, zoom) {
-	const part = Math.pow(0.5,zoom);
-	const minlon = Number(lon) - 360*part/2;
-	const maxlon = Number(lon) + 360*part/2;
-	const minlat = Number(lat) - 180*part/2;
-	const maxlat = Number(lat) + 180*part/2;
-	return [minlon, minlat, maxlon, maxlat];
-
-}
-
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
 function groupBy(xs, key) {
   return xs.reduce(function(rv, x) {

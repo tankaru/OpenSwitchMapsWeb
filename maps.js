@@ -1,4 +1,26 @@
 
+function bboxToLatLonZoom(minlon, minlat, maxlon, maxlat) {
+	const lon = (Number(minlon) + Number(maxlon))/2.0;
+	const lat = (Number(minlat) + Number(maxlat))/2.0;
+	const part = (Number(maxlat) - Number(minlat))/360.0;
+	const height = screen.availHeight;
+	const tile_part = part * 256 / height;
+	const zoom = Math.log(tile_part)/Math.log(0.5); //0.5^zoom=part
+	return [lat, lon, zoom];
+
+}
+
+function latLonZoomToBbox(lat, lon, zoom) {
+	const tile_part = Math.pow(0.5,zoom);
+	const part = tile_part * screen.availHeight / 256;
+	const minlon = Number(lon) - 360*part/2;
+	const maxlon = Number(lon) + 360*part/2;
+	const minlat = Number(lat) - 180*part/2;
+	const maxlat = Number(lat) + 180*part/2;
+	return [minlon, minlat, maxlon, maxlat];
+
+}
+
 const MAIN_CATEGORY = "Main maps";
 const UTILITY_CATEGORY = "Utilities";
 const OTHER_CATEGORY = "Other maps";
@@ -12,6 +34,7 @@ const maps = [
   {
     name: "Google Maps",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "www.google.com",
     getUrl(lat, lon, zoom) {
       return 'https://www.google.com/maps/@' + lat + ',' + lon + ',' + zoom + 'z';
@@ -39,6 +62,7 @@ const maps = [
   {
     name: "OpenStreetMap",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "www.openstreetmap.org",
     getUrl(lat, lon, zoom) {
       return 'https://www.openstreetmap.org/#map=' + zoom + '/' + lat + '/' + lon;
@@ -54,6 +78,7 @@ const maps = [
   {
     name: "Mapillary",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "www.mapillary.com",
 	description: "Crowdsourced street-level imagery available as CC BY-SA",
     getUrl(lat, lon, zoom) {
@@ -70,22 +95,24 @@ const maps = [
   {
     name: "地理院地図",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "maps.gsi.go.jp",
 	description: "Japanese official map",
     getUrl(lat, lon, zoom) {
       return 'https://maps.gsi.go.jp/#' + zoom + '/' + lat + '/' + lon + '/';
     },
     getLatLonZoom(url) {
-      const match = url.match(/maps\.gsi\.go\.jp.*#(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      const match = url.match(/maps\.gsi\.go\.jp.*#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
       if (match) {
         const [, zoom, lat, lon] = match;
-        return [lat, lon, zoom];
+        return [lat, lon, Math.round(Number(zoom))];
       }
     },
   },
   {
     name: "OpenStreetCam",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "openstreetcam.org",
 	description: "Crowdsourced street-level imagery available as CC BY-SA",
     getUrl(lat, lon, zoom) {
@@ -102,6 +129,7 @@ const maps = [
   {
     name: "F4map",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "f4map.com",
 	description: "Dynamic 3D map",
     getUrl(lat, lon, zoom) {
@@ -118,6 +146,7 @@ const maps = [
   {
     name: "Yandex",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "yandex.com",
     getUrl(lat, lon, zoom) {
       return 'https://yandex.com/maps/?ll=' + lon + '%2C' + lat + '&z=' + zoom;
@@ -133,6 +162,7 @@ const maps = [
   {
     name: "Qwant Maps",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "qwant.com",
 	description: "Vector map based on OpenStreetMap data",
     getUrl(lat, lon, zoom) {
@@ -149,6 +179,7 @@ const maps = [
   {
     name: "Bing",
     category: MAIN_CATEGORY,
+    default_check: true,
     domain: "www.bing.com",
     getUrl(lat, lon, zoom) {
       return 'https://www.bing.com/maps?cp=' + lat + '~' + lon + '&lvl=' + zoom;
@@ -157,6 +188,7 @@ const maps = [
   {
     name: "Overpass-turbo",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "overpass-turbo.eu",
 	description: "Power search tool for OpenStreetMap data",
     getUrl(lat, lon, zoom) {
@@ -166,6 +198,7 @@ const maps = [
   {
     name: "Osmose",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "osmose.openstreetmap.fr",
 	description: "OpenStreetMap QA tool",
     getUrl(lat, lon, zoom) {
@@ -182,6 +215,7 @@ const maps = [
   {
     name: "KeepRight",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "www.keepright.at",
 	description: "OpenStreetMap QA tool",
     getUrl(lat, lon, zoom) {
@@ -192,6 +226,7 @@ const maps = [
   {
     name: "OSM Inspector",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "tools.geofabrik.de",
 	description: "OpenStreetMap QA tool",
     getUrl(lat, lon, zoom) {
@@ -202,6 +237,7 @@ const maps = [
   {
     name: "Who did it?",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "simon04.dev.openstreetmap.org",
 	description: "OpenStreetMap QA tool",
     getUrl(lat, lon, zoom) {
@@ -213,6 +249,7 @@ const maps = [
   {
     name: "Map compare",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "tools.geofabrik.de",
 	description: "Compare maps side-by-side",
     getUrl(lat, lon, zoom) {
@@ -229,6 +266,7 @@ const maps = [
   {
     name: "Multimapas",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "javier.jimenezshaw.com",
 	description: "Compare maps by overlay",
     getUrl(lat, lon, zoom) {
@@ -238,6 +276,7 @@ const maps = [
   {
     name: "Ingress Intel map",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "intel.ingress.com",
     getUrl(lat, lon, zoom) {
       return 'https://intel.ingress.com/intel?ll=' + lat + ',' + lon + '&z=' + zoom;
@@ -246,6 +285,7 @@ const maps = [
   {
     name: "Waymarked Trails",
     category: OTHER_CATEGORY,
+    default_check: true,
     domain: "hiking.waymarkedtrails.org",
 	description: "Show hiking, cycling, ski routes",
     getUrl(lat, lon, zoom) {
@@ -262,6 +302,7 @@ const maps = [
   {
     name: "BigMap 2",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "osmz.ru",
 	description: "Obtain a composed big map image",
     getUrl(lat, lon, zoom) {
@@ -271,6 +312,7 @@ const maps = [
   {
     name: "Pic4Carto",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "pavie.info",
 	description: "OpenStreetMap editor using open street level photos",
     getUrl(lat, lon, zoom) {
@@ -289,6 +331,7 @@ const maps = [
   {
     name: "JapanMapCompare",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "mapcompare.jp",
 	description: "Compare maps side-by-side",
     getUrl(lat, lon, zoom) {
@@ -306,6 +349,7 @@ const maps = [
   {
     name: "Yahoo Map (JP)",
     category: LOCAL_CATEGORY,
+    default_check: false,
     domain: "map.yahoo.co.jp",
     getUrl(lat, lon, zoom) {
       return 'https://map.yahoo.co.jp/maps?lat=' + lat + '&lon=' + lon + '&z=' + zoom;
@@ -314,6 +358,7 @@ const maps = [
   {
     name: "MapFan (JP)",
     category: LOCAL_CATEGORY,
+    default_check: false,
     domain: "mapfan.com",
     getUrl(lat, lon, zoom) {
       return 'https://mapfan.com/map/spots/search?c=' + lat + ',' + lon + ',' + zoom;
@@ -329,6 +374,7 @@ const maps = [
   {
     name: "Mapion (JP)",
     category: LOCAL_CATEGORY,
+    default_check: false,
     domain: "www.mapion.co.jp",
     getUrl(lat, lon, zoom) {
       return 'https://www.mapion.co.jp/m2/' + lat + ',' + lon + ',' + zoom;
@@ -337,6 +383,7 @@ const maps = [
   {
     name: "OSM.de",
     category: OSM_LOCAL_CATEGORY,
+    default_check: false,
     domain: "www.openstreetmap.de",
 	description: "OpenStreetMap German local chapter",
     getUrl(lat, lon, zoom) {
@@ -346,6 +393,7 @@ const maps = [
   {
     name: "OSM.ru",
     category: OSM_LOCAL_CATEGORY,
+    default_check: false,
     domain: "openstreetmap.ru",
 	description: "OpenStreetMap Russia local chapter",
     getUrl(lat, lon, zoom) {
@@ -362,6 +410,7 @@ const maps = [
   {
     name: "OSM.jp",
     category: OSM_LOCAL_CATEGORY,
+    default_check: false,
     domain: "openstreetmap.jp",
 	description: "OpenStreetMap Japan local chapter",
     getUrl(lat, lon, zoom) {
@@ -378,6 +427,7 @@ const maps = [
   {
     name: "OSM.ch",
     category: OSM_LOCAL_CATEGORY,
+    default_check: false,
     domain: "openstreetmap.ch",
 	description: "OpenStreetMap Switzerland local chapter",
     getUrl(lat, lon, zoom) {
@@ -389,6 +439,7 @@ const maps = [
   {
     name: "OSM.in",
     category: OSM_LOCAL_CATEGORY,
+    default_check: false,
     domain: "openstreetmap.in",
 	description: "OpenStreetMap India local chapter",
     getUrl(lat, lon, zoom) {
@@ -406,6 +457,7 @@ const maps = [
   {
     name: "OSM.cl",
     category: OSM_LOCAL_CATEGORY,
+    default_check: false,
     domain: "openstreetmap.cl",
 	description: "OpenStreetMap Chile local chapter",
     getUrl(lat, lon, zoom) {
@@ -423,6 +475,7 @@ const maps = [
   {
     name: "IGN Géoportail (FR)",
     category: LOCAL_CATEGORY,
+    default_check: false,
     domain: "geoportail.gouv.fr",
     getUrl(lat, lon, zoom) {
       return 'https://www.geoportail.gouv.fr/carte?c=' + lon + ',' + lat + '&z=' + zoom + '&l0=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN25TOUR.CV::GEOPORTAIL:OGC:WMTS(1)&permalink=yes';
@@ -431,6 +484,7 @@ const maps = [
   {
     name: "Satellite Tracker 3D",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "stdkmd.net",
 	description: "Satellite tracker",
     getUrl(lat, lon, zoom) {
@@ -442,6 +496,7 @@ const maps = [
   {
     name: "earth",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "earth.nullschool.net",
     getUrl(lat, lon, zoom) {
       return 'https://earth.nullschool.net/#current/wind/surface/level/orthographic=' + lon + ',' + lat + ',' + 11.1 * zoom ** 3.12;
@@ -458,6 +513,7 @@ const maps = [
   {
     name: "Windy.com",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "windy.com",
     getUrl(lat, lon, zoom) {
       return 'https://www.windy.com/?' + lat + ',' + lon + ',' + Math.round(zoom) + ',i:pressure';
@@ -473,6 +529,7 @@ const maps = [
   {
     name: "flightradar24",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "flightradar24.com",
 	description: "Airplane tracker",
     getUrl(lat, lon, zoom) {
@@ -489,6 +546,7 @@ const maps = [
   {
     name: "Traze",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "traze.app",
 	description: "Train tracker",
     getUrl(lat, lon, zoom) {
@@ -507,6 +565,7 @@ const maps = [
   {
     name: "MarineTraffic",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "marinetraffic.com",
 	description: "Ship tracker",
     getUrl(lat, lon, zoom) {
@@ -525,6 +584,7 @@ const maps = [
   {
     name: "CyclOSM",
     category: OTHER_CATEGORY,
+    default_check: true,
     domain: "cyclosm.org",
     getUrl(lat, lon, zoom) {
       return 'https://www.cyclosm.org/#map=' + zoom + '/' + lat + '/' + lon + '/cyclosm';
@@ -541,6 +601,7 @@ const maps = [
   {
     name: "OpenTopoMap",
     category: OTHER_CATEGORY,
+    default_check: true,
     domain: "opentopomap.org",
     getUrl(lat, lon, zoom) {
       return 'https://opentopomap.org/#map=' + zoom + '/' + lat + '/' + lon;
@@ -557,6 +618,7 @@ const maps = [
   {
     name: "EO Browser",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "sentinel-hub.com",
 	description: "Satellite sensing image viewer",
     getUrl(lat, lon, zoom) {
@@ -574,6 +636,7 @@ const maps = [
   {
     name: "Macrostrat",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "macrostrat.org",
 	description: "Geological map",
     getUrl(lat, lon, zoom) {
@@ -591,6 +654,7 @@ const maps = [
   {
     name: "Old maps online",
     category: SPECIAL_CATEGORY,
+    default_check: true,
     domain: "oldmapsonline.org",
     getUrl(lat, lon, zoom) {
 		const [minlon, minlat, maxlon, maxlat] = latLonZoomToBbox(lat, lon, zoom);
@@ -610,6 +674,7 @@ const maps = [
   {
     name: "uMap",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "umap.openstreetmap.fr",
 
     getLatLonZoom(url) {
@@ -623,6 +688,7 @@ const maps = [
   {
     name: "Wikimedia maps",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "wikimedia.org",
     getUrl(lat, lon, zoom) {
       return 'https://maps.wikimedia.org/#' + zoom + '/' + lat + '/' + lon;
@@ -640,6 +706,7 @@ const maps = [
   {
     name: "OpenTripMap",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "opentripmap.com",
     getUrl(lat, lon, zoom) {
       return 'https://opentripmap.com/en/#' + zoom + '/' + lat + '/' + lon;
@@ -657,6 +724,7 @@ const maps = [
   {
     name: "Open Infrastructure Map",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "openinframap.org",
     getUrl(lat, lon, zoom) {
       return 'https://openinframap.org/#' + zoom + '/' + lat + '/' + lon;
@@ -674,6 +742,7 @@ const maps = [
   {
     name: "OSM Buildings",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "osmbuildings.org",
     getUrl(lat, lon, zoom) {
       return 'https://osmbuildings.org/?lat=' + lat + '&lon=' + lon + '&zoom=' + zoom + '&tilt=30';
@@ -691,6 +760,7 @@ const maps = [
   {
     name: "openrouteservice",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "openrouteservice.org",
     getUrl(lat, lon, zoom) {
       return 'https://maps.openrouteservice.org/directions?n1=' + lat + '&n2=' + lon + '&n3=' + zoom;
@@ -707,6 +777,7 @@ const maps = [
   {
     name: "OpenRailwayMap",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "openrailwaymap.org",
     getUrl(lat, lon, zoom) {
       return 'https://www.openrailwaymap.org/?lat=' + lat + '&lon=' + lon + '&zoom=' + zoom;
@@ -717,6 +788,7 @@ const maps = [
   {
     name: "聖地巡礼マップ",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "seichimap.jp",
 	description: "Anime location search",
     getUrl(lat, lon, zoom) {
@@ -728,6 +800,7 @@ const maps = [
   {
     name: "OpenAerialMap",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "openaerialmap.org",
     getUrl(lat, lon, zoom) {
       return 'https://map.openaerialmap.org/#/' + lon + ',' + lat + ',' + zoom;
@@ -737,7 +810,8 @@ const maps = [
   
   {
     name: "地質図Navi (JP)",
-    category: SPECIAL_CATEGORY,
+    category: LOCAL_CATEGORY,
+    default_check: false,
     domain: "gbank.gsj.jp",
 	description: "Geological map in Japan",
     getUrl(lat, lon, zoom) {
@@ -749,10 +823,38 @@ const maps = [
   {
     name: "Localwiki",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "localwiki.org",
     getUrl(lat, lon, zoom) {
-		setLocalwikiAddress(lat, lon);
-      return 'https://localwiki.org/';
+
+		const url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1';
+		/*
+		async function returnLocalwiki(url) {
+			const res = await fetch(url);
+			const org = await res.json();
+
+			const localwiki = 'https://localwiki.org/_search/?q=' + org.display_name;
+			return localwiki;
+		}
+		returnLocalwiki(url);
+		*/
+		
+		let request = new XMLHttpRequest();
+		request.open('GET', url, false);//同期処理
+
+		request.send(null);
+		//request.responseType = 'json';
+
+		if (request.status === 200) {
+			const data = JSON.parse(request.response);
+
+			const localwiki = 'https://localwiki.org/_search/?q=' + data.display_name;
+			return localwiki;
+		} else {
+			return 'https://localwiki.org/';
+
+		}
+		
     },
 
   },
@@ -760,6 +862,7 @@ const maps = [
   {
     name: "Launch JOSM",
     category: APP_CATEGORY,
+    default_check: false,
     domain: "josm.openstreetmap.de",
 	description: "OpenStreetMap desktop editor",
     getUrl(lat, lon, zoom) {
@@ -773,6 +876,7 @@ const maps = [
   {
     name: "Launch iD editor",
     category: APP_CATEGORY,
+    default_check: false,
     domain: "ideditor.com/",
 	description: "OpenStreetMap online editor",
     getUrl(lat, lon, zoom) {
@@ -786,6 +890,7 @@ const maps = [
   {//https://mapwith.ai/rapid#background=fb-mapwithai-maxar&disable_features=boundaries&map=17.60/38.00488/140.85905
     name: "Launch RapiD editor",
     category: APP_CATEGORY,
+    default_check: false,
     domain: "mapwith.ai",
 	description: "Facebook AI assisted OSM editor",
     getUrl(lat, lon, zoom) {
@@ -806,6 +911,7 @@ const maps = [
   {
     name: "Apple maps (for Apple device)",
     category: APP_CATEGORY,
+    default_check: false,
     domain: "apple.com/",
     getUrl(lat, lon, zoom) {
       return 'http://maps.apple.com/?ll=' + lat + ',' + lon + '&z=' + zoom;
@@ -817,6 +923,7 @@ const maps = [
   {
     name: "mapbox Cartogram",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "mapbox.com",
 	description: "Create colorful map from your photo",
     getUrl(lat, lon, zoom) {
@@ -834,6 +941,7 @@ const maps = [
   {
     name: "waze",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "waze.com",
 	description: "Crowdsourced route navigation map",
     getUrl(lat, lon, zoom) {
@@ -844,6 +952,7 @@ const maps = [
   {
     name: "Launch waze map editor",
     category: APP_CATEGORY,
+    default_check: false,
     domain: "waze.com",
     getUrl(lat, lon, zoom) {
       return 'https://www.waze.com/ja/editor?lon=' + lon + '&lat=' + lat + '&zoom=5';
@@ -853,6 +962,7 @@ const maps = [
   {
     name: "map.orhyginal",
     category: PORTAL_CATEGORY,
+    default_check: false,
     domain: "orhyginal.fr",
 	description: "Portal of many map services",
     getUrl(lat, lon, zoom) {
@@ -869,6 +979,7 @@ const maps = [
   {
     name: "here maps",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "here.com",
     getUrl(lat, lon, zoom) {
       return 'https://wego.here.com/?map=' + lat + ',' + lon + ',' + zoom + ',normal';
@@ -884,6 +995,7 @@ const maps = [
   {
     name: "wikimapia",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "wikimapia.org",
     getUrl(lat, lon, zoom) {
       return 'https://wikimapia.org/#lat=' + lat + '&lon=' + lon + '&z=' + zoom;
@@ -900,6 +1012,7 @@ const maps = [
     {
     name: "Copernix",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "copernix.io",
 	description: "Show POIs from Wikipedia",
     getUrl(lat, lon, zoom) {
@@ -917,6 +1030,7 @@ const maps = [
     {
     name: "Zoom Earth",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "zoom.earth",
 	description: "Historic and live satellite images",
     getUrl(lat, lon, zoom) {
@@ -933,6 +1047,7 @@ const maps = [
   {
     name: "GeoHack",
     category: PORTAL_CATEGORY,
+    default_check: false,
     domain: "wmflabs.org",
 	description: "Map links for Wikipedia articles",
     getUrl(lat, lon, zoom) {
@@ -945,6 +1060,7 @@ const maps = [
   {
     name: "Google Earth",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "earth.google.com",
     getUrl(lat, lon, zoom) {
 	  let d = Math.exp((zoom - 27)/(-1.44))
@@ -965,6 +1081,7 @@ const maps = [
   {
     name: "World Imagery Wayback",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "arcgis.com",
 	description: "Historic satellite images since 2014",
     getUrl(lat, lon, zoom) {
@@ -985,6 +1102,7 @@ const maps = [
   {
     name: "OpenGeofiction",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "opengeofiction.net",
 	description: "Crowdsoured fictional map",
     getUrl(lat, lon, zoom) {
@@ -1002,6 +1120,7 @@ const maps = [
   {
     name: "TomTom MyDrive",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "tomtom.com",
 	description: "Traffic map",
     getUrl(lat, lon, zoom) {
@@ -1019,6 +1138,7 @@ const maps = [
   {
     name: "Twitter",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "twitter.com",
 	description: "Twitter location based search",
     getUrl(lat, lon, zoom) {
@@ -1031,6 +1151,7 @@ const maps = [
   {
     name: "flickr",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "flickr.com",
 	description: "Geotagged image search",
     getUrl(lat, lon, zoom) {
@@ -1043,6 +1164,7 @@ const maps = [
   {//http://osm-analytics.org/#/show/bbox:136.68676,34.81081,137.11142,34.93364/buildings/recency
     name: "OpenStreetMap Analytics",
     category: UTILITY_CATEGORY,
+    default_check: false,
     domain: "osm-analytics.org",
 	description: "Analyse when/who edited the OSM data in a specific region",
     getUrl(lat, lon, zoom) {
@@ -1056,6 +1178,7 @@ const maps = [
   {//https://firms.modaps.eosdis.nasa.gov/map/#z:9;c:139.9,35.7;d:2020-01-06..2020-01-07
     name: "FIRMS",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "nasa.gov",
 	description: "Realtime fire information of satellite observation",
     getUrl(lat, lon, zoom) {
@@ -1075,6 +1198,7 @@ const maps = [
   {//https://www.openstreetbrowser.org/#map=16/35.3512/139.5310
     name: "OpenStreetBrowser",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "openstreetbrowser.org",
 	description: "OSM POI viewer",
     getUrl(lat, lon, zoom) {
@@ -1092,6 +1216,7 @@ const maps = [
   {//https://map.meurisse.org/?lon=139.642839&lng=139.642839&lat=35.520631&zoom=14
     name: "Distance calculator",
     category: UTILITY_CATEGORY,
+    default_check: false,
     domain: "meurisse.org",
 	description: "Distance calculator on OSM map",
     getUrl(lat, lon, zoom) {	
@@ -1103,6 +1228,7 @@ const maps = [
   {
     name: "Kontur",
     category: UTILITY_CATEGORY,
+    default_check: true,
     domain: "disaster.ninja",
 	description: "The most active OSM contributor",
     getUrl(lat, lon, zoom) {
@@ -1121,6 +1247,7 @@ const maps = [
   {//https://en.mapy.cz/zakladni?x=139.7624242&y=35.6819532&z=16
     name: "MAPY.CZ",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "mapy.cz",
 	description: "",
     getUrl(lat, lon, zoom) {
@@ -1139,6 +1266,7 @@ const maps = [
   {//https://www.maptiler.com/maps/#streets//vector/12.82/139.62724/35.44413
     name: "maptiler",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "maptiler.com",
 	description: "vextor map provider",
     getUrl(lat, lon, zoom) {
@@ -1157,6 +1285,7 @@ const maps = [
   {//https://gribrouillon.fr/#15/35.4484/139.6179
     name: "Gribrouillon",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "gribrouillon.fr",
 	description: "Draw on a map and share it",
     getUrl(lat, lon, zoom) {
@@ -1175,6 +1304,7 @@ const maps = [
   {//https://www.strava.com/heatmap#9.41/139.72884/35.84051/hot/all
     name: "STRAVA",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "strava.com",
 	description: "Heatmap of athletes activities",
     getUrl(lat, lon, zoom) {	
@@ -1192,6 +1322,7 @@ const maps = [
   {//https://www.peakfinder.org/?lat=46.6052&lng=8.3217&azi=0&zoom=4&ele=1648
     name: "PeakFinder",
     category: SPECIAL_CATEGORY,
+    default_check: false,
     domain: "peakfinder.org",
 	description: "Mountain landscape view map",
     getUrl(lat, lon, zoom) {	
@@ -1209,6 +1340,7 @@ const maps = [
   {//https://resultmaps.neis-one.org/osm-change-tiles#14/35.6726/139.7576
     name: "Latest OSM Edits per Tile",
     category: UTILITY_CATEGORY,
+    default_check: false,
     domain: "neis-one.org",
 	description: "Latest OpenStreetMap Edits per Tile",
     getUrl(lat, lon, zoom) {	
@@ -1226,6 +1358,7 @@ const maps = [
   {//https://www.viamichelin.com/web/maps?position=35;135.8353;12
     name: "ViaMichelin",
     category: OTHER_CATEGORY,
+    default_check: false,
     domain: "viamichelin.com",
 	description: "Michelin Travel map",
     getUrl(lat, lon, zoom) {	
@@ -1234,5 +1367,119 @@ const maps = [
     },
 
   },
-];
 
+  {//http://map.baidu.com/?latlng=35.6777,139.7588
+    name: "Baidu",
+    category: MAIN_CATEGORY,
+    default_check: false,
+    domain: "baidu.com",
+
+    getUrl(lat, lon, zoom) {	
+      return 'http://map.baidu.com/?latlng=' + lat + ',' + lon;
+
+    },
+
+  },
+  {//https://osmaps.ordnancesurvey.co.uk/51.39378,0.13892,10
+    name: "Ordnance Survey(UK)",
+    category: LOCAL_CATEGORY,
+    default_check: false,
+    domain: "ordnancesurvey.co.uk",
+
+    getUrl(lat, lon, zoom) {	
+      return 'https://osmaps.ordnancesurvey.co.uk/' + lat + ',' + lon + ',' + zoom;
+
+    },
+    getLatLonZoom(url) {
+      const match = url.match(/osmaps\.ordnancesurvey\.co\.uk\/(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9.]*)/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },
+  
+  {//http://www.opensnowmap.org/?zoom=17&lat=43.08561&lon=141.33047
+    name: "OpenSnowMap",
+    category: OTHER_CATEGORY,
+    default_check: false,
+    domain: "opensnowmap.org",
+	description: "Winter sports map",
+    getUrl(lat, lon, zoom) {	
+      return 'http://www.opensnowmap.org/?zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
+
+    },
+  },
+  {//http://www.opencyclemap.org/?zoom=17&lat=43.08561&lon=141.33047
+    name: "OpenCycleMap",
+    category: OTHER_CATEGORY,
+    default_check: false,
+    domain: "opencyclemap.org",
+	description: "Cycling map",
+    getUrl(lat, lon, zoom) {	
+      return 'http://www.opencyclemap.org/?zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
+
+    },
+  },
+  {//http://gk.historic.place/historische_objekte/translate/en/index-en.html?zoom=5&lat=50.37522&lon=11.5
+    name: "Historic Place",
+    category: OTHER_CATEGORY,
+    default_check: false,
+    domain: "historic.place",
+	description: "Historic objects",
+    getUrl(lat, lon, zoom) {	
+      return 'http://gk.historic.place/historische_objekte/translate/en/index-en.html?zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
+
+    },
+  },    
+  {//http://ktgis.net/kjmapw/kjmapw.html?lat=35.680202&lng=139.758840&zoom=14
+    name: "今昔マップ(JP)",
+    category: LOCAL_CATEGORY,
+    default_check: false,
+    domain: "ktgis.net",
+	description: "Historic map compare in Japan",
+    getUrl(lat, lon, zoom) {	
+      return 'http://ktgis.net/kjmapw/kjmapw.html?lat=' + lat + '&lng=' + lat + '&zoom=' + zoom;
+
+    },
+	getLatLonZoom(url) {
+      const match = url.match(/ktgis\.net\/kjmapw\/kjmapw\.html\?lat=(-?\d[0-9.]*)\&lng=(-?\d[0-9.]*)\&zoom=(\d[0-9.]*)/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },    
+  {//https://openstreetmap.org.ar/#8.93/35.5727/139.4429
+    name: "OSM.org.ar",
+    category: OSM_LOCAL_CATEGORY,
+    default_check: false,
+    domain: "openstreetmap.org.ar",
+	description: "",
+    getUrl(lat, lon, zoom) {	
+      return 'https://openstreetmap.org.ar/#' + zoom + '/' + lat + '/' + lon;
+
+    },
+	getLatLonZoom(url) {
+      const match = url.match(/openstreetmap\.org\.ar\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      if (match) {
+        const [, zoom, lat, lon] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },   
+  {//https://www.yelp.com/search?l=g%3A139.74862972962964%2C35.60176325581224%2C139.64666287171949%2C35.483875357833384
+    name: "yelp",
+    category: OTHER_CATEGORY,
+    default_check: false,
+    domain: "yelp.com",
+	description: "Local review",
+    getUrl(lat, lon, zoom) {
+		const [minlon, minlat, maxlon, maxlat] = latLonZoomToBbox(lat, lon, zoom);
+		return 'https://www.yelp.com/search?l=g%3A' + maxlon + '%2C' + maxlat + '%2C' + minlon + '%2C' + minlat;
+
+    },
+  }, 
+
+  
+];
