@@ -1439,7 +1439,7 @@ const maps = [
     domain: "ktgis.net",
 	description: "Historic map compare in Japan",
     getUrl(lat, lon, zoom) {	
-      return 'http://ktgis.net/kjmapw/kjmapw.html?lat=' + lat + '&lng=' + lat + '&zoom=' + zoom;
+      return 'http://ktgis.net/kjmapw/kjmapw.html?lat=' + lat + '&lng=' + lon + '&zoom=' + zoom;
 
     },
 	getLatLonZoom(url) {

@@ -119,6 +119,28 @@ function setLocalwikiAddress(lat, lon){
 	request.send();
 }
 
+//https://qiita.com/n0bisuke/items/f2dd06bfb0e4daa1e0d8
+function sortByKey(data,key,order){
+	//デフォは降順(DESC)
+	var num_a = -1;
+	var num_b = 1;
+
+	if(order === 'asc'){//指定があれば昇順(ASC)
+	  num_a = 1;
+	  num_b = -1;
+	}
+
+	data = data.sort(function(a, b){
+	  var x = a[key].toUpperCase();
+	  var y = b[key].toUpperCase();
+	  if (x > y) return num_a;
+	  if (x < y) return num_b;
+	  return 0;
+	});
+
+	return data;
+
+}
 
 //https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
 function groupBy(xs, key) {
@@ -197,7 +219,13 @@ let latlonzoom = getLatLonZoom(testurl, maps);
   document.getElementById("zoom").innerHTML = zoom;
 
   let columns = groupBy(maps, 'category');
- 
+	
+	//名前順に並び替え
+	for (let key in columns){
+		columns[key] = sortByKey(columns[key], 'name', 'asc');
+	}
+
+	
   let maplist = "";
   
   let categories = Object.keys(columns);
