@@ -1528,7 +1528,35 @@ const maps = [
       }
     },
   },   
+  
+  {//https://earthquake.usgs.gov/earthquakes/map/#{"autoUpdate":["autoUpdate"],"basemap":"grayscale","feed":"1day_m25","listFormat":"default","mapposition":[[32.2313896627376,126.71630859375],[40.421860362045194,143.27270507812497]],"overlays":["plates"],"restrictListToMap":["restrictListToMap"],"search":null,"sort":"newest","timezone":"utc","viewModes":["settings","map"],"event":null}
+    name: "USGS earthquakes",
+    category: SPECIAL_CATEGORY,
+    default_check: false,
+    domain: "usgs.gov",
+	description: "Latest earthquakes",
+    getUrl(lat, lon, zoom) {
+		const [minlon, minlat, maxlon, maxlat] = latLonZoomToBbox(lat, lon, zoom);
+		const url = 'https://earthquake.usgs.gov/earthquakes/map/#{"autoUpdate":["autoUpdate"],"basemap":"grayscale","feed":"1day_m25","listFormat":"default","mapposition":[[' + minlat + ',' + minlon + '],[' + maxlat + ',' + maxlon + ']],"overlays":["plates"],"restrictListToMap":["restrictListToMap"],"search":null,"sort":"newest","timezone":"utc","viewModes":["settings","map"],"event":null}';
+      return encodeURI(url);
 
+    },
+	
+	getLatLonZoom(url) {
+		const decoded = decodeURI(url);
+      const match1 = decoded.match(/\"mapposition\"%3A\[\[(-?\d[0-9.]*)%2C(-?\d[0-9.]*)\]%2C\[(-?\d[0-9.]*)%2C(-?\d[0-9.]*)\]\]/);
+	  const match2 = decoded.match(/\"mapposition\":\[\[(-?\d[0-9.]*),(-?\d[0-9.]*)\],\[(-?\d[0-9.]*),(-?\d[0-9.]*)\]\]/);
+	  let match = false;
+	  if (match1) match = match1;
+	  if (match2) match = match2;
+      if (match) {
+        const [, minlat, minlon, maxlat, maxlon] = match;
+		const [lat, lon, zoom] = bboxToLatLonZoom(minlon, minlat, maxlon, maxlat);
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+	
+  }, 
 
   
 ];
