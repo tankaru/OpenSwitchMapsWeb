@@ -9,6 +9,10 @@ function bboxToLatLonZoom(minlon, minlat, maxlon, maxlat) {
 	return [lat, lon, zoom];
 
 }
+// -180 < lon < 180
+function normalizeLon(lon){
+	return ((lon + 180) % 360) -180;
+}
 
 function latLonZoomToBbox(lat, lon, zoom) {
 	const tile_part = Math.pow(0.5,zoom);
@@ -1185,7 +1189,7 @@ const maps = [
     getUrl(lat, lon, zoom) {
 		let z = Number(zoom);
 		if ( z > 14 ) z = 14;		
-      return 'https://firms.modaps.eosdis.nasa.gov/map/#z:' + z + ';c:' + lon + ',' + lat;
+      return 'https://firms.modaps.eosdis.nasa.gov/map/#z:' + z + ';c:' + normalizeLon(lon) + ',' + lat;
 
     },
     getLatLonZoom(url) {
