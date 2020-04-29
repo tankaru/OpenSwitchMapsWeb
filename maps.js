@@ -184,6 +184,7 @@ const maps = [
     getUrl(lat, lon, zoom) {
       return 'https://www.bing.com/maps?cp=' + lat + '~' + lon + '&lvl=' + zoom;
     },
+	
   },
   {
     name: "Overpass-turbo",
@@ -1480,6 +1481,54 @@ const maps = [
 
     },
   }, 
+  {//http://map.openseamap.org/?zoom=6&lat=53.32140&lon=2.86829
+    name: "OpenSeaMap",
+    category: OTHER_CATEGORY,
+    default_check: false,
+    domain: "openseamap.org",
+	description: "",
+    getUrl(lat, lon, zoom) {
+		return 'http://map.openseamap.org/?zoom=' + Math.min(Number(zoom),18) + '&lat=' + lat + '&lon=' + lon;
+
+    },
+  }, 
+  {//https://disaportal.gsi.go.jp/maps/index.html?ll=35.371135,138.713379&z=5
+    name: "重ねるハザードマップ(JP)",
+    category: LOCAL_CATEGORY,
+    default_check: false,
+    domain: "gsi.go.jp",
+	description: "Hazard map in Japan",
+    getUrl(lat, lon, zoom) {	
+      return 'https://disaportal.gsi.go.jp/maps/index.html?ll=' + lat + ',' + lon + '&z=' + Math.min(Number(zoom),18);
+
+    },
+	getLatLonZoom(url) {
+      const match = url.match(/disaportal\.gsi\.go\.jp\/maps\/index.html\?ll=(-?\d[0-9.]*),(-?\d[0-9.]*)\&z=(\d[0-9.]*)/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },   
+  {//https://mapps.gsi.go.jp/history.html#ll=35.6936743,139.4884086&z=15&target=t25000
+    name: "地形図・地勢図図歴(JP)",
+    category: LOCAL_CATEGORY,
+    default_check: false,
+    domain: "gsi.go.jp",
+	description: "Historic topo map in Japan",
+    getUrl(lat, lon, zoom) {	
+      return 'https://mapps.gsi.go.jp/history.html#ll=' + lat + ',' + lon + '&z=' + Math.min(Number(zoom),15);
+
+    },
+	getLatLonZoom(url) {
+      const match = url.match(/mapps\.gsi\.go\.jp\/history\.html#ll=(-?\d[0-9.]*),(-?\d[0-9.]*)&z=(\d[0-9.]*)/);
+      if (match) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, Math.round(Number(zoom))];
+      }
+    },
+  },   
+
 
   
 ];
