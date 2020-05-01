@@ -11,8 +11,9 @@ function bboxToLatLonZoom(minlon, minlat, maxlon, maxlat) {
 }
 // -180 < lon < 180
 function normalizeLon(lon){
-	return ((lon + 180) % 360) -180;
+	return ((((Number(lon) + 180) % 360) + 360) % 360) -180;
 }
+
 
 function latLonZoomToBbox(lat, lon, zoom) {
 	const tile_part = Math.pow(0.5,zoom);
@@ -521,7 +522,7 @@ const maps = [
     default_check: true,
     domain: "windy.com",
     getUrl(lat, lon, zoom) {
-      return 'https://www.windy.com/?' + lat + ',' + lon + ',' + Math.round(zoom) + ',i:pressure';
+      return 'https://www.windy.com/?' + Number(lat).toFixed(3) + ',' + Number(lon).toFixed(3) + ',' + Math.round(zoom) + ',i:pressure';
     },
     getLatLonZoom(url) {
       const match = url.match(/www\.windy\.com.*[,\?](-?\d[0-9.]+),(-?\d[0-9.]+),(\d{1,2})/);
