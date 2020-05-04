@@ -833,17 +833,22 @@ const maps = [
     domain: "localwiki.org",
     getUrl(lat, lon, zoom) {
 
-		const url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1';
+		var url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1';
+		
 		/*
-		async function returnLocalwiki(url) {
-			const res = await fetch(url);
-			const org = await res.json();
-
-			const localwiki = 'https://localwiki.org/_search/?q=' + org.display_name;
-			return localwiki;
+		//https://qiita.com/chinka/items/a084fd1c5ef9dcde4728
+		var getLocalwiki = async function () {
+			try {
+				let res = await fetch(url);
+				let org = res.json();
+				let localwiki = 'https://localwiki.org/_search/?q=' + org.display_name;
+				return localwiki;
+			} catch(e) {
+				
+			}
 		}
-		returnLocalwiki(url);
 		*/
+
 		
 		let request = new XMLHttpRequest();
 		request.open('GET', url, false);//同期処理
