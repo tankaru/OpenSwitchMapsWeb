@@ -814,16 +814,22 @@ const maps = [
 
   },
   
-  {
+  {//https://gbank.gsj.jp/geonavi/geonavi.php#14,35.51047,139.64054
     name: "地質図Navi (JP)",
     category: LOCAL_CATEGORY,
     default_check: false,
     domain: "gbank.gsj.jp",
-	description: "Geological map in Japan",
+	  description: "Geological map in Japan",
     getUrl(lat, lon, zoom) {
       return 'https://gbank.gsj.jp/geonavi/geonavi.php#' + zoom + ',' + lat + ',' + lon;
     },
-
+    getLatLonZoom(url) {
+      const match = url.match(/gbank\.gsj\.jp\/geonavi\/geonavi\.php#(\d{1,2}),(-?\d[0-9.]*),(-?\d[0-9.]*)/);
+      if (match) {
+        let [, zoom, lat, lon] = match;
+        return [lat, lon, zoom];
+      }
+    },
   },
   
   {
@@ -1567,6 +1573,6 @@ const maps = [
     },
 	
   }, 
-
+ 
   
 ];
