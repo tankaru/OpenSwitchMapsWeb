@@ -1577,8 +1577,8 @@ const maps = [
     name: "2gis(RU)",
     category: LOCAL_CATEGORY,
     default_check: false,
-    domain: "2gis.ru",
-    description: "Russian map",
+    domain: "2gis.com",
+    description: "Russia and some Europe map",
     getUrl(lat, lon, zoom) {
       return `https://2gis.ru/?m=${lon}%2C${lat}%2F${zoom}`;
 
