@@ -972,7 +972,7 @@ const maps = [
     default_check: false,
     domain: "waze.com",
     getUrl(lat, lon, zoom) {
-      return 'https://www.waze.com/ja/editor?lon=' + lon + '&lat=' + lat + '&zoom=5';
+      return 'https://www.waze.com/editor?lon=' + lon + '&lat=' + lat + '&zoom=7';
     },
 
   },
