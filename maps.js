@@ -1592,4 +1592,22 @@ const maps = [
     },
   },
 
+    { //https://www.openhistoricalmap.org/#map=10/35.6149/139.2593&layers=O
+      name: "OpenHistoricalMap",
+      category: SPECIAL_CATEGORY,
+      default_check: false,
+      domain: "openhistoricalmap.org",
+      description: "Crowedsourced Historical map",
+      getUrl(lat, lon, zoom) {
+        return `https://www.openhistoricalmap.org/#map=${zoom}/${lat}/${lon}&layers=O`;
+
+      },
+      getLatLonZoom(url) {
+        const match = url.match(/www\.openhistoricalmap\.org\/#map=(-?\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+        if (match) {
+          const [, zoom, lat, lon] = match;
+          return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+        }
+      },
+    },
 ];
