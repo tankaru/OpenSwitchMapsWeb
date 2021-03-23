@@ -1782,7 +1782,7 @@ const maps = [
       domain: "nls.uk",
       description: "National Library of Scotland's historic maps",
       getUrl(lat, lon, zoom) {
-        return `https://maps.nls.uk/geo/explore/#zoom=${zoom}&lat={lat}&lon=${lon}&layers=6&b=1`;
+        return `https://maps.nls.uk/geo/explore/#zoom=${zoom}&lat=${lat}&lon=${lon}`;
 
       },
       getLatLonZoom(url) {
