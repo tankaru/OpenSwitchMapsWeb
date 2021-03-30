@@ -140,16 +140,17 @@ const maps = [
     },
   },
   {
-    name: "OpenStreetCam",
+    //https://kartaview.org/map/@36.039955287882236,139.62856504534716,8z
+    name: "KartaView",
     category: MAIN_CATEGORY,
-    default_check: true,
-    domain: "openstreetcam.org",
+    default_check: false,
+    domain: "kartaview.org",
     description: "Crowdsourced street-level imagery available as CC BY-SA",
     getUrl(lat, lon, zoom) {
-      return 'https://openstreetcam.org/map/@' + lat + ',' + lon + ',' + zoom + 'z';
+      return `https://kartaview.org/map/@${lat},${lon},${zoom}z`
     },
     getLatLonZoom(url) {
-      const match = url.match(/openstreetcam\.org.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})/);
+      const match = url.match(/kartaview\.org.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})/);
       if (match) {
         const [, lat, lon, zoom] = match;
         return [lat, lon, zoom];
