@@ -58,7 +58,7 @@
 			margin: 5px;
 		}
 		img {
-			padding: 0px 5px;
+			margin: 0px 5px;
 			vertical-align: middle;
 		}
       </style>
@@ -174,16 +174,16 @@ function groupBy(xs, key) {
     return rv;
   }, {});
 };
-    function setAddress(lat, lon){
-			var request = new XMLHttpRequest();
-			request.open('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1', true);
-			request.responseType = 'json';
-			request.onload = function () {
-				var data = this.response;
-				document.getElementById("address").innerHTML = data.display_name;
-			};
-			request.send();
-		}
+function setAddress(lat, lon){
+		var request = new XMLHttpRequest();
+		request.open('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1', true);
+		request.responseType = 'json';
+		request.onload = function () {
+			var data = this.response;
+			document.getElementById("address").innerHTML = data.display_name;
+		};
+		request.send();
+	}
 
 
 
@@ -196,6 +196,25 @@ function getLatLonZoom(url, maps) {
 		}
 	}
 	return ;
+}
+function img_src_replace(domain) {
+    let img = new Image();
+	const src = `favicons/${domain}.png`;
+	img.src = src;
+	const domain_class = domain.replace( /\./g , "" );
+ 
+    // 画像があった時の処理
+    img.onload = function() {
+		//$(`.${domain_class}`).attr('src', src);
+		//console.log('onload:', img.src);
+    }
+ 
+    // 画像がなかった時の処理
+    img.onerror = function() {
+        $(`.${domain_class}`).attr('src', 'http://www.google.com/s2/favicons?domain=' + domain);
+		//console.log('onerror:', img.src);
+    }
+	
 }
 
 let lat, lon, zoom;
@@ -256,7 +275,9 @@ let latlonzoom = getLatLonZoom(testurl, maps);
 			if (map.hasOwnProperty('getUrl')) {
 				let tooltip = "";
 				if (map.hasOwnProperty('description')) tooltip = ' title="' + map.description + '" ';
-				maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '"'+ tooltip + '>' + map.name + '</a></li>';
+				maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(lat,lon,zoom)}" id="${map.name}" ${tooltip}>${map.name}</a></li>`;
+				img_src_replace(map.domain);
+				//maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '"'+ tooltip + '>' + map.name + '</a></li>';
 			}
 		}
 		maplist += '</ul>';
