@@ -61,6 +61,31 @@ const maps = [
 
     },
   },
+  {
+    name: "Google Street View",
+    category: MAIN_CATEGORY,
+    default_check: false,
+    domain: "www.google.com",
+    getUrl(lat, lon, zoom) {
+      return `https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=${lat},${lon}`;
+    },
+    getLatLonZoom(url) {
+      let match;
+      if (match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})[.z]/)) {
+        const [, lat, lon, zoom] = match;
+        return [lat, lon, zoom];
+      } else if (match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9.]*)[m]/)) {
+        let [, lat, lon, zoom] = match;
+        zoom = Math.round(-1.4436 * Math.log(zoom) + 26.871);
+        return [lat, lon, zoom];
+      } else if (match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),([0-9]*)[a],[0-9.]*y/)) {
+        let [, lat, lon, zoom] = match;
+        zoom = Math.round(-1.44 * Math.log(zoom) + 27.5);
+        return [lat, lon, zoom];
+      }
+
+    },
+  },
 
 
 
