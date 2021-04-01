@@ -1966,4 +1966,22 @@ const maps = [
         }
       },
     },
+
+              
+    { //https://plateauview.jp/#start={"initSources":[{"initialCamera":{"west":139.6,"south":35.6,"east":139.7,"north":35.7}}]}
+      name: "PLATEAU(JP)",
+      category: LOCAL_CATEGORY,
+      default_check: false,
+      domain: "plateauview.jp",
+      description: "3D City models in Japan",
+      getUrl(lat, lon, zoom) {
+        const [west, south, east, north] = latLonZoomToBbox(lat, lon, zoom);
+        const params = `{"initSources":[{"initialCamera":{"west":${west},"south":${south},"east":${east},"north":${north}}}]}`;
+        const encoded = encodeURI(params);
+        url = `https://plateauview.jp/#start=${encoded}`;
+        return url;
+
+      },
+
+    },
 ];
