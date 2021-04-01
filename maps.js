@@ -476,10 +476,10 @@ const maps = [
     domain: "openstreetmap.in",
     description: "OpenStreetMap India local chapter",
     getUrl(lat, lon, zoom) {
-      return 'https://openstreetmap.in/demo/#' + zoom + '/' + lat + '/' + lon;
+      return 'https://openstreetmap.in/#' + zoom + '/' + lat + '/' + lon;
     },
     getLatLonZoom(url) {
-      const match = url.match(/openstreetmap\.in\/demo\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+      const match = url.match(/openstreetmap\.in\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
       if (match) {
         const [, zoom, lat, lon] = match;
         return [lat, normalizeLon(lon), Math.round(Number(zoom))];
