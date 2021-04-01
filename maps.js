@@ -464,7 +464,7 @@ const maps = [
     domain: "openstreetmap.ch",
     description: "OpenStreetMap Switzerland local chapter",
     getUrl(lat, lon, zoom) {
-      return 'https://www.openstreetmap.ch/?zoom=' + zoom + '&lat=' + lat + '&lon=' + lon;
+      return 'https://www.openstreetmap.ch/?zoom=' + Math.min(Number(zoom), 18) + '&lat=' + lat + '&lon=' + lon;
     },
 
   },
