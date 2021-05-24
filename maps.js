@@ -378,14 +378,22 @@ const maps = [
     },
   },
 
+  //https://map.yahoo.co.jp/?lat=35.76999&lon=139.41380&zoom=16&maptype=basic
   {
     name: "Yahoo Map (JP)",
     category: LOCAL_CATEGORY,
     default_check: false,
     domain: "map.yahoo.co.jp",
     getUrl(lat, lon, zoom) {
-      return 'https://map.yahoo.co.jp/maps?lat=' + lat + '&lon=' + lon + '&z=' + zoom;
+      return `https://map.yahoo.co.jp/?lat=${lat}&lon=${lon}&zoom=${zoom}`;
     },
+	getLatLonZoom(url) {
+		const match = url.match(/lat=(-?\d[0-9.]*)&lon=(-?\d[0-9.]*)&zoom=(\d{1,2})/);
+		if (match) {
+		  const [, lat, lon, zoom] = match;
+		  return [lat, lon, zoom];
+		}
+	  },
   },
   {
     name: "MapFan (JP)",
