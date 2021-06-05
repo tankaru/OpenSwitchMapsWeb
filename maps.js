@@ -584,6 +584,7 @@ const maps = [
       }
     },
   },
+  /*
   {
     name: "Traze",
     category: SPECIAL_CATEGORY,
@@ -602,6 +603,7 @@ const maps = [
     },
 
   },
+  */
 
   {
     name: "MarineTraffic",
@@ -1627,18 +1629,18 @@ const maps = [
         }
       },
     },
-    { //https://k-sakanoshita.github.io/mapmaker/#15/35.4517/139.6212
+    { //https://armd-02.github.io/mapmaker/#12.5/35.7059/139.7616
       name: "Walking Town Map Maker",
       category: SPECIAL_CATEGORY,
       default_check: false,
       domain: "github.io",
       description: "Create a customized map",
       getUrl(lat, lon, zoom) {
-        return `https://k-sakanoshita.github.io/mapmaker/#${zoom}/${lat}/${lon}`;
+        return `https://armd-02.github.io/mapmaker/#${zoom}/${lat}/${lon}`;
 
       },
       getLatLonZoom(url) {
-        const match = url.match(/k-sakanoshita\.github\.io\/mapmaker\/#(-?\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+        const match = url.match(/armd-02\.github\.io\/mapmaker\/#(-?\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
         if (match) {
           const [, zoom, lat, lon] = match;
           return [lat, normalizeLon(lon), Math.round(Number(zoom))];
