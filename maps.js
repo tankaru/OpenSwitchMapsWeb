@@ -1,4 +1,5 @@
 
+
 function bboxToLatLonZoom(minlon, minlat, maxlon, maxlat) {
   const lon = (Number(minlon) + Number(maxlon)) / 2.0;
   const lat = (Number(minlat) + Number(maxlat)) / 2.0;
