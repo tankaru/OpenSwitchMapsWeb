@@ -515,6 +515,24 @@ const maps = [
 	  },
 
 	  {
+		name: "osm.tw",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "osm.tw",
+		description: "OpenStreetMap Taiwan local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://osm.tw';
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/osm\.tw/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
+	  {
 		name: "osm.kr",
 		category: OSM_LOCAL_CATEGORY,
 		default_check: false,
