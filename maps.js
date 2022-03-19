@@ -1509,6 +1509,25 @@ const maps = [
 			  }
 			},
 		  },
+	{//https://js.protomaps.com/examples/leaflet.html#12/25.0578/121.5115
+		name: "protomaps.com",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "jawg.io",
+		description: "vextor map provider",
+		getUrl(lat, lon, zoom) {
+		  return 'https://js.protomaps.com/examples/leaflet.html#' + zoom + '/' + lon + '/' + lat;
+	
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/protomaps.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+	
+		  if (match) {
+			const [, zoom, lon, lat] = match;
+			return [lat, lon, Math.round(Number(zoom))];
+		  }
+		},
+	  },
 	  
 	{//https://gribrouillon.fr/#15/35.4484/139.6179
 	  name: "Gribrouillon",
