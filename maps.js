@@ -533,6 +533,42 @@ const maps = [
 	  },
 
 	  {
+		name: "osm.be",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "openstreetmap.be",
+		description: "OpenStreetMap Belgium local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://openstreetmap.be';
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/openstreetmap\.be/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
+	  {
+		name: "osm.lu",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "openstreetmap.lu",
+		description: "OpenStreetMap Luxemburg local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://openstreetmap.lu';
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/openstreetmap\.lu/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
+	  {
 		name: "osm.kr",
 		category: OSM_LOCAL_CATEGORY,
 		default_check: false,
