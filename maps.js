@@ -532,6 +532,23 @@ const maps = [
 		},
 	  },
 
+	  {
+		name: "osm.bzh",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "kartenn.openstreetmap.bzh",
+		description: "OpenStreetMap Breizh local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://kartenn.openstreetmap.bzh/#' + zoom + '/' + lat + '/' + lon;
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/openstreetmap\.bzh\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
   
 	{
 	  name: "OSM.cl",
