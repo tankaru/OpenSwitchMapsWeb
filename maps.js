@@ -343,6 +343,16 @@ const maps = [
 		  return 'https://revert.osmz.ru';
 		},
 	  },
+	  {
+		name: "Localization OSM",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "localize.osm.tracestrack.com",
+		description: "A tool that can fliter elements with specific tag then translate them",
+		getUrl(lat, lon, zoom) {
+		  return 'https://localize.osm.tracestrack.com';
+		},
+	  },
 	{
 	  name: "Ingress Intel map",
 	  category: SPECIAL_CATEGORY,
