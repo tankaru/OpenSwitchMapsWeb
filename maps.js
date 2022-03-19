@@ -513,6 +513,25 @@ const maps = [
 		  }
 		},
 	  },
+
+	  {
+		name: "osm.kr",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "tiles.osm.kr",
+		description: "OpenStreetMap Korea local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://tiles.osm.kr/#' + zoom + '/' + lat + '/' + lon;
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/osm\.kr\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
   
 	{
 	  name: "OSM.cl",
