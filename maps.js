@@ -1490,6 +1490,26 @@ const maps = [
 		}
 	  },
 	},
+		{//https://www.jawg.io/en/maps#8/48.863/2.359
+			name: "jawg.io",
+			category: OTHER_CATEGORY,
+			default_check: false,
+			domain: "jawg.io",
+			description: "vextor map provider",
+			getUrl(lat, lon, zoom) {
+			  return 'https://www.jawg.io/en/maps/#' + zoom + '/' + lon + '/' + lat;
+		
+			},
+			getLatLonZoom(url) {
+			  const match = url.match(/jawg.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		
+			  if (match) {
+				const [, zoom, lon, lat] = match;
+				return [lat, lon, Math.round(Number(zoom))];
+			  }
+			},
+		  },
+	  
 	{//https://gribrouillon.fr/#15/35.4484/139.6179
 	  name: "Gribrouillon",
 	  category: SPECIAL_CATEGORY,
