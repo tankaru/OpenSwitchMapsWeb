@@ -495,6 +495,24 @@ const maps = [
 		}
 	  },
 	},
+
+	{
+		name: "OSMChina",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "map.osmchina.org",
+		description: "OpenStreetMap China local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://map.osmchina.org/#' + zoom + '/' + lat + '/' + lon;
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/osmchina\.org\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
   
 	{
 	  name: "OSM.cl",
