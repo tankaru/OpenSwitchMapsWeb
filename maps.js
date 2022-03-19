@@ -623,6 +623,22 @@ const maps = [
 	  },
 	},
 	{
+		name: "OpenWeatherMap.org",
+		category: SPECIAL_CATEGORY,
+		default_check: true,
+		domain: "openweathermap.org",
+		getUrl(lat, lon, zoom) {
+		  return 'https://openweathermap.org/?';
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/openweathermap\.org.*[,\?](-?\d[0-9.]+),(-?\d[0-9.]+),(\d{1,2})/);
+		  if (match) {
+			const [, lat, lon, zoom] = match;
+			return [lat, lon, zoom];
+		  }
+		},
+	  },
+	{
 	  name: "flightradar24",
 	  category: SPECIAL_CATEGORY,
 	  default_check: true,
