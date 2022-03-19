@@ -297,6 +297,23 @@ const maps = [
 	  },
 	},
 	{
+		name: "Map compare (BBBike)",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "mc.bbbike.org",
+		description: "Compare maps side-by-side",
+		getUrl(lat, lon, zoom) {
+		  return 'http://mc.bbbike.org/mc/#' + zoom + '/' + lat + '/' + lon;
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/mc\.bbbike\.org\/mc\/#(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, lon, zoom];
+		  }
+		},
+	  },
+	{
 	  name: "Multimapas",
 	  category: UTILITY_CATEGORY,
 	  default_check: true,
