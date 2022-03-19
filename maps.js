@@ -324,6 +324,26 @@ const maps = [
 	  },
 	},
 	{
+		name: "Level 0 Editor",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "level0.osmz.ru",
+		description: "OSM raw editor",
+		getUrl(lat, lon, zoom) {
+		  return 'https://level0.osmz.ru';
+		},
+	  },
+	  {
+		name: "Revert UI",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "revert.osmz.ru",
+		description: "Simple changeset online reverter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://revert.osmz.ru';
+		},
+	  },
+	{
 	  name: "Ingress Intel map",
 	  category: SPECIAL_CATEGORY,
 	  default_check: true,
