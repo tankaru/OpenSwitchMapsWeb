@@ -323,36 +323,7 @@ const maps = [
 		return 'http://javier.jimenezshaw.com/mapas/mapas.html?z=' + zoom + '&c=' + lat + ',' + lon;
 	  },
 	},
-	{
-		name: "Level 0 Editor",
-		category: UTILITY_CATEGORY,
-		default_check: true,
-		domain: "level0.osmz.ru",
-		description: "OSM raw editor",
-		getUrl(lat, lon, zoom) {
-		  return 'https://level0.osmz.ru';
-		},
-	  },
-	  {
-		name: "Revert UI",
-		category: UTILITY_CATEGORY,
-		default_check: true,
-		domain: "revert.osmz.ru",
-		description: "Simple changeset online reverter",
-		getUrl(lat, lon, zoom) {
-		  return 'https://revert.osmz.ru';
-		},
-	  },
-	  {
-		name: "Localization OSM",
-		category: UTILITY_CATEGORY,
-		default_check: true,
-		domain: "localize.osm.tracestrack.com",
-		description: "A tool that can fliter elements with specific tag then translate them",
-		getUrl(lat, lon, zoom) {
-		  return 'https://localize.osm.tracestrack.com';
-		},
-	  },
+
 	{
 	  name: "Ingress Intel map",
 	  category: SPECIAL_CATEGORY,
