@@ -645,20 +645,13 @@ const maps = [
 		}
 	  },
 	},
-	{
+	{//https://openweathermap.org/weathermap?basemap=map&cities=true&layer=temperature&lat=35.4157&lon=139.6212&zoom=5
 		name: "OpenWeatherMap.org",
 		category: SPECIAL_CATEGORY,
 		default_check: true,
 		domain: "openweathermap.org",
 		getUrl(lat, lon, zoom) {
-		  return 'https://openweathermap.org/?';
-		},
-		getLatLonZoom(url) {
-		  const match = url.match(/openweathermap\.org.*[,\?](-?\d[0-9.]+),(-?\d[0-9.]+),(\d{1,2})/);
-		  if (match) {
-			const [, lat, lon, zoom] = match;
-			return [lat, lon, zoom];
-		  }
+		  return `https://openweathermap.org/weathermap?lat=${lat}&lon=${lon}&zoom=${zoom}`;
 		},
 	  },
 	{
