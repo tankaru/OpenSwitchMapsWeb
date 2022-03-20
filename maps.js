@@ -2238,4 +2238,15 @@ const maps = [
   
 		},
 	  },
+	  { //https://boulter.com/gps/#35.89182%2C140.49066
+		name: "boulter",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "boulter.com",
+		description: "GPS Coordinate Converter",
+		getUrl(lat, lon, zoom) {
+		  return `https://boulter.com/gps/#${lat}%2C${lon}`;
+  
+		},
+	  },
   ];
