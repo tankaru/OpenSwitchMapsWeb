@@ -1410,17 +1410,17 @@ const maps = [
 			category: OTHER_CATEGORY,
 			default_check: false,
 			domain: "jawg.io",
-			description: "vextor map provider",
+			description: "vector map provider",
 			getUrl(lat, lon, zoom) {
-			  return 'https://www.jawg.io/en/maps/#' + zoom + '/' + lon + '/' + lat;
+			  return 'https://www.jawg.io/en/maps/#' + zoom + '/' + lat + '/' + lon;
 		
 			},
 			getLatLonZoom(url) {
-			  const match = url.match(/jawg.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			  const match = url.match(/jawg.*\/#([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 		
 			  if (match) {
-				const [, zoom, lon, lat] = match;
-				return [lat, lon, Math.round(Number(zoom))];
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
 			  }
 			},
 		  },
