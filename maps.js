@@ -559,13 +559,14 @@ const maps = [
 		name: "osm.bzh",
 		category: OSM_LOCAL_CATEGORY,
 		default_check: false,
-		domain: "kartenn.openstreetmap.bzh",
+		domain: "openstreetmap.bzh",
 		description: "OpenStreetMap Breizh local chapter",
 		getUrl(lat, lon, zoom) {
-		  return 'https://kartenn.openstreetmap.bzh/#' + zoom + '/' + lat + '/' + lon;
+
+		  return 'https://kartenn.openstreetmap.bzh/#map=' + zoom + '/' + lat + '/' + lon;
 		},
 		getLatLonZoom(url) {
-		  const match = url.match(/openstreetmap\.bzh\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  const match = url.match(/openstreetmap\.bzh\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 		  if (match) {
 			const [, zoom, lat, lon] = match;
 			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
@@ -1428,37 +1429,37 @@ const maps = [
 		name: "protomaps.com",
 		category: OTHER_CATEGORY,
 		default_check: false,
-		domain: "jawg.io",
-		description: "vextor map provider",
+		domain: "protomaps.com",
+		description: "vector map provider",
 		getUrl(lat, lon, zoom) {
-		  return 'https://js.protomaps.com/examples/leaflet.html#' + zoom + '/' + lon + '/' + lat;
+		  return 'https://js.protomaps.com/examples/leaflet.html#' + zoom + '/' + lat + '/' + lon;
 	
 		},
 		getLatLonZoom(url) {
-		  const match = url.match(/protomaps.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  const match = url.match(/protomaps.*\/#([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 	
 		  if (match) {
-			const [, zoom, lon, lat] = match;
-			return [lat, lon, Math.round(Number(zoom))];
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
 		  }
 		},
 	  },
-	  	{//https://tracesmap.com/#8/30.9932/121.5952
+	  	{//https://tracesmap.com/#8/36.6338/139.5915
 		name: "tracesmap.com",
 		category: OTHER_CATEGORY,
 		default_check: false,
 		domain: "tracesmap.com",
 		description: "raster map provider",
 		getUrl(lat, lon, zoom) {
-		  return 'https://tracesmap.com/e#' + zoom + '/' + lon + '/' + lat;
+		  return 'https://tracesmap.com/#' + zoom + '/' + lat + '/' + lon;
 	
 		},
 		getLatLonZoom(url) {
-		  const match = url.match(/tracesmap.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  const match = url.match(/tracesmap.*\/#([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 	
 		  if (match) {
-			const [, zoom, lon, lat] = match;
-			return [lat, lon, Math.round(Number(zoom))];
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
 		  }
 		},
 	  },
