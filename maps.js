@@ -2249,4 +2249,15 @@ const maps = [
   
 		},
 	  },
+	  { //https://www.gpxeditor.co.uk/?location=35.89182,140.49066&zoom=17
+		name: "GPX Editor",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "gpxeditor.co.uk",
+		description: "GPX Editor",
+		getUrl(lat, lon, zoom) {
+		  return `https://www.gpxeditor.co.uk/?location=${lat},${lon}&zoom=${zoom}`;
+  
+		},
+	  },
   ];
