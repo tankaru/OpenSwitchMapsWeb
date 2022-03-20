@@ -1,4 +1,5 @@
 
+
 function bboxToLatLonZoom(minlon, minlat, maxlon, maxlat) {
   const lon = (Number(minlon) + Number(maxlon)) / 2.0;
   const lat = (Number(minlat) + Number(maxlat)) / 2.0;
@@ -296,6 +297,23 @@ const maps = [
 	  },
 	},
 	{
+		name: "Map compare (BBBike)",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "mc.bbbike.org",
+		description: "Compare maps side-by-side",
+		getUrl(lat, lon, zoom) {
+		  return 'http://mc.bbbike.org/mc/#' + zoom + '/' + lat + '/' + lon;
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/mc\.bbbike\.org\/mc\/#(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, lon, zoom];
+		  }
+		},
+	  },
+	{
 	  name: "Multimapas",
 	  category: UTILITY_CATEGORY,
 	  default_check: true,
@@ -305,6 +323,36 @@ const maps = [
 		return 'http://javier.jimenezshaw.com/mapas/mapas.html?z=' + zoom + '&c=' + lat + ',' + lon;
 	  },
 	},
+	{
+		name: "Level 0 Editor",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "level0.osmz.ru",
+		description: "OSM raw editor",
+		getUrl(lat, lon, zoom) {
+		  return 'https://level0.osmz.ru';
+		},
+	  },
+	  {
+		name: "Revert UI",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "revert.osmz.ru",
+		description: "Simple changeset online reverter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://revert.osmz.ru';
+		},
+	  },
+	  {
+		name: "Localization OSM",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "localize.osm.tracestrack.com",
+		description: "A tool that can fliter elements with specific tag then translate them",
+		getUrl(lat, lon, zoom) {
+		  return 'https://localize.osm.tracestrack.com';
+		},
+	  },
 	{
 	  name: "Ingress Intel map",
 	  category: SPECIAL_CATEGORY,
@@ -494,6 +542,114 @@ const maps = [
 		}
 	  },
 	},
+
+	{
+		name: "OSMChina",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "map.osmchina.org",
+		description: "OpenStreetMap China local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://map.osmchina.org/#' + zoom + '/' + lat + '/' + lon;
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/osmchina\.org\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
+	  {
+		name: "osm.tw",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "osm.tw",
+		description: "OpenStreetMap Taiwan local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://osm.tw';
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/osm\.tw/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
+	  {
+		name: "osm.be",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "openstreetmap.be",
+		description: "OpenStreetMap Belgium local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://openstreetmap.be';
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/openstreetmap\.be/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
+	  {
+		name: "osm.lu",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "openstreetmap.lu",
+		description: "OpenStreetMap Luxemburg local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://openstreetmap.lu';
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/openstreetmap\.lu/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
+	  {
+		name: "osm.kr",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "tiles.osm.kr",
+		description: "OpenStreetMap Korea local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://tiles.osm.kr/#' + zoom + '/' + lat + '/' + lon;
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/osm\.kr\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
+	  {
+		name: "osm.bzh",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "kartenn.openstreetmap.bzh",
+		description: "OpenStreetMap Breizh local chapter",
+		getUrl(lat, lon, zoom) {
+		  return 'https://kartenn.openstreetmap.bzh/#' + zoom + '/' + lat + '/' + lon;
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/openstreetmap\.bzh\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  if (match) {
+			const [, zoom, lat, lon] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
   
 	{
 	  name: "OSM.cl",
@@ -567,6 +723,22 @@ const maps = [
 		}
 	  },
 	},
+	{
+		name: "OpenWeatherMap.org",
+		category: SPECIAL_CATEGORY,
+		default_check: true,
+		domain: "openweathermap.org",
+		getUrl(lat, lon, zoom) {
+		  return 'https://openweathermap.org/?';
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/openweathermap\.org.*[,\?](-?\d[0-9.]+),(-?\d[0-9.]+),(\d{1,2})/);
+		  if (match) {
+			const [, lat, lon, zoom] = match;
+			return [lat, lon, zoom];
+		  }
+		},
+	  },
 	{
 	  name: "flightradar24",
 	  category: SPECIAL_CATEGORY,
@@ -1318,6 +1490,64 @@ const maps = [
 		}
 	  },
 	},
+		{//https://www.jawg.io/en/maps#8/48.863/2.359
+			name: "jawg.io",
+			category: OTHER_CATEGORY,
+			default_check: false,
+			domain: "jawg.io",
+			description: "vextor map provider",
+			getUrl(lat, lon, zoom) {
+			  return 'https://www.jawg.io/en/maps/#' + zoom + '/' + lon + '/' + lat;
+		
+			},
+			getLatLonZoom(url) {
+			  const match = url.match(/jawg.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		
+			  if (match) {
+				const [, zoom, lon, lat] = match;
+				return [lat, lon, Math.round(Number(zoom))];
+			  }
+			},
+		  },
+	{//https://js.protomaps.com/examples/leaflet.html#12/25.0578/121.5115
+		name: "protomaps.com",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "jawg.io",
+		description: "vextor map provider",
+		getUrl(lat, lon, zoom) {
+		  return 'https://js.protomaps.com/examples/leaflet.html#' + zoom + '/' + lon + '/' + lat;
+	
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/protomaps.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+	
+		  if (match) {
+			const [, zoom, lon, lat] = match;
+			return [lat, lon, Math.round(Number(zoom))];
+		  }
+		},
+	  },
+	  	{//https://tracesmap.com/#8/30.9932/121.5952
+		name: "tracesmap.com",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "tracesmap.com",
+		description: "raster map provider",
+		getUrl(lat, lon, zoom) {
+		  return 'https://tracesmap.com/e#' + zoom + '/' + lon + '/' + lat;
+	
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/tracesmap.*\/([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+	
+		  if (match) {
+			const [, zoom, lon, lat] = match;
+			return [lat, lon, Math.round(Number(zoom))];
+		  }
+		},
+	  },
+	  
 	{//https://gribrouillon.fr/#15/35.4484/139.6179
 	  name: "Gribrouillon",
 	  category: SPECIAL_CATEGORY,
