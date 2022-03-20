@@ -299,7 +299,7 @@ const maps = [
 	{
 		name: "Map compare (BBBike)",
 		category: UTILITY_CATEGORY,
-		default_check: true,
+		default_check: false,
 		domain: "mc.bbbike.org",
 		description: "Compare maps side-by-side",
 		getUrl(lat, lon, zoom) {
