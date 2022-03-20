@@ -514,17 +514,17 @@ const maps = [
 	  },
 	},
 
-	{
+	{//https://map.osmchina.org/#map=14/35.6806/139.7371
 		name: "OSMChina",
 		category: OSM_LOCAL_CATEGORY,
 		default_check: false,
-		domain: "map.osmchina.org",
+		domain: "osmchina.org",
 		description: "OpenStreetMap China local chapter",
 		getUrl(lat, lon, zoom) {
-		  return 'https://map.osmchina.org/#' + zoom + '/' + lat + '/' + lon;
+		  return 'https://map.osmchina.org/#map=' + zoom + '/' + lat + '/' + lon;
 		},
 		getLatLonZoom(url) {
-		  const match = url.match(/osmchina\.org\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+		  const match = url.match(/osmchina\.org\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 		  if (match) {
 			const [, zoom, lat, lon] = match;
 			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
@@ -541,7 +541,7 @@ const maps = [
 		name: "osm.kr",
 		category: OSM_LOCAL_CATEGORY,
 		default_check: false,
-		domain: "tiles.osm.kr",
+		domain: "osm.kr",
 		description: "OpenStreetMap Korea local chapter",
 		getUrl(lat, lon, zoom) {
 		  return 'https://tiles.osm.kr/#' + zoom + '/' + lat + '/' + lon;
