@@ -2227,4 +2227,15 @@ const maps = [
   
 		},
 	  },
+	  { //https://map.what3words.com/35.89182,140.49066
+		name: "what3words",
+		category: SPECIAL_CATEGORY,
+		default_check: false,
+		domain: "what3words.com",
+		description: "Specify location with 3 words",
+		getUrl(lat, lon, zoom) {
+		  return `https://map.what3words.com/${lat},${lon}`;
+  
+		},
+	  },
   ];
