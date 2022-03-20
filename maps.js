@@ -2196,4 +2196,35 @@ const maps = [
 		  }
 		},
 	  },
+	  /* Suncalc doesn't move to specified coordinates
+	  { //http://suncalc.net/#/35.514,139.6201,12
+		name: "SunCalc",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "suncalc.net",
+		description: "Sunrise, sunset, sun direction",
+		getUrl(lat, lon, zoom) {
+		  return `http://suncalc.net/#/${lat},${lon},${zoom}`;
+  
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/#\/(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9.]*)/);
+		  if (match) {
+			const [, lat, lon, zoom] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+	  */
+	  { //https://www.wolframalpha.com/input?i=35.514N+139.6201E
+		name: "Wolfram Alpha",
+		category: SPECIAL_CATEGORY,
+		default_check: false,
+		domain: "wolframalpha.com",
+		description: "Scientific information at the location",
+		getUrl(lat, lon, zoom) {
+		  return `https://www.wolframalpha.com/input?i=${lat}N+${lon}E`;
+  
+		},
+	  },
   ];
