@@ -2278,4 +2278,23 @@ const maps = [
 		  }
 		},
 	  },
+	  { //https://hanishina.github.io/maps/historymap.html?y=34.7935&x=134.8956&z=8
+		name: "市区町村境界時系列マップ(仮)(JP)",
+		category: LOCAL_CATEGORY,
+		default_check: false,
+		domain: "github.io",
+		description: "Transition of administrative boundaries in Japan",
+		getUrl(lat, lon, zoom) {
+		  return `https://hanishina.github.io/maps/historymap.html?y=${lat}&x=${lon}&z=${zoom}`;
+  
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/historymap\.html\?y=(-?\d[0-9.]*)&x=(-?\d[0-9.]*)&z=(\d[0-9.]*)/);
+		  if (match) {
+			const [, lat, lon, zoom] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
+
   ];
