@@ -99,7 +99,6 @@
 					<li>URL: <i><span id="showurl"></span></i></li>
 					<li>Lat: <i><span id="lat"><span></i>, Lon: <i><span id="lon"><span></i>, Zoom: <i><span
 								id="zoom"><span></i></li>
-					<li>Country code: <span id="country_code"></span></li>
 				</div>
 				<li>Address: <i><span id="address"></span></i></li>
 			</ul>
@@ -175,138 +174,13 @@ function groupBy(xs, key) {
     return rv;
   }, {});
 };
-
-
-//https://github.com/googollee/eviltransform
-const eviltransform = {
-	
-	earthR: 6378137.0,
-
-	outOfChina(lat, lng) {
-		if ((lng < 72.004) || (lng > 137.8347)) {
-			return true;
-		}
-		if ((lat < 0.8293) || (lat > 55.8271)) {
-			return true;
-		}
-		return false;
-	},
-
-	transform(x, y) {
-		var xy = x * y;
-		var absX = Math.sqrt(Math.abs(x));
-		var xPi = x * Math.PI;
-		var yPi = y * Math.PI;
-		var d = 20.0*Math.sin(6.0*xPi) + 20.0*Math.sin(2.0*xPi);
-
-		var lat = d;
-		var lng = d;
-
-		lat += 20.0*Math.sin(yPi) + 40.0*Math.sin(yPi/3.0);
-		lng += 20.0*Math.sin(xPi) + 40.0*Math.sin(xPi/3.0);
-
-		lat += 160.0*Math.sin(yPi/12.0) + 320*Math.sin(yPi/30.0);
-		lng += 150.0*Math.sin(xPi/12.0) + 300.0*Math.sin(xPi/30.0);
-
-		lat *= 2.0 / 3.0;
-		lng *= 2.0 / 3.0;
-
-		lat += -100.0 + 2.0*x + 3.0*y + 0.2*y*y + 0.1*xy + 0.2*absX;
-		lng += 300.0 + x + 2.0*y + 0.1*x*x + 0.1*xy + 0.1*absX;
-
-		return {lat: lat, lng: lng}
-	},
-
-	delta(lat, lng) {
-		var ee = 0.00669342162296594323;
-		var d = this.transform(lng-105.0, lat-35.0);
-		var radLat = lat / 180.0 * Math.PI;
-		var magic = Math.sin(radLat);
-		magic = 1 - ee*magic*magic;
-		var sqrtMagic = Math.sqrt(magic);
-		d.lat = (d.lat * 180.0) / ((this.earthR * (1 - ee)) / (magic * sqrtMagic) * Math.PI);
-		d.lng = (d.lng * 180.0) / (this.earthR / sqrtMagic * Math.cos(radLat) * Math.PI);
-		return d;
-	},
-
-	wgs2gcj(wgsLat, wgsLng) {
-		if (this.outOfChina(wgsLat, wgsLng)) {
-			return {lat: wgsLat, lng: wgsLng};
-		}
-		var d = this.delta(wgsLat, wgsLng);
-		return {lat: wgsLat + d.lat, lng: wgsLng + d.lng};
-	},
-
-	gcj2wgs(gcjLat, gcjLng) {
-		if (this.outOfChina(gcjLat, gcjLng)) {
-			return {lat: gcjLat, lng: gcjLng};
-		}
-		var d = this.delta(gcjLat, gcjLng);
-		return {lat: gcjLat - d.lat, lng: gcjLng - d.lng};
-	},
-			
-	gcj2bd(gcjLat, gcjLng) {
-		if (this.outOfChina(gcjLat, gcjLng)) {
-			return {lat: gcjLat, lng: gcjLng};
-		}
-
-		var x = gcjLng, y = gcjLat;
-		var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * Math.PI);
-		var theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * Math.PI);
-		var bdLng = z * Math.cos(theta) + 0.0065;
-		var bdLat = z * Math.sin(theta) + 0.006;
-		return {lat: bdLat, lng: bdLng};
-	},
-
-
-	bd2gcj(bdLat, bdLng) {
-		if (this.outOfChina(bdLat, bdLng)) {
-			return {lat: bdLat, lng: bdLng};
-		}
-
-		var x = bdLng - 0.0065, y = bdLat - 0.006;
-		var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * Math.PI);
-		var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * Math.PI);
-		var gcjLng = z * Math.cos(theta);
-		var gcjLat = z * Math.sin(theta);
-		return {lat: gcjLat, lng: gcjLng};
-	},
-
-
-	wgs2bd(wgsLat, wgsLng) {
-		var gcj = this.wgs2gcj(wgsLat, wgsLng);
-		return this.gcj2bd(gcj.lat, gcj.lng);
-	},
-
-
-	bd2wgs(bdLat, bdLng) {
-		var gcj = this.bd2gcj(bdLat, bdLng);
-		return this.gcj2wgs(gcj.lat, gcj.lng);
-	},
-}
-
-function setLatLon(lat_, lon_){
-	document.getElementById("lat").innerHTML = lat_;
-	document.getElementById("lon").innerHTML = lon_;
-	lat = lat_;
-	lon = lon_;
-
-}
 function setAddress(lat, lon){
 		var request = new XMLHttpRequest();
 		request.open('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1', true);
 		request.responseType = 'json';
 		request.onload = function () {
 			var data = this.response;
-			console.log(data);
 			document.getElementById("address").innerHTML = data.display_name;
-			country_code = data.address.country_code;
-			if (country_code == 'cn' && is_gcj_in_china){
-				console.log('in china gcj');
-				const wgs = eviltransform.gcj2wgs(lat,lon);
-				setLatLon(wgs.lat, wgs.lng);
-				setMaps(wgs.lat, wgs.lng, zoom, maps);
-			}
 		};
 		request.send();
 	}
@@ -318,12 +192,7 @@ function getLatLonZoom(url, maps) {
 	for (let map of maps){
 		if (map.hasOwnProperty('getLatLonZoom')){
 			let latlonzoom = map.getLatLonZoom(url);
-			if (latlonzoom) {
-				if (map.hasOwnProperty('is_gcj_in_china')){
-					is_gcj_in_china = map.is_gcj_in_china;
-				}
-				return latlonzoom;
-			}
+			if (latlonzoom) return latlonzoom;
 		}
 	}
 	return ;
@@ -347,57 +216,8 @@ function img_src_replace(domain) {
     }
 	
 }
-function setMaps(lat, lon, zoom, maps){
 
-	let columns = groupBy(maps, 'category');
-	
-	//名前順に並び替え
-	for (let key in columns){
-		columns[key] = sortByKey(columns[key], 'name', 'asc');
-	}
-
-	
-  let maplist = "";
-  
-  let categories = Object.keys(columns);
-
-  for (let category of categories){
-	  maplist += '<ul class="submaps" id="' + category + '"><li class="title">' + category + '</li>';
-	  let mapsublist = columns[category];
-  //alert(category);	  
-	    for (let map of mapsublist){
-			if (map.hasOwnProperty('getUrl')) {
-				let tooltip = "";
-				let map_lat = lat, map_lon = lon;
-				if (map.hasOwnProperty('is_gcj_in_china') && map.is_gcj_in_china){
-					const gcj = eviltransform.wgs2gcj(parseFloat(lat), parseFloat(lon));
-					map_lat = gcj.lat;
-					map_lon = gcj.lng;
-				}
-				if (map.hasOwnProperty('description')) tooltip = ' title="' + map.description + '" ';
-				maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon,zoom)}" id="${map.name}" ${tooltip}>${map.name}</a></li>`;
-				img_src_replace(map.domain);
-				//maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '"'+ tooltip + '>' + map.name + '</a></li>';
-			}
-		}
-		maplist += '</ul>';
-  }
-  
-
-  /*
-  for (let column of columns)
-  
-  let maplist = "";
-  for (let map of maps){
-	maplist = maplist + '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '">' + map.name + '</li>';
-  };
-  */
-  document.getElementById("maps").innerHTML =  maplist;
-}
-let lat = 0, lon = 0, zoom = 4;
-let country_code;
-let is_gcj_in_china = false;
-
+let lat, lon, zoom;
 
 /* 
 const testurl = "https://www.openstreetmap.org/#map=13/33.0354/129.7383&layers=N";
@@ -417,10 +237,12 @@ let latlonzoom = getLatLonZoom(testurl, maps);
 	  [lat, lon, zoom] = latlonzoom;
 	}
 	else {
+		[lat, lon, zoom] = [0, 0, 4];
 	document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported.</strong>";
 	}
   }
   else {
+	[lat, lon, zoom] = [0, 0, 4];
 	document.getElementById("sorry").innerHTML = "<strong>Install above bookmarklet first.</strong>";
   }
   
@@ -429,12 +251,50 @@ let latlonzoom = getLatLonZoom(testurl, maps);
 
 
   setAddress(lat,lon);	
-  setLatLon(lat,lon);
-
+  document.getElementById("lat").innerHTML = lat;
+  document.getElementById("lon").innerHTML = lon;
   document.getElementById("zoom").innerHTML = zoom;
 
+  let columns = groupBy(maps, 'category');
+	
+	//名前順に並び替え
+	for (let key in columns){
+		columns[key] = sortByKey(columns[key], 'name', 'asc');
+	}
 
-  setMaps(lat, lon, zoom, maps);
+	
+  let maplist = "";
+  
+  let categories = Object.keys(columns);
+
+  for (let category of categories){
+	  maplist += '<ul class="submaps" id="' + category + '"><li class="title">' + category + '</li>';
+	  let mapsublist = columns[category];
+  //alert(category);	  
+	    for (let map of mapsublist){
+			if (map.hasOwnProperty('getUrl')) {
+				let tooltip = "";
+				if (map.hasOwnProperty('description')) tooltip = ' title="' + map.description + '" ';
+				maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(lat,lon,zoom)}" id="${map.name}" ${tooltip}>${map.name}</a></li>`;
+				img_src_replace(map.domain);
+				//maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '"'+ tooltip + '>' + map.name + '</a></li>';
+			}
+		}
+		maplist += '</ul>';
+  }
+  
+
+  /*
+  for (let column of columns)
+  
+  let maplist = "";
+  for (let map of maps){
+	maplist = maplist + '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '">' + map.name + '</li>';
+  };
+  */
+  document.getElementById("maps").innerHTML =  maplist;
+
+  
   
 </script>
 
