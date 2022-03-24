@@ -303,7 +303,7 @@ function setAddress(lat, lon){
 			country_code = data.address.country_code;
 			if (country_code == 'cn' && is_gcj_in_china){
 				console.log('in china gcj');
-				const wgs = eviltransform.gcj2wgs(lat,lon);
+				const wgs = eviltransform.gcj2wgs(parseFloat(lat),parseFloat(lon));
 				setLatLon(wgs.lat, wgs.lng);
 				setMaps(wgs.lat, wgs.lng, zoom, maps);
 			}
@@ -369,10 +369,15 @@ function setMaps(lat, lon, zoom, maps){
 			if (map.hasOwnProperty('getUrl')) {
 				let tooltip = "";
 				let map_lat = lat, map_lon = lon;
-				if (map.hasOwnProperty('is_gcj_in_china') && map.is_gcj_in_china){
+				if (map.hasOwnProperty('is_gcj_in_china') && map.is_gcj_in_china && country_code == 'cn'){
 					const gcj = eviltransform.wgs2gcj(parseFloat(lat), parseFloat(lon));
 					map_lat = gcj.lat;
 					map_lon = gcj.lng;
+					if (map.is_gcj_in_china == 'bd'){
+						const bd = eviltransform.gcj2bd(map_lat, map_lon);
+						map_lat = bd.lat;
+						map_lon = bd.lng;
+					}
 				}
 				if (map.hasOwnProperty('description')) tooltip = ' title="' + map.description + '" ';
 				maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon,zoom)}" id="${map.name}" ${tooltip}>${map.name}</a></li>`;

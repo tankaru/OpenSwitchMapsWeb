@@ -1560,11 +1560,11 @@ const maps = [
 	  category: MAIN_CATEGORY,
 	  default_check: false,
 	  domain: "map.baidu.com",
-	  is_gcj_in_china: true,
+	  is_gcj_in_china: "bd",
 		
 	  getUrl(lat, lon, zoom) {
-		const bd =  eviltransform.gcj2bd(lat, lon);
-		return 'http://map.baidu.com/?latlng=' + bd.lat + ',' + bd.lng;
+		//const bd =  eviltransform.gcj2bd(lat, lon);
+		return 'http://map.baidu.com/?latlng=' + lat + ',' + lon;
   
 	  },
 
