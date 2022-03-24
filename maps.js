@@ -42,7 +42,6 @@ const maps = [
 	  category: MAIN_CATEGORY,
 	  default_check: true,
 	  domain: "www.google.com",
-	  is_gcj_in_china: true,
 	  getUrl(lat, lon, zoom) {
 		return 'https://www.google.com/maps/@' + lat + ',' + lon + ',' + zoom + 'z';
 	  },
@@ -68,7 +67,6 @@ const maps = [
 	  category: MAIN_CATEGORY,
 	  default_check: false,
 	  domain: "www.google.com",
-	  is_gcj_in_china: true,
 	  getUrl(lat, lon, zoom) {
 		return `https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=${lat},${lon}`;
 	  },
@@ -215,7 +213,6 @@ const maps = [
 	  category: MAIN_CATEGORY,
 	  default_check: true,
 	  domain: "www.bing.com",
-	  is_gcj_in_china: true,
 	  getUrl(lat, lon, zoom) {
 		return 'https://www.bing.com/maps?cp=' + lat + '~' + lon + '&lvl=' + zoom;
 	  },
@@ -1553,22 +1550,16 @@ const maps = [
   
 	},
   
-	//import {} from "./eviltransform/TransformStream.js";
-
 	{//http://map.baidu.com/?latlng=35.6777,139.7588
 	  name: "Baidu",
 	  category: MAIN_CATEGORY,
 	  default_check: false,
 	  domain: "map.baidu.com",
-	  is_gcj_in_china: true,
-		
+  
 	  getUrl(lat, lon, zoom) {
-		const bd =  eviltransform.gcj2bd(lat, lon);
-		return 'http://map.baidu.com/?latlng=' + bd.lat + ',' + bd.lng;
+		return 'http://map.baidu.com/?latlng=' + lat + ',' + lon;
   
 	  },
-
-
   
 	},
 	{//https://osmaps.ordnancesurvey.co.uk/51.39378,0.13892,10
@@ -2191,7 +2182,7 @@ const maps = [
 		name: "OSM address editor",
 		category: UTILITY_CATEGORY,
 		default_check: false,
-		domain: "github.io",
+		domain: "yuiseki.github.io",
 		description: "View the editor of buidling and edit address",
 		getUrl(lat, lon, zoom) {
 		  return `https://yuiseki.github.io/osm-address-editor-vite/#${zoom}/${lat}/${lon}`;
@@ -2303,17 +2294,6 @@ const maps = [
 			const [, lat, lon, zoom] = match;
 			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
 		  }
-		},
-	  },
-	  { //https://www.its-mo.com/maps/?lat=35.626534167&lon=139.841299444
-		name: "いつもNAVI(JP)",
-		category: LOCAL_CATEGORY,
-		default_check: false,
-		domain: "its-mo.com",
-		description: "Zenrin map in Japan",
-		getUrl(lat, lon, zoom) {
-		  return `https://www.its-mo.com/maps/?lat=${lat}&lon=${lon}`;
-  
 		},
 	  },
 
