@@ -301,12 +301,18 @@ function setAddress(lat, lon){
 			console.log(data);
 			document.getElementById("address").innerHTML = data.display_name;
 			country_code = data.address.country_code;
-			if (country_code == 'cn' && is_gcj_in_china){
-				console.log('in china gcj');
-				const wgs = eviltransform.gcj2wgs(parseFloat(lat),parseFloat(lon));
-				setLatLon(wgs.lat, wgs.lng);
-				setMaps(wgs.lat, wgs.lng, zoom, maps);
+			if (country_code == 'cn'){
+				if (is_gcj_in_china){
+					console.log('in china from google/bing/baidu');
+					const wgs = eviltransform.gcj2wgs(parseFloat(lat),parseFloat(lon));
+					setLatLon(wgs.lat, wgs.lng);
+					setMaps(wgs.lat, wgs.lng, zoom, maps);
+				} else {
+					//中国国内が確定したので作り直し
+					setMaps(lat, lon, zoom, maps);
+				}
 			}
+
 		};
 		request.send();
 	}
@@ -321,6 +327,7 @@ function getLatLonZoom(url, maps) {
 			if (latlonzoom) {
 				if (map.hasOwnProperty('is_gcj_in_china')){
 					is_gcj_in_china = map.is_gcj_in_china;
+					console.log('google/bing/baidu');
 				}
 				return latlonzoom;
 			}
@@ -370,6 +377,7 @@ function setMaps(lat, lon, zoom, maps){
 				let tooltip = "";
 				let map_lat = lat, map_lon = lon;
 				if (map.hasOwnProperty('is_gcj_in_china') && map.is_gcj_in_china && country_code == 'cn'){
+					console.log('setting google/bing/baidu coords')
 					const gcj = eviltransform.wgs2gcj(parseFloat(lat), parseFloat(lon));
 					map_lat = gcj.lat;
 					map_lon = gcj.lng;
