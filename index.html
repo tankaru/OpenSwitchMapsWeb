@@ -388,7 +388,9 @@ function setMaps(lat, lon, zoom, maps){
 					}
 				}
 				if (map.hasOwnProperty('description')) tooltip = ' title="' + map.description + '" ';
-				maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon,zoom)}" id="${map.name}" ${tooltip}>${map.name}</a></li>`;
+				//一方通行のマップに、*マークを付ける
+				const oneway_note = map.hasOwnProperty('getLatLonZoom') ? '' : '<sup>*</sup>';
+				maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon,zoom)}" id="${map.name}" ${tooltip}>${map.name}${oneway_note}</a></li>`;
 				img_src_replace(map.domain);
 				//maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '"'+ tooltip + '>' + map.name + '</a></li>';
 			}
