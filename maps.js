@@ -2316,5 +2316,40 @@ const maps = [
   
 		},
 	  },
+	  { //https://duckduckgo.com/?q=-35%2C-135&iaxm=maps
+		name: "DuckDuckGo",
+		category: MAIN_CATEGORY,
+		default_check: false,
+		domain: "duckduckgo.com",
+		description: "Privacy secured search service",
+		getUrl(lat, lon, zoom) {
+		  return `https://duckduckgo.com/?q=${lat}%2C${lon}&iaxm=maps`;
+  
+		},
+	  },
+	  /* No good result
+	  { //https://anvaka.github.io/city-roads/?q=-23.55095%2C%20-46.63296
+		name: "city roads",
+		category: SPECIAL_CATEGORY,
+		default_check: false,
+		domain: "github.io",
+		description: "Create a map every single road within a city",
+		getUrl(lat, lon, zoom) {
+		  return `https://anvaka.github.io/city-roads/?q=${lat}%2C%20${lon}`;
+  
+		},
+	  },
+	  */
+	  { //https://skyvector.com/?ll=34.735668976405066,139.33731081107155&chart=301&zoom=2
+		name: "SkyVector",
+		category: SPECIAL_CATEGORY,
+		default_check: false,
+		domain: "skyvector.com",
+		description: "Aeronautical chart",
+		getUrl(lat, lon, zoom) {
+		  return `https://skyvector.com/?ll=${lat},${lon}&chart=301&zoom=2`;
+  
+		},
+	  },
 
   ];
