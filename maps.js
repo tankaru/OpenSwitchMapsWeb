@@ -759,9 +759,9 @@ const maps = [
 		return 'https://apps.sentinel-hub.com/eo-browser/?lat=' + lat + '&lng=' + lon + '&zoom=' + zoom;
 	  },
 	  getLatLonZoom(url) {
-		const match = url.match(/apps\.sentinel-hub\.com\/eo-browser\/\?lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&zoom=(\d{1,2})/);
+		const match = url.match(/apps\.sentinel-hub\.com\/eo-browser\/\?zoom=(\d{1,2})&lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)/);
 		if (match) {
-		  let [, lat, lon, zoom] = match;
+		  let [, zoom, lat, lon] = match;
 		  return [lat, lon, zoom];
 		}
 	  },
