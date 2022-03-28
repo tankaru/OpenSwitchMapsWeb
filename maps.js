@@ -1553,9 +1553,7 @@ const maps = [
   
 	},
   
-	//import {} from "./eviltransform/TransformStream.js";
-
-	{//http://map.baidu.com/?latlng=35.6777,139.7588
+		{//http://map.baidu.com/?latlng=35.6777,139.7588
 	  name: "Baidu",
 	  category: MAIN_CATEGORY,
 	  default_check: false,
@@ -1563,7 +1561,6 @@ const maps = [
 	  is_gcj_in_china: "bd",
 		
 	  getUrl(lat, lon, zoom) {
-		//const bd =  eviltransform.gcj2bd(lat, lon);
 		return 'http://map.baidu.com/?latlng=' + lat + ',' + lon;
   
 	  },
