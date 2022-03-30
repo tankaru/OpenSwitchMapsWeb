@@ -1765,7 +1765,7 @@ const maps = [
 		domain: "poole.ch",
 		description: "Streets with no names",
 		getUrl(lat, lon, zoom) {
-			return `http://qa.poole.ch/?zoom=${zoom}&lat=${lat}&lon=${lon}`;
+			return `http://qa.poole.ch/?zoom=${Math.min(zoom, 18)}&lat=${lat}&lon=${lon}`;
 		},
 	},
 	{
