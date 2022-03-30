@@ -1,5 +1,5 @@
 # OpenSwitchMapsWeb
-Web version of OpenSwitchMaps.
+Web version of [OpenSwitchMaps](https://github.com/tankaru/OpenSwitchMaps).
 
 # Why not browser extension?
 Web browser extension "OpenSwitchMaps" is available for Chrome and Firefox. You can switch maps via browser menu. I tried to add more and more map services, but a too much expanded menu lost its usability. So I decided to make a web version to add map services as much as I want.

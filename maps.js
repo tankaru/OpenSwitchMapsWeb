@@ -2134,29 +2134,27 @@ const maps = [
 				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
 			}
 		},
-<<<<<<< HEAD
-	},
-	{
-		//https://app.shadowmap.org/?lat=48.15646&lng=16.39107&zoom=15
+
+	
+	  { //https://app.shadowmap.org/?lat=48.15646&lng=16.39107&zoom=15
 		name: "Shadowmap",
 		category: SPECIAL_CATEGORY,
 		default_check: false,
 		domain: "shadowmap.org",
 		description: "Visualize sunlight and shadows of terrains and buildings at specified time",
 		getUrl(lat, lon, zoom) {
-			return `https://app.shadowmap.org/?lat=${lat}&lng=${lon}&zoom=${zoom}`;
+		  return `https://app.shadowmap.org/?lat=${lat}&lng=${lon}&zoom=${zoom}`;
+  
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/shadowmap\.org\/\?lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&zoom=(\d[0-9.]*)/);
-			if (match) {
-				const [, lat, lon, zoom] = match;
-				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
-			}
+		  const match = url.match(/shadowmap\.org\/\?lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&zoom=(\d[0-9.]*)/);
+		  if (match) {
+			const [, lat, lon, zoom] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
 		},
-	},
-=======
 	  },
->>>>>>> parent of 5187dd5 (Add Shadowmap)
+
 
 	{
 		//https://yuiseki.github.io/osm-address-editor-vite/#16.79/35.683021/139.749329
