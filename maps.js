@@ -2134,6 +2134,7 @@ const maps = [
 				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
 			}
 		},
+	},
 
 	
 	  { //https://app.shadowmap.org/?lat=48.15646&lng=16.39107&zoom=15
