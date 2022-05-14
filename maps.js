@@ -1176,6 +1176,7 @@ const maps = [
 	},
 
 	{
+		//https://livingatlas.arcgis.com/wayback/#ext=29.37336,59.60122,31.43192,60.27332&active=16245
 		name: "World Imagery Wayback",
 		category: OTHER_CATEGORY,
 		default_check: false,
@@ -1183,11 +1184,11 @@ const maps = [
 		description: "Historic satellite images since 2014",
 		getUrl(lat, lon, zoom) {
 			const [minlon, minlat, maxlon, maxlat] = latLonZoomToBbox(lat, lon, zoom);
-			return "http://livingatlas.arcgis.com/wayback/?ext=" + minlon + "," + minlat + "," + maxlon + "," + maxlat;
+			return "https://livingatlas.arcgis.com/wayback/#ext=" + minlon + "," + minlat + "," + maxlon + "," + maxlat;
 		},
 		getLatLonZoom(url) {
 			let match;
-			if ((match = url.match(/livingatlas\.arcgis\.com\/wayback\/\?ext=(-?\d[0-9.]*),(-?\d[0-9.]*),(-?\d[0-9.]*),(-?\d[0-9.]*)/))) {
+			if ((match = url.match(/livingatlas\.arcgis\.com\/wayback\/\#ext=(-?\d[0-9.]*),(-?\d[0-9.]*),(-?\d[0-9.]*),(-?\d[0-9.]*)/))) {
 				const [, minlon, minlat, maxlon, maxlat] = match;
 				const [lat, lon, zoom] = bboxToLatLonZoom(minlon, minlat, maxlon, maxlat);
 				return [lat, lon, zoom];
@@ -2321,4 +2322,45 @@ const maps = [
 			return `https://skyvector.com/?ll=${lat},${lon}&chart=301&zoom=2`;
 		},
 	},
+	{
+		//https://osmapp.org/#8.36/35.5586/139.5846
+		name: "OsmAPP",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "osmapp.org",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://osmapp.org/#${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/osmapp\.org\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+	/* Couldn't find a good converter.
+	{
+		//https://www.geoportal.bayern.de/bayernatlas/?topic=ba&lang=de&bgLayer=atkis&catalogNodes=11&E=604510.08&N=5337130.40&zoom=3
+		name: "BayernAtlas",
+		category: LOCAL_CATEGORY,
+		default_check: false,
+		domain: "geoportal.bayern.de",
+		description: "der Kartenviewer des Freistaates Bayern",
+		getUrl(lat, lon, zoom) {
+			return `https://www.geoportal.bayern.de/bayernatlas/?topic=ba&lang=de&bgLayer=atkis&catalogNodes=11&E=${72721*Number(lon) - 154177}&N=${110681*Number(lat) + 7222}&zoom=${Number(zoom)-5}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/geoportal\.bayern\.de.*E=(\d[0-9.]*)&N=(\d[0-9.]*)&zoom=(\d[0-9.]*)/);
+			if (match) {
+				const [, gk4_lon, gk4_lat, gk4_zoom] = match;
+				const lat = (Number(gk4_lat) - 7222)/110681;
+				const lon = (Number(gk4_lon) + 154177)/72721;
+				const zoom = Number(gk4_zoom) +5;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+	*/
 ];
