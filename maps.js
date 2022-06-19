@@ -393,6 +393,25 @@ const maps = [
 			}
 		},
 	},
+	
+	//https://www.maptiler.com/google-maps-coordinates-tile-bounds-projection/#5/111.84/47.09
+	{
+		name: "Tiles à la Google Maps",
+		category: UTILITY_CATEGORY,
+		default_check: true,
+		domain: "maptiler.com",
+		description: "Different kind of map tile number in Google Map",
+		getUrl(lat, lon, zoom) {
+			return "https://www.maptiler.com/google-maps-coordinates-tile-bounds-projection/#" + zoom + "/" + lon + "/" + lat;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/maptiler\.com\/google-maps-coordinates-tile-bounds-projection\/#\d+\/(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lon, lat] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
 
 	//https://map.yahoo.co.jp/?lat=35.76999&lon=139.41380&zoom=16&maptype=basic
 	{
