@@ -405,7 +405,7 @@ const maps = [
 			return "https://www.maptiler.com/google-maps-coordinates-tile-bounds-projection/#" + zoom + "/" + lon + "/" + lat;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/maptiler\.com\/google-maps-coordinates-tile-bounds-projection\/#\d+\/(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			const match = url.match(/maptiler\.com\/google-maps-coordinates-tile-bounds-projection\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
 				const [, zoom, lon, lat] = match;
 				return [lat, lon, zoom];
