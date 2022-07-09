@@ -2418,4 +2418,40 @@ const maps = [
 			}
 		},
 	},
+	{
+		//https://notes-heatmap.openstreetmap.fr/?pos=48.25,15.39,6
+		name: "OSM Notes Heatmap",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "openstreetmap.fr",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://notes-heatmap.openstreetmap.fr/?pos=${lat},${lon},${zoom}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/pos=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9.]*)/);
+			if (match) {
+				const [, lat, lon, zoom] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+	{
+		//https://osmand.net/map#11/35.6492/139.8395
+		name: "OsmAnd",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "osmand.net",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://osmand.net/map#${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/osmand\.net\/map#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
 ];
