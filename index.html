@@ -64,9 +64,16 @@
       </style>
 </head>
 <body>
-	<div class="container-fluid bg-primary text-light">
+	<nav class="navbar navbar-primary bg-primary text-light p-0" id="main_navbar">
 		<h1 class="h3"> 🗺️OpenSwitchMaps Web🗺️</h1>
-	</div>
+		<div>
+			Map URL:<input type="url" class="" id="inputbox_map_url" placeholder="Enter Map URL">
+			<button type="submit" id="button_refresh_links" class="btn btn-secondary btn-sm" onclick="button_refresh_links();">Refresh links</button>
+		</div>
+
+		
+
+	</nav>
 
 	<div class="container-fluid alert-warning">
 		<div id="description">
@@ -412,9 +419,42 @@ function setMaps(lat, lon, zoom, maps){
   */
   document.getElementById("maps").innerHTML =  maplist;
 }
-let lat = 0, lon = 0, zoom = 4;
-let country_code;
-let is_gcj_in_china = false;
+
+function button_refresh_links(){
+	const url = document.getElementById('inputbox_map_url').value;
+	console.log(url);
+	make_links(url);
+}
+
+//移動前の地図URLを受取って、リンクを生成する
+function make_links(prevUrl){
+	let elementUrl = document.getElementById("showurl");
+
+
+	document.getElementById("description").style.display = "none";
+	elementUrl.innerHTML = prevUrl;
+	let latlonzoom;
+	latlonzoom = getLatLonZoom(prevUrl, maps);
+	if (latlonzoom){
+		[lat, lon, zoom] = latlonzoom;
+		document.getElementById("sorry").innerHTML = '';
+	}
+	else {
+		document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported.</strong>";
+	}
+
+	setAddress(lat,lon);	
+	setLatLon(lat,lon);
+
+	document.getElementById("zoom").innerHTML = zoom;
+
+
+	setMaps(lat, lon, zoom, maps);
+}
+
+function init(){
+
+
 
 
 /* 
@@ -422,37 +462,30 @@ const testurl = "https://www.openstreetmap.org/#map=13/33.0354/129.7383&layers=N
 let latlonzoom = getLatLonZoom(testurl, maps);
 */
 
-  let elementUrl = document.getElementById("showurl");
-  let prevUrls = location.href.match(/#(.*)$/);
 
-  if (prevUrls) {
-    let prevUrl = prevUrls[1];
-    document.getElementById("description").style.display = "none";
-    elementUrl.innerHTML = prevUrl;
-    let latlonzoom;
-    latlonzoom = getLatLonZoom(prevUrl, maps);
-	if (latlonzoom){
-	  [lat, lon, zoom] = latlonzoom;
+	const prevUrls = location.href.match(/#(.*)$/);
+	if (prevUrls) {
+		const prevUrl = prevUrls[1];
+		make_links(prevUrl);
 	}
 	else {
-	document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported.</strong>";
+		document.getElementById("sorry").innerHTML = "<strong>Install above bookmarklet first.</strong>";
+		//set dummy links
+		setMaps(lat, lon, zoom, maps);
 	}
-  }
-  else {
-	document.getElementById("sorry").innerHTML = "<strong>Install above bookmarklet first.</strong>";
-  }
+}
+
+//Global variables
+let lat = 0, lon = 0, zoom = 4;
+let country_code;
+let is_gcj_in_china = false;
+
+init();
+
+
+
   
 
-
-
-
-  setAddress(lat,lon);	
-  setLatLon(lat,lon);
-
-  document.getElementById("zoom").innerHTML = zoom;
-
-
-  setMaps(lat, lon, zoom, maps);
   
 </script>
 

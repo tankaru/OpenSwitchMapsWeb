@@ -2454,4 +2454,24 @@ const maps = [
 			}
 		},
 	},
+	{
+		//https://rene78.github.io/latest-changes/#12/43.0991/141.3772
+		name: "OSM Latest Changes",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "github.io",
+		description: "Shows recent changes on OpenStreetMap",
+		getUrl(lat, lon, zoom) {
+			return `https://rene78.github.io/latest-changes/#${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/latest-changes\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+
+
 ];
