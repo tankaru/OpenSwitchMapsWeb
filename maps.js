@@ -2473,5 +2473,19 @@ const maps = [
 		},
 	},
 
+	{
+		//geo:37.786971,-122.399677
+		//https://en.wikipedia.org/wiki/Geo_URI_scheme
+		name: "geo URI",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `geo:${lat},${lon}`;
+		},
+
+	},
+
 
 ];
