@@ -1306,7 +1306,8 @@ const maps = [
 	},
 
 	{
-		//https://firms.modaps.eosdis.nasa.gov/map/#z:9;c:139.9,35.7;d:2020-01-06..2020-01-07
+
+		//https://firms.modaps.eosdis.nasa.gov/map/#t:adv;d:7days;@139.8,35.6,11z
 		name: "FIRMS",
 		category: SPECIAL_CATEGORY,
 		default_check: false,
@@ -1315,12 +1316,12 @@ const maps = [
 		getUrl(lat, lon, zoom) {
 			let z = Number(zoom);
 			if (z > 14) z = 14;
-			return "https://firms.modaps.eosdis.nasa.gov/map/#z:" + z + ";c:" + normalizeLon(lon) + "," + lat;
+			return `https://firms.modaps.eosdis.nasa.gov/map/#t:adv;d:7days;@${lon},${lat},${Math.round(Math.min(Number(zoom), 14))}z`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/firms\.modaps\.eosdis\.nasa\.gov\/map\/#z:(\d{1,2});c:(-?\d[0-9.]*),(-?\d[0-9.]*)/);
+			const match = url.match(/firms\.modaps\.eosdis\.nasa\.gov\/map\/.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9.]*)z/);
 			if (match) {
-				const [, zoom, lon, lat] = match;
+				const [,  lon, lat, zoom] = match;
 				return [lat, lon, zoom];
 			}
 		},
