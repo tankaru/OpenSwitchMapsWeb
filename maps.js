@@ -182,7 +182,7 @@ const maps = [
 			return "https://yandex.com/maps/?ll=" + lon + "%2C" + lat + "&z=" + zoom;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/yandex.*maps.*ll=(-?\d[0-9.]*)%2C(-?\d[0-9.]*)&z=(\d{1,2})/);
+			const match = url.match(/yandex.*maps.*ll=(-?\d[0-9.]*)%2C(-?\d[0-9.]*).*&z=(\d{1,2})/);
 			if (match) {
 				const [, lon, lat, zoom] = match;
 				return [lat, lon, zoom];
@@ -2483,6 +2483,55 @@ const maps = [
 		description: "",
 		getUrl(lat, lon, zoom) {
 			return `geo:${lat},${lon}`;
+		},
+
+	},
+	{
+		//https://app.openindoor.io/#17.48/35.689768/139.700802
+		name: "OpenIndoor",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "openindoor.io",
+		description: "Shows Indoor information of buildings",
+		getUrl(lat, lon, zoom) {
+			return `https://app.openindoor.io/#${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/app\.openindoor\.io\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+	{
+		//https://indoorequal.org/#map=16.13/35.681577/139.766966&level=-5
+		name: "indoor=",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "indoorequal.org",
+		description: "display indoor data",
+		getUrl(lat, lon, zoom) {
+			return `https://indoorequal.org/#map=${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/indoorequal\.org\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+
+	{
+		//https://liveuamap.com/?zoom=10&ll=52.30637946442471,32.53189086914063
+		name: "Live Universal Awareness Map",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "liveuamap.com",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://liveuamap.com/?zoom=${zoom}&ll=${lat},${lon}`;
 		},
 
 	},
