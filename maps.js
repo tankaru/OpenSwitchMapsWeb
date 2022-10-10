@@ -2556,6 +2556,26 @@ const maps = [
 
 	},
 
+	{
+		//https://www.deepstatemap.live/en#7.5/53.313/28.872
+		name: "DeepState Map",
+		category: SPECIAL_CATEGORY,
+		default_check: false,
+		domain: "deepstatemap.live",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://www.deepstatemap.live/en#${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/deepstatemap\.live\/en#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+
+
 
 
 ];
