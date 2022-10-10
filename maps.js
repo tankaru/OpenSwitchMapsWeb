@@ -2484,6 +2484,13 @@ const maps = [
 		getUrl(lat, lon, zoom) {
 			return `geo:${lat},${lon}`;
 		},
+		getLatLonZoom(url) {
+			const match = url.match(/geo:(-?\d[0-9.]*),(-?\d[0-9.]*)/);
+			if (match) {
+				const [, lat, lon] = match;
+				return [lat, normalizeLon(lon), 16];//zoom=16は適当
+			}
+		},
 
 	},
 	{
@@ -2526,7 +2533,7 @@ const maps = [
 	{
 		//https://liveuamap.com/?zoom=10&ll=52.30637946442471,32.53189086914063
 		name: "Live Universal Awareness Map",
-		category: OTHER_CATEGORY,
+		category: SPECIAL_CATEGORY,
 		default_check: false,
 		domain: "liveuamap.com",
 		description: "",
@@ -2535,6 +2542,20 @@ const maps = [
 		},
 
 	},
+
+	{
+		//https://tankaru.github.io/OpenSwitchMapsWeb/index.html#https://www.openstreetmap.org/#map=6/49.852/34.909
+		name: "OpenSwitchMapsWeb",
+		category: PORTAL_CATEGORY,
+		default_check: false,
+		domain: "github.io",
+		description: "Web version of OpenSwitchMaps",
+		getUrl(lat, lon, zoom) {
+			return `https://tankaru.github.io/OpenSwitchMapsWeb/index.html#https://www.openstreetmap.org/#map=${zoom}/${lat}/${lon}`;//use osm as dummy
+		},
+
+	},
+
 
 
 ];
