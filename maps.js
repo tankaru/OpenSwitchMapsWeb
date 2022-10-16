@@ -85,7 +85,8 @@ const maps = [
 					if (p) {
 						const lat = ((p[4] == 'N') ? 1 : -1) * (Number(p[1]) + Number(p[2])/60.0 + Number(p[3])/60/60) ;
 						const lon = ((p[8] == 'E') ? 1 : -1) * (Number(p[5]) + Number(p[6])/60.0 + Number(p[7])/60/60)  ;
-						console.log(lat,lon);
+
+						return [lat,lon];
 					} else {
 
 					}
