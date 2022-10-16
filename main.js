@@ -171,10 +171,10 @@ function setAddress(lat, lon){
 					console.log('in china from google/bing/baidu');
 					const wgs = eviltransform.gcj2wgs(parseFloat(lat),parseFloat(lon));
 					setLatLon(wgs.lat, wgs.lng);
-					setMaps(wgs.lat, wgs.lng, zoom, maps);
+					setMaps(wgs.lat, wgs.lng, zoom, maps, pin_lat, pin_lon);
 				} else {
 					//中国国内が確定したので作り直し
-					setMaps(lat, lon, zoom, maps);
+					setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
 				}
 			}
 
@@ -219,7 +219,7 @@ function img_src_replace(domain) {
     }
 	
 }
-function setMaps(lat, lon, zoom, maps){
+function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 
 	let columns = groupBy(maps, 'category');
 	
@@ -278,12 +278,12 @@ function setMaps(lat, lon, zoom, maps){
 				if (checkbox_show_descriptions){
 					maplist += `
 						<tr>
-							<td><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon,zoom)}" id="${map.name}">${map.name}${oneway_note}</a></td>
+							<td><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon, zoom, pin_lat, pin_lon)}" id="${map.name}">${map.name}${oneway_note}</a></td>
 							<td><small>${map.hasOwnProperty('description') ? map.description : ''}</small></td>
 						</tr>
 					`;
 				} else {
-					maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon,zoom)}" id="${map.name}" ${tooltip}>${map.name}${oneway_note}</a></li>`;
+					maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat, map_lon, zoom, pin_lat, pin_lon)}" id="${map.name}" ${tooltip}>${map.name}${oneway_note}</a></li>`;
 				}
 
 
@@ -334,7 +334,7 @@ function make_links(prevUrl){
 	let latlonzoom;
 	latlonzoom = getLatLonZoom(prevUrl, maps);
 	if (latlonzoom){
-		[lat, lon, zoom] = latlonzoom;
+		[lat, lon, zoom, pin_lat, pin_lon] = latlonzoom;
 		document.getElementById("sorry").innerHTML = '';
 	}
 	else {
@@ -347,7 +347,7 @@ function make_links(prevUrl){
 	document.getElementById("zoom").innerHTML = zoom;
 
 
-	setMaps(lat, lon, zoom, maps);
+	setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
 }
 
 function init(){
@@ -369,12 +369,12 @@ let latlonzoom = getLatLonZoom(testurl, maps);
 	else {
 		document.getElementById("sorry").innerHTML = "<strong>Install above bookmarklet first.</strong>";
 		//set dummy links
-		setMaps(lat, lon, zoom, maps);
+		setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
 	}
 }
 document.getElementById('checkbox_show_descriptions').addEventListener('change', function(){
 	console.log('checkbox_show_descriptions');
-	setMaps(lat, lon, zoom, maps);
+	setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
 });
 /*
 document.getElementById('checkbox_set_onoff').addEventListener('change', function(){
@@ -384,6 +384,7 @@ document.getElementById('checkbox_set_onoff').addEventListener('change', functio
 
 //Global variables
 let lat = 51.5129, lon = 0, zoom = 13;
+let pin_lat, pin_lon;
 let country_code;
 let is_gcj_in_china = false;
 
