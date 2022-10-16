@@ -376,10 +376,11 @@ document.getElementById('checkbox_show_descriptions').addEventListener('change',
 	console.log('checkbox_show_descriptions');
 	setMaps(lat, lon, zoom, maps);
 });
+/*
 document.getElementById('checkbox_set_onoff').addEventListener('change', function(){
 	console.log('checkbox_set_onoff');
 });
-
+*/
 
 //Global variables
 let lat = 51.5129, lon = 0, zoom = 13;
