@@ -85,7 +85,6 @@ const maps = [
 					if (p) {
 						const lat = ((p[4] == 'N') ? 1 : -1) * (Number(p[1]) + Number(p[2])/60.0 + Number(p[3])/60/60) ;
 						const lon = ((p[8] == 'E') ? 1 : -1) * (Number(p[5]) + Number(p[6])/60.0 + Number(p[7])/60/60)  ;
-
 						return [lat,lon];
 					} else {
 
@@ -2697,6 +2696,40 @@ const maps = [
 		},
 
 	},
-
-
+	{
+		// https://satellites.pro/#48.060184,37.677612,14
+		name: "Satellites.pro",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "satellites.pro",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://satellites.pro/#${lat},${lon},${zoom}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/satellites\.pro\/(\w+)#(-?\d[0-9.]*)\,(-?\d[0-9.]*)\,(\d[0-9.]*)/);
+			if (match) {
+				const [, map, lat, lon, zoom] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+	{
+		name: "ProjectOwl: Ukraine",
+		category: SPECIAL_CATEGORY,
+		default_check: false,
+		domain: "www.google.com",
+		is_gcj_in_china: true,
+		getUrl(lat, lon, zoom) {
+			return `https://www.google.com/maps/d/u/0/viewer?mid=180u1IkUjtjpdJWnIC0AxTKSiqK4G6Pez&ll=${lat}%2C${lon}&z=${zoom}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/www\.google\.com\/maps\/d\/u\/0\/viewer\?mid=180u1IkUjtjpdJWnIC0AxTKSiqK4G6Pez&ll=(-?\d[0-9.]*)%2C(-?\d[0-9.]*)&z=(\d[0-9]*)/);
+			if (match) {
+				const [, lat, lon, zoom] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
 ];
+
