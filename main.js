@@ -233,21 +233,16 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
   
   let categories = Object.keys(columns);
 
-  const checkbox_show_descriptions = document.getElementById('checkbox_show_descriptions').checked;
 
   for (let category of categories){
-		if (checkbox_show_descriptions){
-			maplist += `
-				<div class="submaps" id="${category}" style="float:left; margin: 3px;">
-				<table class="table table-sm caption-top">
-					<caption class="title">${category}</caption>
-					<thead>
-					</thead>
-					<tbody>
-			`;
-		} else {
-			maplist += '<ul class="submaps" id="' + category + '"><li class="title">' + category + '</li>';
-		}
+		maplist += `
+			<div class="submaps" id="${category}" style="float:left; margin: 3px;">
+			<table class="table table-sm caption-top">
+				<caption class="title">${category}</caption>
+				<thead>
+				</thead>
+				<tbody>
+		`;
 	  
 	  let mapsublist = columns[category];
   //alert(category);	  
@@ -275,16 +270,13 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 
 				//地図リストを追加
 				
-				if (checkbox_show_descriptions){
-					maplist += `
-						<tr>
-							<td><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon, zoom, pin_lat, pin_lon)}" id="${map.name}">${map.name}${oneway_note}</a></td>
-							<td><small>${map.hasOwnProperty('description') ? map.description : ''}</small></td>
-						</tr>
-					`;
-				} else {
-					maplist += `<li><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat, map_lon, zoom, pin_lat, pin_lon)}" id="${map.name}" ${tooltip}>${map.name}${oneway_note}</a></li>`;
-				}
+				maplist += `
+					<tr id="item_${map.name}">
+						<td><input type="checkbox" id="checkbox_show_${map.name}"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon, zoom, pin_lat, pin_lon)}" id="${map.name}">${map.name}${oneway_note}</a></td>
+						<td class="td_description"><small>${map.hasOwnProperty('description') ? map.description : ''}</small></td>
+					</tr>
+				`;
+
 
 
 
@@ -294,15 +286,11 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 				//maplist += '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '" id="' + map.name + '"'+ tooltip + '>' + map.name + '</a></li>';
 			}
 		}
-		if (checkbox_show_descriptions){
-			maplist += `
-					</tbody>
-					</table>
-					</div>
-			`;
-		} else {
-			maplist += '</ul>';
-		}
+		maplist += `
+				</tbody>
+				</table>
+				</div>
+		`;
 		
   }
   
@@ -351,16 +339,6 @@ function make_links(prevUrl){
 }
 
 function init(){
-
-
-
-
-/* 
-const testurl = "https://www.openstreetmap.org/#map=13/33.0354/129.7383&layers=N";
-let latlonzoom = getLatLonZoom(testurl, maps);
-*/
-
-
 	const prevUrls = location.href.match(/#(.*)$/);
 	if (prevUrls) {
 		const prevUrl = prevUrls[1];
@@ -371,16 +349,99 @@ let latlonzoom = getLatLonZoom(testurl, maps);
 		//set dummy links
 		setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
 	}
+
+	//地図表示・非表示設定を読み込む
+	load_display_maps_setting();
+
+	change_map_display();
+	change_description_display();
+}
+
+function change_description_display(){
+	const checkbox_show_descriptions = document.getElementById('checkbox_show_descriptions').checked;
+	const checkbox_display = checkbox_show_descriptions ? 'table-cell' : 'none';
+	const elements = document.getElementsByClassName('td_description');
+	for (const element of elements){
+		element.style.display = checkbox_display;
+	}
 }
 document.getElementById('checkbox_show_descriptions').addEventListener('change', function(){
 	console.log('checkbox_show_descriptions');
-	setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
+	change_description_display();
 });
-/*
-document.getElementById('checkbox_set_onoff').addEventListener('change', function(){
-	console.log('checkbox_set_onoff');
+
+function change_map_display(){
+	const checkbox_show_all = document.getElementById('checkbox_show_all').checked;
+	const checkbox_display = checkbox_show_all ? 'inline' : 'none';
+
+
+	for (const map of maps){
+		
+		const id = document.getElementById(`checkbox_show_${map.name}`);
+		if (id){
+			id.style.display = checkbox_display;
+			const item_display_checked = id.checked;
+			const item_display = (item_display_checked || checkbox_show_all) ? 'table-row' : 'none';
+			const item_id = document.getElementById(`item_${map.name}`);
+			if (item_id){
+				item_id.style.display = item_display;
+			}
+		}
+
+	}
+}
+//チェックボックスで、地図を表示・非表示を設定
+document.getElementById('checkbox_show_all').addEventListener('change', function(){
+	//表示・非表示切り替えのタイミングで保存
+	save_display_maps_setting();
+	change_map_display();
+
 });
-*/
+
+//地図表示・非表示の設定を保存
+function save_display_maps_setting(){
+	let settings = {};
+	for (const map of maps){
+		const checkbox_id = document.getElementById(`checkbox_show_${map.name}`);
+		if (checkbox_id){
+			settings[map.name] = checkbox_id.checked;
+		}
+	}
+	settings['checkbox_show_descriptions'] = document.getElementById('checkbox_show_descriptions').checked;
+	settings['checkbox_show_all'] = document.getElementById('checkbox_show_all').checked;
+	console.log(settings);
+	localStorage.setItem('OpenSwitchMapsSettings', JSON.stringify(settings));
+}
+
+//地図表示・非表示の設定を読み込み
+function load_display_maps_setting(){
+	let settings = JSON.parse(localStorage.getItem('OpenSwitchMapsSettings'));
+	console.log(settings);
+	if (!settings) settings = {};
+	for (const map of maps){
+		const id = document.getElementById(`checkbox_show_${map.name}`);
+		if (id){
+			const setting = settings[map.name];
+			console.log(map.name, setting);
+			if (setting == false){
+				id.checked = false;
+			} else if (setting == true){
+				id.checked = true;
+			} else {
+				//保存された設定がない場合は、表示しない
+				id.checked = false;
+			}
+		}
+	}
+
+	document.getElementById('checkbox_show_descriptions').checked = ('checkbox_show_descriptions' in settings) ? settings['checkbox_show_descriptions'] : true;
+	document.getElementById('checkbox_show_all').checked = ('checkbox_show_all' in settings) ? settings['checkbox_show_all'] : true;
+
+
+}
+
+
+
 
 //Global variables
 let lat = 51.5129, lon = 0, zoom = 13;
