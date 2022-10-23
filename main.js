@@ -272,7 +272,7 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 				
 				maplist += `
 					<tr id="item_${map.name}">
-						<td><input type="checkbox" id="checkbox_show_${map.name}"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon, zoom, pin_lat, pin_lon)}" id="${map.name}">${map.name}${oneway_note}</a></td>
+						<td><input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon, zoom, pin_lat, pin_lon)}" id="${map.name}">${map.name}${oneway_note}</a></td>
 						<td class="td_description"><small>${map.hasOwnProperty('description') ? map.description : ''}</small></td>
 					</tr>
 				`;
@@ -397,7 +397,9 @@ document.getElementById('checkbox_show_all').addEventListener('change', function
 	change_map_display();
 
 });
-
+function save_settings(){
+	save_display_maps_setting();
+}
 //地図表示・非表示の設定を保存
 function save_display_maps_setting(){
 	let settings = {};
@@ -417,12 +419,12 @@ function save_display_maps_setting(){
 function load_display_maps_setting(){
 	let settings = JSON.parse(localStorage.getItem('OpenSwitchMapsSettings'));
 	console.log(settings);
+	
 	if (!settings) settings = {};
 	for (const map of maps){
 		const id = document.getElementById(`checkbox_show_${map.name}`);
 		if (id){
 			const setting = settings[map.name];
-			console.log(map.name, setting);
 			if (setting == false){
 				id.checked = false;
 			} else if (setting == true){
