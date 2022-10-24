@@ -219,6 +219,16 @@ function img_src_replace(domain) {
     }
 	
 }
+
+function refresh_map_links(lat, lon, zoom, maps, pin_lat, pin_lon){
+	for (const map of maps){
+		const elem_a = document.getElementById(`a_${maps.name}`);
+		if (elem_a){
+			elem_a.setAttribute('href',map.getUrl(lat, lon, zoom, pin_lat, pin_lon));
+		}
+	}
+}
+
 function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 
 	let columns = groupBy(maps, 'category');
@@ -272,14 +282,10 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 				
 				maplist += `
 					<tr id="item_${map.name}">
-						<td><input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon, zoom, pin_lat, pin_lon)}" id="${map.name}">${map.name}${oneway_note}</a></td>
+						<td><input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon, zoom, pin_lat, pin_lon)}" id="a_${map.name}">${map.name}${oneway_note}</a></td>
 						<td class="td_description"><small>${map.hasOwnProperty('description') ? map.description : ''}</small></td>
 					</tr>
 				`;
-
-
-
-
 
 				//指定した画像が無かったらgoogle機能で置き換える
 				img_src_replace(map.domain);
@@ -307,9 +313,15 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 }
 
 function button_refresh_links(){
+	
 	const url = document.getElementById('inputbox_map_url').value;
+	history.replaceState('','','index.html#' + url);
+	location.reload();
+	/*
 	console.log(url);
 	make_links(url);
+	filter_maps();
+	*/
 }
 
 //移動前の地図URLを受取って、リンクを生成する
@@ -353,10 +365,12 @@ function init(){
 	//地図表示・非表示設定を読み込む
 	load_display_maps_setting();
 
+	filter_maps();
+}
+function filter_maps(){
 	change_map_display();
 	change_description_display();
 }
-
 function change_description_display(){
 	const checkbox_show_descriptions = document.getElementById('checkbox_show_descriptions').checked;
 	const checkbox_display = checkbox_show_descriptions ? 'table-cell' : 'none';
@@ -419,7 +433,7 @@ function save_display_maps_setting(){
 function load_display_maps_setting(){
 	let settings = JSON.parse(localStorage.getItem('OpenSwitchMapsSettings'));
 	console.log(settings);
-	
+
 	if (!settings) settings = {};
 	for (const map of maps){
 		const id = document.getElementById(`checkbox_show_${map.name}`);

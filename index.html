@@ -52,6 +52,7 @@
 			font-weight: bold;
 			font-size: larger;
 			text-align: center;
+			color: #000;
 		}
 		ul.submaps li{
 			list-style: none;
@@ -61,11 +62,17 @@
 			margin: 0px 5px;
 			vertical-align: middle;
 		}
+		caption {
+			padding: 2px;
+		}
+		td {
+			border-style: none; 
+		}
       </style>
 </head>
 <body>
 	<nav class="navbar navbar-primary bg-primary text-light p-0" id="main_navbar">
-		<h1 class="h3"> 🗺️OpenSwitchMaps Web🗺️</h1>
+		<h1 class="h4"> 🗺️OpenSwitchMaps Web🗺️</h1>
 		<div>
 			Map URL:<input type="url" class="" id="inputbox_map_url" placeholder="Enter Map URL">
 			<button type="submit" id="button_refresh_links" class="btn btn-secondary btn-sm" onclick="button_refresh_links();">Refresh links</button>
@@ -81,7 +88,7 @@
 				on.
 				You can jump to another map service keeping the location and the zoom level</p>
 
-			<h2>How to use</h2>
+			<h2 class="h5">How to use</h2>
 			<ol>
 				<li><strong>First, add a bookmark(bookmarklet) to your browser</strong>: Drag following link to your
 					bookmark bar: <a
@@ -101,7 +108,7 @@
 
 	<div class="container-fluid bg-light">
 		<div id="location">
-			<h2 class="h4">Location</h2>
+			<h2 class="h5">Location</h2>
 			<ul>
 				<div style="display:none">
 					<li>URL: <i><span id="showurl"></span></i></li>
@@ -118,7 +125,7 @@
 
 <div class="container-fluid bg-white">
 	<div id="results">
-		<h2 class="h4">Open maps:</h2>
+		<h2 class="h5">Open maps:</h2>
 		<div id="maps">
 
 		</div>
@@ -140,8 +147,8 @@
 </div>
 
 <div class="container-fluid bg-secondary text-light">
-	<h2 class="h4">Notes</h2>
-	<ul>
+	<h2 class="h5">Notes</h2>
+	<ul >
 		<li><sup>*</sup> means 'Jump-to only'.</li>
 		<li>Go to <a href="https://tankaru.github.io/OpenSwitchMapsWeb/index.html">Instruction page</a> to get map
 			links.
