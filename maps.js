@@ -1046,8 +1046,7 @@ const maps = [
 				const data = JSON.parse(request.response);
 				const localwiki = "https://localwiki.org/_search/?q=" + data.display_name;
 				const elem = document.getElementById("Localwiki");
-
-				elem.href = localwiki;
+				if (elem) elem.href = localwiki;
 			};
 			request.send();
 			return "https://localwiki.org/";

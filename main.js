@@ -157,35 +157,35 @@ function setLatLon(lat_, lon_){
 	lon = lon_;
 
 }
-function setAddress(lat, lon){
-		var request = new XMLHttpRequest();
-		request.open('GET', 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=10&addressdetails=1', true);
-		request.responseType = 'json';
-		request.onload = function () {
-			var data = this.response;
-			console.log(data);
-			document.getElementById("address").innerHTML = data.display_name;
-			country_code = data.address.country_code;
-			if (country_code == 'cn'){
-				if (is_gcj_in_china){
-					console.log('in china from google/bing/baidu');
-					const wgs = eviltransform.gcj2wgs(parseFloat(lat),parseFloat(lon));
-					setLatLon(wgs.lat, wgs.lng);
-					setMaps(wgs.lat, wgs.lng, zoom, maps, pin_lat, pin_lon);
-				} else {
-					//中国国内が確定したので作り直し
-					setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
-				}
+function setAddress(lat, lon) {
+	var request = new XMLHttpRequest();
+	request.open("GET", "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon + "&zoom=10&addressdetails=1", true);
+	request.responseType = "json";
+	request.onload = function () {
+		var data = this.response;
+		console.log(data);
+		document.getElementById("address").innerHTML = data.display_name;
+		country_code = data.address.country_code;
+		if (country_code == "cn") {
+			if (is_gcj_in_china) {
+				console.log("in china from google/bing/baidu");
+				const wgs = eviltransform.gcj2wgs(parseFloat(lat), parseFloat(lon));
+				setLatLon(wgs.lat, wgs.lng);
+				update_map_links([wgs.lat, wgs.lng, zoom, pin_lat, pin_lon]);
+			} else {
+				//中国国内が確定したので作り直し
+				update_map_links([lat, lon, zoom, pin_lat, pin_lon]);
 			}
-
-		};
-		request.send();
-	}
+		}
+	};
+	request.send();
+}
 
 
 
 		
 function getLatLonZoom(url, maps) {
+	if (!url) return;
 	for (let map of maps){
 		if (map.hasOwnProperty('getLatLonZoom')){
 			let latlonzoom = map.getLatLonZoom(url);
@@ -220,9 +220,16 @@ function img_src_replace(domain) {
 	
 }
 
-function refresh_map_links(lat, lon, zoom, maps, pin_lat, pin_lon){
+function update_map_links(latlonzoom){
+	if (!latlonzoom){
+		document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported.</strong>";
+		return;
+	}
+	document.getElementById("sorry").innerHTML = "";
+
+	[lat, lon, zoom, pin_lat, pin_lon] = latlonzoom;
 	for (const map of maps){
-		const elem_a = document.getElementById(`a_${maps.name}`);
+		const elem_a = document.getElementById(`a_${map.name}`);
 		if (elem_a){
 			elem_a.setAttribute('href',map.getUrl(lat, lon, zoom, pin_lat, pin_lon));
 		}
@@ -260,21 +267,11 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 			if (map.hasOwnProperty('getUrl')) {
 				let tooltip = "";
 				let map_lat = lat, map_lon = lon;
-				if (map.hasOwnProperty('is_gcj_in_china') && map.is_gcj_in_china && country_code == 'cn'){
-					console.log('setting google/bing/baidu coords')
-					const gcj = eviltransform.wgs2gcj(parseFloat(lat), parseFloat(lon));
-					map_lat = gcj.lat;
-					map_lon = gcj.lng;
-					if (map.is_gcj_in_china == 'bd'){
-						const bd = eviltransform.gcj2bd(map_lat, map_lon);
-						map_lat = bd.lat;
-						map_lon = bd.lng;
-					}
-				}
 
 				//地図の説明をツールチップとして作成
-				if (map.hasOwnProperty('description')) tooltip = ' title="' + map.description + '" ';
-
+				if (map.hasOwnProperty('description')){
+					tooltip = ' title="' + map.description + '" ';
+				}
 				//一方通行のマップに、*マークを付ける
 				const oneway_note = map.hasOwnProperty('getLatLonZoom') ? '' : '<sup><span title="Jump-to only">*</span></sup>';
 
@@ -300,15 +297,6 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 		
   }
   
-
-  /*
-  for (let column of columns)
-  
-  let maplist = "";
-  for (let map of maps){
-	maplist = maplist + '<li>' + '<img src="http://www.google.com/s2/favicons?domain=' + map.domain + '">' + '<a href="' + map.getUrl(lat,lon,zoom) + '">' + map.name + '</li>';
-  };
-  */
   document.getElementById("maps").innerHTML =  maplist;
 }
 
@@ -316,15 +304,15 @@ function button_refresh_links(){
 	
 	const url = document.getElementById('inputbox_map_url').value;
 	history.replaceState('','','index.html#' + url);
-	location.reload();
-	/*
-	console.log(url);
-	make_links(url);
-	filter_maps();
-	*/
+	const latlonzoom = getLatLonZoom(url, maps);
+	update_map_links(latlonzoom); 
+	setAddress(latlonzoom[0], latlonzoom[1]);
 }
-
+function hide_instructions(){
+	document.getElementById("description").style.display = "none";
+}
 //移動前の地図URLを受取って、リンクを生成する
+/*
 function make_links(prevUrl){
 	let elementUrl = document.getElementById("showurl");
 
@@ -349,25 +337,31 @@ function make_links(prevUrl){
 
 	setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
 }
-
-function init(){
+*/
+function get_prev_url(){
 	const prevUrls = location.href.match(/#(.*)$/);
 	if (prevUrls) {
 		const prevUrl = prevUrls[1];
-		make_links(prevUrl);
+		return prevUrl;
 	}
 	else {
 		document.getElementById("sorry").innerHTML = "<strong>Install above bookmarklet first.</strong>";
-		//set dummy links
-		setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
 	}
+	return false;
+}
+function init_maps(){
+	setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
 
 	//地図表示・非表示設定を読み込む
 	load_display_maps_setting();
 
-	filter_maps();
+	show_hide_maps();
 }
-function filter_maps(){
+function init(){
+
+
+}
+function show_hide_maps(){
 	change_map_display();
 	change_description_display();
 }
@@ -432,7 +426,7 @@ function save_display_maps_setting(){
 //地図表示・非表示の設定を読み込み
 function load_display_maps_setting(){
 	let settings = JSON.parse(localStorage.getItem('OpenSwitchMapsSettings'));
-	console.log(settings);
+	console.log("load settings: ", settings);
 
 	if (!settings) settings = {};
 	for (const map of maps){
@@ -460,12 +454,20 @@ function load_display_maps_setting(){
 
 
 //Global variables
-let lat = 51.5129, lon = 0, zoom = 13;
+let lat = 51.5129, lon = 0.1, zoom = 13;
 let pin_lat, pin_lon;
 let country_code;
 let is_gcj_in_china = false;
 
 init();
+init_maps();
+const prev_url = get_prev_url();
+if (prev_url) hide_instructions();
+const latlonzoom = getLatLonZoom(prev_url, maps);
+update_map_links(latlonzoom); 
+setAddress(latlonzoom[0], latlonzoom[1]);
+
+
 
 
 
