@@ -237,11 +237,12 @@ function get_url(map, lat, lon, zoom, pin_lat, pin_lon, changeset){
 function update_map_links(latlonzoom){
 	if (!latlonzoom){
 		document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported.</strong>";
-		return;
+		[lat, lon, zoom, pin_lat, pin_lon, changeset] = [51.5129, 0.1, 13, null, null, null];
+	} else {
+		document.getElementById("sorry").innerHTML = "";
+		[lat, lon, zoom, pin_lat, pin_lon, changeset] = latlonzoom;
 	}
-	document.getElementById("sorry").innerHTML = "";
-
-	[lat, lon, zoom, pin_lat, pin_lon, changeset] = latlonzoom;
+	
 	for (const map of maps){
 		const elem_a = document.getElementById(`a_${map.name}`);
 		if (!elem_a) continue;
