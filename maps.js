@@ -2208,7 +2208,7 @@ const maps = [
 			return `https://openlevelup.net/#${zoom}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			const match = url.match(/openlevelup\.net\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
 				const [, zoom, lat, lon] = match;
 				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
@@ -2266,7 +2266,7 @@ const maps = [
 			return `https://yuiseki.github.io/osm-address-editor-vite/#${zoom}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			const match = url.match(/osm-address-editor-vite\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
 				const [, zoom, lat, lon] = match;
 				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
