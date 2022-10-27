@@ -2756,7 +2756,7 @@ const maps = [
 		},
 		getLatLonZoom(url) {
 			//for changeset 
-			const changeset_match = url.match(/osmcha\.org\/changesets\/128124079(\d[0-9.]*)/);
+			const changeset_match = url.match(/osmcha\.org\/changesets\/(\d[0-9.]*)/);
 			if (changeset_match) {
 				const [, changeset] = changeset_match;
 				return [ null, null, null, null, null, changeset];
