@@ -131,15 +131,21 @@ const maps = [
 		},
 	},
 
-	{
+	{ //https://www.openstreetmap.org/changeset/127728858?mlat=35.7220&mlon=139.6376#map=10/35.7220/139.6376
 		name: "OpenStreetMap",
 		category: MAIN_CATEGORY,
 		default_check: true,
 		domain: "www.openstreetmap.org",
-		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
-			return `https://www.openstreetmap.org/${pin_lat ? '?mlat=' + pin_lat : ''}${pin_lon ? '&mlon=' + pin_lon : ''}#map=${zoom}/${lat}/${lon}`;
+		getUrl(lat, lon, zoom, pin_lat, pin_lon, changeset) {
+			return `https://www.openstreetmap.org/${changeset ? 'changeset/' + changeset : ''}${pin_lat ? '?mlat=' + pin_lat : ''}${pin_lon ? '&mlon=' + pin_lon : ''}#map=${zoom}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
+			//for changeset 
+			const changeset_match = url.match(/www\.openstreetmap\.org\/changeset\/(\d[0-9.]*)/);
+			if (changeset_match) {
+				const [, changeset] = changeset_match;
+				return [ null, null, null, null, null, changeset];
+			}
 			//for pinned map
 			const pin_match = url.match(/www\.openstreetmap\.org\/.*mlat=(-?\d[0-9.]*)&mlon=(-?\d[0-9.]*).*map=(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (pin_match) {
@@ -154,6 +160,9 @@ const maps = [
 				return [lat, lon, zoom];
 			}
 		},
+		getChangesetUrl(changeset){
+			return `https://www.openstreetmap.org/changeset/${changeset}`;
+		}
 	},
 	{
 		name: "Mapillary",
@@ -2729,6 +2738,80 @@ const maps = [
 				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
 			}
 		},
+	},
+
+
+
+
+	//--------------OSM changeset analyzers, Only for web version ---------------------------------------
+
+	{ //https://osmcha.org/changesets/128124079
+		name: "OSMCha",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "osmcha.org",
+		getUrl(lat, lon, zoom) {
+			return 'https://osmcha.org/';//dummy
+			
+		},
+		getLatLonZoom(url) {
+			//for changeset 
+			const changeset_match = url.match(/osmcha\.org\/changesets\/128124079(\d[0-9.]*)/);
+			if (changeset_match) {
+				const [, changeset] = changeset_match;
+				return [ null, null, null, null, null, changeset];
+			}
+
+		},
+		getChangesetUrl(changeset){
+			return `https://osmcha.org/changesets/${changeset}`;
+		}
+	},
+	{ //https://overpass-api.de/achavi/?changeset=128124079
+		name: "achavi",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "overpass-api.de",
+		getUrl(lat, lon, zoom) {
+			return 'https://overpass-api.de/achavi/';//dummy
+			
+		},
+		getLatLonZoom(url) {
+			//for changeset 
+			const changeset_match = url.match(/overpass-api\.de\/achavi\/\?changeset=(\d[0-9.]*)/);
+			if (changeset_match) {
+				const [, changeset] = changeset_match;
+				return [ null, null, null, null, null, changeset];
+			}
+
+		},
+		getChangesetUrl(changeset){
+			return `https://overpass-api.de/achavi/?changeset=${changeset}`;
+		}
+	},
+
+	//https://resultmaps.neis-one.org/osm-change-viz?c=128124079
+	{ 
+		name: "resultmaps",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "neis-one.org",
+		getUrl(lat, lon, zoom) {
+			return 'https://resultmaps.neis-one.org/osm-change-viz';//dummy
+			
+		},
+		getLatLonZoom(url) {
+			//for changeset 
+			const changeset_match = url.match(/resultmaps\.neis-one\.org\/osm-change-viz\?c=(\d[0-9.]*)/);
+			if (changeset_match) {
+				const [, changeset] = changeset_match;
+				return [ null, null, null, null, null, changeset];
+			}
+
+		},
+		getChangesetUrl(changeset){
+			return `https://resultmaps.neis-one.org/osm-change-viz?c=${changeset}`;
+		}
 	},
 ];
 

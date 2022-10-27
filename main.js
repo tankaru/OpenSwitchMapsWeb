@@ -158,6 +158,7 @@ function setLatLon(lat_, lon_){
 
 }
 function setAddress(lat, lon) {
+	if (!lat || !lon) return;//変な値だったらヤメ
 	var request = new XMLHttpRequest();
 	request.open("GET", "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon + "&zoom=10&addressdetails=1", true);
 	request.responseType = "json";
@@ -171,10 +172,10 @@ function setAddress(lat, lon) {
 				console.log("in china from google/bing/baidu");
 				const wgs = eviltransform.gcj2wgs(parseFloat(lat), parseFloat(lon));
 				setLatLon(wgs.lat, wgs.lng);
-				update_map_links([wgs.lat, wgs.lng, zoom, pin_lat, pin_lon]);
+				update_map_links([wgs.lat, wgs.lng, zoom, pin_lat, pin_lon, changeset]);
 			} else {
 				//中国国内が確定したので作り直し
-				update_map_links([lat, lon, zoom, pin_lat, pin_lon]);
+				update_map_links([lat, lon, zoom, pin_lat, pin_lon, changeset]);
 			}
 		}
 	};
@@ -219,7 +220,20 @@ function img_src_replace(domain) {
     }
 	
 }
+function get_url(map, lat, lon, zoom, pin_lat, pin_lon, changeset){
 
+	//console.log(map.name, lat, lon, zoom, pin_lat, pin_lon, changeset);
+	if (changeset) {
+		if (!map.hasOwnProperty('getChangesetUrl')) return false;
+		return map.getChangesetUrl(changeset);
+	}
+	if (!map.hasOwnProperty('getUrl')) return false;
+	if (lat) {
+		return map.getUrl(lat, lon, zoom, pin_lat, pin_lon, changeset);
+	}
+
+	return false;
+}
 function update_map_links(latlonzoom){
 	if (!latlonzoom){
 		document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported.</strong>";
@@ -227,16 +241,22 @@ function update_map_links(latlonzoom){
 	}
 	document.getElementById("sorry").innerHTML = "";
 
-	[lat, lon, zoom, pin_lat, pin_lon] = latlonzoom;
+	[lat, lon, zoom, pin_lat, pin_lon, changeset] = latlonzoom;
 	for (const map of maps){
 		const elem_a = document.getElementById(`a_${map.name}`);
-		if (elem_a){
-			elem_a.setAttribute('href',map.getUrl(lat, lon, zoom, pin_lat, pin_lon));
+		if (!elem_a) continue;
+		//if (!map.hasOwnProperty('getUrl')) continue;
+		const url = get_url(map, lat, lon, zoom, pin_lat, pin_lon, changeset);
+		if (url){
+			elem_a.setAttribute('href',url);
+			set_error_element_by_id(`item_${map.name}`, false);
+		} else {
+			set_error_element_by_id(`item_${map.name}`, true);
 		}
 	}
 }
 
-function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
+function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon, changeset){
 
 	let columns = groupBy(maps, 'category');
 	
@@ -279,7 +299,7 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon){
 				
 				maplist += `
 					<tr id="item_${map.name}">
-						<td><input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${map.getUrl(map_lat,map_lon, zoom, pin_lat, pin_lon)}" id="a_${map.name}">${map.name}${oneway_note}</a></td>
+						<td><input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${get_url(map, map_lat,map_lon, zoom, pin_lat, pin_lon, changeset)}" id="a_${map.name}">${map.name}${oneway_note}</a></td>
 						<td class="td_description"><small>${map.hasOwnProperty('description') ? map.description : ''}</small></td>
 					</tr>
 				`;
@@ -350,7 +370,7 @@ function get_prev_url(){
 	return false;
 }
 function init_maps(){
-	setMaps(lat, lon, zoom, maps, pin_lat, pin_lon);
+	setMaps(lat, lon, zoom, maps, pin_lat, pin_lon, changeset);
 
 	//地図表示・非表示設定を読み込む
 	load_display_maps_setting();
@@ -367,10 +387,10 @@ function show_hide_maps(){
 }
 function change_description_display(){
 	const checkbox_show_descriptions = document.getElementById('checkbox_show_descriptions').checked;
-	const checkbox_display = checkbox_show_descriptions ? 'table-cell' : 'none';
+	//const checkbox_display = checkbox_show_descriptions ? 'table-cell' : 'none';
 	const elements = document.getElementsByClassName('td_description');
 	for (const element of elements){
-		element.style.display = checkbox_display;
+		hide_element(element, !checkbox_show_descriptions);
 	}
 }
 document.getElementById('checkbox_show_descriptions').addEventListener('change', function(){
@@ -379,23 +399,65 @@ document.getElementById('checkbox_show_descriptions').addEventListener('change',
 });
 
 function change_map_display(){
+
+	change_checkbox_display();
+
 	const checkbox_show_all = document.getElementById('checkbox_show_all').checked;
 	const checkbox_display = checkbox_show_all ? 'inline' : 'none';
 
 
 	for (const map of maps){
-		
-		const id = document.getElementById(`checkbox_show_${map.name}`);
-		if (id){
-			id.style.display = checkbox_display;
-			const item_display_checked = id.checked;
-			const item_display = (item_display_checked || checkbox_show_all) ? 'table-row' : 'none';
-			const item_id = document.getElementById(`item_${map.name}`);
-			if (item_id){
-				item_id.style.display = item_display;
-			}
-		}
+		const elem_item = document.getElementById(`item_${map.name}`);
+		if (!elem_item) continue;
 
+		
+		//全部表示か、全部非表示かにする
+		hide_element(elem_item, !checkbox_show_all);
+		//全部表示ならよし
+		if (checkbox_show_all) continue;
+		
+		//全部非表示のときは、チェックボックスがついているものは表示する
+		const elem_checkbox_show_map = document.getElementById(`checkbox_show_${map.name}`);
+		if (!elem_checkbox_show_map) continue;
+		const checkbox_show_map = elem_checkbox_show_map.checked;
+		hide_element(elem_item, !checkbox_show_map);
+		
+	}
+}
+
+function hide_element_by_id(element_id, hide){
+	const element = document.getElementById(element_id);
+	if (!element) return false;
+	return hide_element(element, hide);
+}
+
+function hide_element(element, hide){
+	if (!element) return false;
+	if (hide){
+		element.classList.add('item_hide');
+	} else {
+		element.classList.remove('item_hide');
+	}
+	return true;
+}
+
+function set_error_element_by_id(element_id, is_error){
+	const element = document.getElementById(element_id);
+	if (!element) return false;
+	if (is_error){
+		element.classList.add('item_error');
+	} else {
+		element.classList.remove('item_error');
+	}
+	return true;
+}
+function change_checkbox_display(){
+	
+	const checkbox_show_all = document.getElementById('checkbox_show_all').checked;
+	//const checkbox_display = checkbox_show_all ? 'inline' : 'none';
+
+	for (const map of maps){
+		hide_element_by_id(`checkbox_show_${map.name}`, !checkbox_show_all);
 	}
 }
 //チェックボックスで、地図を表示・非表示を設定
@@ -456,6 +518,7 @@ function load_display_maps_setting(){
 //Global variables
 let lat = 51.5129, lon = 0.1, zoom = 13;
 let pin_lat, pin_lon;
+let changeset;
 let country_code;
 let is_gcj_in_china = false;
 
