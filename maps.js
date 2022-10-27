@@ -2751,7 +2751,7 @@ const maps = [
 		default_check: false,
 		domain: "osmcha.org",
 		getUrl(lat, lon, zoom) {
-			return 'https://osmcha.org/';//dummy
+			return ;//'https://osmcha.org/';//dummy
 			
 		},
 		getLatLonZoom(url) {
@@ -2773,7 +2773,7 @@ const maps = [
 		default_check: false,
 		domain: "overpass-api.de",
 		getUrl(lat, lon, zoom) {
-			return 'https://overpass-api.de/achavi/';//dummy
+			return ;//'https://overpass-api.de/achavi/';//dummy
 			
 		},
 		getLatLonZoom(url) {
@@ -2797,7 +2797,7 @@ const maps = [
 		default_check: false,
 		domain: "neis-one.org",
 		getUrl(lat, lon, zoom) {
-			return 'https://resultmaps.neis-one.org/osm-change-viz';//dummy
+			return ;//'https://resultmaps.neis-one.org/osm-change-viz';//dummy
 			
 		},
 		getLatLonZoom(url) {

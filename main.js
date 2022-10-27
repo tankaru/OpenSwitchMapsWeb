@@ -251,6 +251,7 @@ function update_map_links(latlonzoom){
 			elem_a.setAttribute('href',url);
 			set_error_element_by_id(`item_${map.name}`, false);
 		} else {
+			elem_a.removeAttribute('href');
 			set_error_element_by_id(`item_${map.name}`, true);
 		}
 	}
@@ -518,7 +519,7 @@ function load_display_maps_setting(){
 //Global variables
 let lat = 51.5129, lon = 0.1, zoom = 13;
 let pin_lat, pin_lon;
-let changeset;
+let changeset = 100000000;
 let country_code;
 let is_gcj_in_china = false;
 
