@@ -515,14 +515,14 @@ const maps = [
 			return "https://www.mapion.co.jp/m2/" + lat + "," + lon + "," + zoom;
 		},
 	},
-	{
+	{//https://openstreetmap.de/karte/?zoom=12&lat=35.69527&lon=139.63071&layers=B00TT
 		name: "OSM.de",
 		category: OSM_LOCAL_CATEGORY,
 		default_check: false,
 		domain: "www.openstreetmap.de",
 		description: "OpenStreetMap German local chapter",
 		getUrl(lat, lon, zoom) {
-			return "https://www.openstreetmap.de/karte.html?zoom=" + zoom + "&lat=" + lat + "&lon=" + lon;
+			return "https://www.openstreetmap.de/karte/?zoom=" + zoom + "&lat=" + lat + "&lon=" + lon;
 		},
 	},
 	{
