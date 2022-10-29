@@ -543,17 +543,17 @@ const maps = [
 		},
 	},
 	{
-		//https://openstreetmap.jp/#zoom=15&lat=35.66838&lon=139.77208&layers=B000
+		//https://tile.openstreetmap.jp/styles/osm-bright/#12.37/35.66916/139.7817
 		name: "OSM.jp",
 		category: OSM_LOCAL_CATEGORY,
 		default_check: false,
 		domain: "openstreetmap.jp",
 		description: "OpenStreetMap Japan local chapter",
 		getUrl(lat, lon, zoom) {
-			return `https://openstreetmap.jp/#zoom=${Math.min(Number(zoom), 19)}&lat=${lat}&lon=${lon}&layers=B000`;
+			return `https://tile.openstreetmap.jp/styles/osm-bright/#${zoom}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/#zoom=(\d{1,2})&lat=(-?\d[0-9.]*)&lon=(-?\d[0-9.]*)/);
+			const match = url.match(/tile\.openstreetmap\.jp\/.*#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
 				const [, zoom, lat, lon] = match;
 				return [lat, lon, zoom];

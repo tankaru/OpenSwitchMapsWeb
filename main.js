@@ -241,6 +241,8 @@ function update_map_links(latlonzoom){
 	} else {
 		document.getElementById("sorry").innerHTML = "";
 		[lat, lon, zoom, pin_lat, pin_lon, changeset] = latlonzoom;
+		lon = normalizeLon(lon);
+		zoom = normalizeZoom(zoom);
 	}
 	
 	for (const map of maps){
@@ -515,7 +517,13 @@ function load_display_maps_setting(){
 }
 
 
+function normalizeLon(lon) {
+	return ((((Number(lon) + 180) % 360) + 360) % 360) - 180;
+  }
 
+function normalizeZoom(zoom){
+	return Math.round(Number(zoom));
+}
 
 //Global variables
 let lat = 51.5129, lon = 0.1, zoom = 13;
