@@ -1529,16 +1529,16 @@ const maps = [
 	},
 	{
 		//https://labs.mapple.com/mapplevt.html?#8.47/35.7472/139.9546
-		name: "MAPPLEのベクトルタイル",
+		name: "MαPPLE",
 		category: OTHER_CATEGORY,
 		default_check: false,
 		domain: "labs.mapple.com",
-		description: "vector map provider",
+		description: "experimental vector map in Japan",
 		getUrl(lat, lon, zoom) {
 			return "https://labs.mapple.com/mapplevt.html?#" + zoom + "/" + lat + "/" + lon;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/labs.mapple.com.*\/#([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			const match = url.match(/labs\.mapple\.com.*#([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 
 			if (match) {
 				const [, zoom, lat, lon] = match;
