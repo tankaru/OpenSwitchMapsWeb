@@ -180,6 +180,7 @@ function setAddress(lat, lon) {
 		}
 	};
 	request.send();
+	return request;
 }
 
 
@@ -324,14 +325,29 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon, changeset){
   document.getElementById("maps").innerHTML =  maplist;
 }
 
+function input_key_press(event) {
+	if (event.key == 'Enter') button_refresh_links()
+}
+
 function button_refresh_links(){
-	
 	const url = document.getElementById('inputbox_map_url').value;
-	history.replaceState('','','index.html#' + url);
+	update_from_url(url);
+	history.pushState({url: url},'','#' + url);
+}
+
+function update_from_url(url){
 	const latlonzoom = getLatLonZoom(url, maps);
 	update_map_links(latlonzoom); 
 	setAddress(latlonzoom[0], latlonzoom[1]);
 }
+
+window.addEventListener('popstate', function (event) {
+	const state = event.state;
+	const url = state.url;
+	update_from_url(url);
+	document.getElementById('inputbox_map_url').value = url;
+})
+
 function hide_instructions(){
 	document.getElementById("description").style.display = "none";
 }
@@ -536,14 +552,5 @@ init();
 init_maps();
 const prev_url = get_prev_url();
 if (prev_url) hide_instructions();
-const latlonzoom = getLatLonZoom(prev_url, maps);
-update_map_links(latlonzoom); 
-setAddress(latlonzoom[0], latlonzoom[1]);
-
-
-
-
-
-  
-
-  
+update_from_url(prev_url);
+history.replaceState({url: prev_url}, '', '#'+prev_url);

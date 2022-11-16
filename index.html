@@ -81,8 +81,8 @@
 	<nav class="navbar navbar-primary bg-primary text-light p-0" id="main_navbar">
 		<h1 class="h4"> 🗺️OpenSwitchMaps Web🗺️</h1>
 		<div>
-			Map URL:<input type="url" class="" id="inputbox_map_url" placeholder="Enter Map URL">
-			<button type="submit" id="button_refresh_links" class="btn btn-secondary btn-sm" onclick="button_refresh_links();">Refresh links</button>
+			Map URL:<input type="url" id="inputbox_map_url" placeholder="Enter Map URL" onkeypress="input_key_press(event);">
+			<button id="button_refresh_links" class="btn btn-secondary btn-sm" onclick="button_refresh_links();">Refresh links</button>
 		</div>
 
 		
