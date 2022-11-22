@@ -42,7 +42,7 @@ const maps = [
 		domain: "www.google.com",
 		is_gcj_in_china: true,
 		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
-
+			
 			function Num2DMS(num){
 				
 				//numは正数
@@ -78,6 +78,8 @@ const maps = [
 			}
 			if (match){
 				//pinned map
+				//https://www.google.com/maps/place/%E5%8F%B0%E5%8C%97/@25.0484312,121.5016642,15z/data=!4m5!3m4!1s0x3442a9727e339109:0xc34a31ce3a4abecb!8m2!3d25.0480075!4d121.5170613
+				/*
 				function DMS_str_to_latlon(dms_str){
 					const p = dms_str.match(/([0-9]*)%C2%B0([0-9]*)'([0-9.]*)%22(.)\+([0-9]*)%C2%B0([0-9]*)'([0-9.]*)%22(.)/);
 					if (p) {
@@ -89,13 +91,11 @@ const maps = [
 					}
 					
 				}
-				let pin_match = url.match(/google.*maps\/place\/(.*)\/@/);
+				*/
+				let pin_match = url.match(/google.*maps\/place\/.*!3d(-?\d[0-9.]*)!4d(-?\d[0-9.]*)/);
 				if (pin_match){
-					const [,dms_str] = pin_match;
-					const pinned = DMS_str_to_latlon(dms_str);
-					if (pinned) {
-						return [lat, lon, zoom, pinned[0], pinned[1]];
-					}
+					const [,pin_lat, pin_lon] = pin_match;
+					return [lat, lon, zoom, pin_lat, pin_lon];
 				}
 				
 				//unpinned map
