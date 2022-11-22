@@ -1550,16 +1550,16 @@ const maps = [
 		category: OTHER_CATEGORY,
 		default_check: false,
 		domain: "maps.omniscale.com",
-		description: "A German map tile host provider",
+		description: "Interactive map with different projections",
 		getUrl(lat, lon, zoom) {
 			return "https://maps.omniscale.com/en/p/map#map=" + zoom + "/" + lat + "/" + lon + "3857/B";
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/maps\.omniscale\.com.*#([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			const match = url.match(/maps\.omniscale\.com.*#map=([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 
 			if (match) {
 				const [, zoom, lat, lon] = match;
-				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+				return [lat, lon, zoom];
 			}
 		},
 	},
