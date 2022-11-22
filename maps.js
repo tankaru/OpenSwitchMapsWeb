@@ -11,9 +11,7 @@ function bboxToLatLonZoom(minlon, minlat, maxlon, maxlat) {
 
 }
 // -180 < lon < 180
-function normalizeLon(lon) {
-  return ((((Number(lon) + 180) % 360) + 360) % 360) - 180;
-}
+
 
 
 function latLonZoomToBbox(lat, lon, zoom) {
