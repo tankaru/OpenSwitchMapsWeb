@@ -1046,17 +1046,14 @@ const maps = [
 		domain: "localwiki.org",
 		getUrl(lat, lon, zoom) {
 			const url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon + "&zoom=10&addressdetails=1";
-			let request = new XMLHttpRequest();
-
-			request.open("GET", url, true); //非同期処理
-			request.onload = function () {
-				const data = JSON.parse(request.response);
-				const localwiki = "https://localwiki.org/_search/?q=" + data.display_name;
-				const elem = document.getElementById("Localwiki");
+			let localwiki = "https://localwiki.org/"
+			cacheDb.ajaxCallback(url, function (json) {
+				const data = JSON.parse(json);
+				localwiki = "https://localwiki.org/_search/?q=" + data.display_name;
+				const elem = document.getElementById("a_Localwiki");
 				if (elem) elem.href = localwiki;
-			};
-			request.send();
-			return "https://localwiki.org/";
+			});
+			return localwiki;
 		},
 	},
 
