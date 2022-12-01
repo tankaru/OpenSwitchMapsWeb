@@ -149,21 +149,68 @@ const eviltransform = {
 		return this.gcj2wgs(gcj.lat, gcj.lng);
 	},
 }
+const cacheDb = {
+	prefix: "OpenSwitchMaps:cache",
+	expire: 2 * 24 * 60 * 60 * 1000, // 2 day
+	callback: {},
+	get(key) {
+		this.clearTimeout();
+		const json = localStorage.getItem(`${this.prefix}:${key}`);
+		if (json) return JSON.parse(json).data;
+	},
+	ajaxCallback(url, callback) {
+		const key = `ajax:${url}`;
+		const data = this.get(key);
+		if (data) {
+			callback(data);
+			return "cache";
+		}
+		let callbackList = this.callback[key];
+		if (callbackList) {
+			callbackList.push(callback);
+			return "loading";
+		}
+		
+		callbackList = this.callback[key] = [callback];
+		var that = this;
+		const request = new XMLHttpRequest();
+		request.open("GET", url, true);
+		request.onload = function () {
+			var data = this.response;
+			that.set(key, data);
+			for (const callback of callbackList) callback(data);
+			that.callback[key] = null;
+		};
+		request.send();
+		return "send";
+	},
+	set(key, data) {
+		const record = {time: Date.now(), data: data};
+		const json = JSON.stringify(record);
+		localStorage.setItem(`${this.prefix}:${key}`, json);
+	},
+	clearTimeout(time = Date.now() - this.expire) {
+		const prefix = this.prefix + ':';
+		for (const key of Object.keys(localStorage)) {
+			if (key.slice(0, prefix.length) != prefix) continue;
+			const json = localStorage.getItem(key);
+			const record = JSON.parse(json);
+			if (record.time < time) localStorage.removeItem(key);
+		}
+	}
+}
 
 function setLatLon(lat_, lon_){
 	document.getElementById("lat").innerHTML = lat_;
 	document.getElementById("lon").innerHTML = lon_;
 	lat = lat_;
 	lon = lon_;
-
 }
 function setAddress(lat, lon) {
 	if (!lat || !lon) return;//変な値だったらヤメ
-	var request = new XMLHttpRequest();
-	request.open("GET", "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon + "&zoom=10&addressdetails=1", true);
-	request.responseType = "json";
-	request.onload = function () {
-		var data = this.response;
+	const url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon + "&zoom=10&addressdetails=1";
+	return cacheDb.ajaxCallback(url, function (json) {
+		const data = JSON.parse(json);
 		console.log(data);
 		document.getElementById("address").innerHTML = data.display_name;
 		country_code = data.address.country_code;
@@ -178,9 +225,7 @@ function setAddress(lat, lon) {
 				update_map_links([lat, lon, zoom, pin_lat, pin_lon, changeset]);
 			}
 		}
-	};
-	request.send();
-	return request;
+	});
 }
 
 
