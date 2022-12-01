@@ -2572,7 +2572,7 @@ const maps = [
 		category: UTILITY_CATEGORY,
 		default_check: false,
 		domain: "",
-		description: "",
+		description: "A URI schema to represent a point in a coordinate reference system, which may show the location on the default map application.",
 		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
 			// Usually, geo uri represent a point(pin),
 			// not a map view. Therefore, if the source have pin, 
