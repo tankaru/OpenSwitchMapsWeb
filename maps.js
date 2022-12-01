@@ -2566,22 +2566,49 @@ const maps = [
 	},
 
 	{
-		//geo:37.786971,-122.399677
+		//geo:37.786971,-122.399677?z=16&q=([\d\.]+,[\d\.]+|.*)
 		//https://en.wikipedia.org/wiki/Geo_URI_scheme
 		name: "geo URI",
 		category: UTILITY_CATEGORY,
 		default_check: false,
 		domain: "",
-		description: "",
-		getUrl(lat, lon, zoom) {
-			return `geo:${lat},${lon}`;
+		description: "A URI schema to represent a point in a coordinate reference system, which may show the location on the default map application.",
+		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
+			// Usually, geo uri represent a point(pin),
+			// not a map view. Therefore, if the source have pin, 
+			// use the pin and discard the lat and lon.
+			if (pin_lat != null) {
+				[lat, lon] = [pin_lat, pin_lon];
+			}
+			return `geo:${lat},${lon}?z=${zoom}`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/geo:(-?\d[0-9.]*),(-?\d[0-9.]*)/);
-			if (match) {
-				const [, lat, lon] = match;
-				return [lat, normalizeLon(lon), 16];//zoom=16は適当
+			let lat, lon, zoom = 16; // 16 as default zoom level
+			
+			const u = new URL(url);
+			const latlonRegexp = /(-?\d[0-9.]*),(-?\d[0-9.]*)/;
+			const latlon = u.pathname.match(latlonRegexp);
+			if (!latlon) return;
+			[, lat, lon] = latlon;
+			if (u.search) {
+				const z = u.searchParams.get('z');
+				if (z) zoom = z;
+				
+				// some android device use 0,0?q=${lat},${lon}
+				// to represent a pin.
+				// https://en.wikipedia.org/wiki/Geo_URI_scheme#Unofficial_extensions
+				const q = u.searchParams.get('q');
+				let latlon;
+				if (Number(lat) == 0 && Number(lon) == 0 && q) {
+					latlon = q.match(latlonRegexp);
+				}
+				if (latlon) [, lat, lon] = latlon;
 			}
+			lon = normalizeLon(lon);
+			return [
+				lat, lon, zoom,
+				lat, lon // treat geo uri as a pin url
+			];
 		},
 
 	},
