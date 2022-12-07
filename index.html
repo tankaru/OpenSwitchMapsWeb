@@ -75,6 +75,10 @@
 			background-color: #ddd;
 			//display: none;
 		}
+		.setting-list {
+			float:left;
+			margin-left: 1em;
+		}
       </style>
 </head>
 <body>
@@ -136,12 +140,12 @@
 			<div class="col-sm-6  bg-info">
 				<div class="container-fluid text-light">
 					<h2 class="h5"> Settings</h2>
-					<div class="form-check">
+					<div class="form-check setting-list">
 						<input class="form-check-input" type="checkbox" value="" id="checkbox_show_descriptions" onchange="save_settings();">
 						<label class="form-check-label" for="checkbox_show_descriptions">Show descriptions</label>
 					</div>
 					
-					<div class="form-check">
+					<div class="form-check setting-list">
 						<input class="form-check-input" type="checkbox" value="" id="checkbox_show_all" onchange="save_settings();">
 						<label class="form-check-label" for="checkbox_show_all">Show all maps</label>
 					</div>
