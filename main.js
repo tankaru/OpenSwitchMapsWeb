@@ -596,6 +596,9 @@ let is_gcj_in_china = false;
 init();
 init_maps();
 const prev_url = get_prev_url();
-if (prev_url) hide_instructions();
+if (prev_url) {
+	hide_instructions();
+	document.getElementById('inputbox_map_url').value = prev_url;
+}
 update_from_url(prev_url);
 history.replaceState({url: prev_url}, '', '#'+prev_url);
