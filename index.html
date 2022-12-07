@@ -113,45 +113,57 @@
 		</div>
 	</div>
 
-	<div class="container-fluid bg-light">
-		<div id="location">
-			<h2 class="h5">Location</h2>
-			<ul>
-				<div style="display:none">
-					<li>URL: <i><span id="showurl"></span></i></li>
-					<li>Lat: <i><span id="lat"><span></i>, Lon: <i><span id="lon"><span></i>, Zoom: <i><span
-								id="zoom"><span></i></li>
-					<li>Country code: <span id="country_code"></span></li>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-6  bg-light">
+				<div class="container-fluid">
+					<div id="location">
+						<h2 class="h5">Location</h2>
+						<ul>
+							<div style="display:none">
+								<li>URL: <i><span id="showurl"></span></i></li>
+								<li>Lat: <i><span id="lat"><span></i>, Lon: <i><span id="lon"><span></i>, Zoom: <i><span
+											id="zoom"><span></i></li>
+								<li>Country code: <span id="country_code"></span></li>
+							</div>
+							<li>Address: <i><span id="address"></span></i></li>
+						</ul>
+					</div>
+		
+					<span id="sorry"></span>
 				</div>
-				<li>Address: <i><span id="address"></span></i></li>
-			</ul>
+			</div>
+			<div class="col-sm-6  bg-info">
+				<div class="container-fluid text-light">
+					<h2 class="h5"> Settings</h2>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="checkbox_show_descriptions" onchange="save_settings();">
+						<label class="form-check-label" for="checkbox_show_descriptions">Show descriptions</label>
+					</div>
+					
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="checkbox_show_all" onchange="save_settings();">
+						<label class="form-check-label" for="checkbox_show_all">Show all maps</label>
+					</div>
+		
+				</div>
+			</div>
+			</div>
 		</div>
 
-		<span id="sorry"></span>
-	</div>
 
-<div class="container-fluid bg-white">
-	<div id="results">
-		<h2 class="h5">Open maps:</h2>
-		<div id="maps">
 
+
+
+	<div class="container-fluid bg-white">
+		<div id="results">
+			<h2 class="h5">Open maps:</h2>
+			<div id="maps">
+
+			</div>
 		</div>
 	</div>
-</div>
 
-<div class="container-fluid bg-info text-light">
-	<h2 class="h4"> Settings</h2>
-	<div class="form-check">
-		<input class="form-check-input" type="checkbox" value="" id="checkbox_show_descriptions" onchange="save_settings();">
-		<label class="form-check-label" for="checkbox_show_descriptions">Show descriptions</label>
-	</div>
-	
-	<div class="form-check">
-		<input class="form-check-input" type="checkbox" value="" id="checkbox_show_all" onchange="save_settings();">
-		<label class="form-check-label" for="checkbox_show_all">Show all maps</label>
-	</div>
-
-</div>
 
 <div class="container-fluid bg-secondary text-light">
 	<h2 class="h5">Notes</h2>
