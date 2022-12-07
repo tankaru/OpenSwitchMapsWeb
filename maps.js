@@ -1175,7 +1175,7 @@ const maps = [
 			return "https://wego.here.com/?map=" + lat + "," + lon + "," + zoom + ",normal";
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/wego\.here\.com\/\?map=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})/);
+			const match = url.match(/.*\.here\.com\/\?map=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})/);
 			if (match) {
 				const [, lat, lon, zoom] = match;
 				return [lat, lon, zoom];
