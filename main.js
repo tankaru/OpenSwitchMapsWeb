@@ -219,10 +219,10 @@ function setAddress(lat, lon) {
 				console.log("in china from google/bing/baidu");
 				const wgs = eviltransform.gcj2wgs(parseFloat(lat), parseFloat(lon));
 				setLatLon(wgs.lat, wgs.lng);
-				update_map_links([wgs.lat, wgs.lng, zoom, pin_lat, pin_lon, changeset]);
+				update_map_links([wgs.lat, wgs.lng, zoom, extra]);
 			} else {
 				//中国国内が確定したので作り直し
-				update_map_links([lat, lon, zoom, pin_lat, pin_lon, changeset]);
+				update_map_links([lat, lon, zoom, extra]);
 			}
 		}
 	});
@@ -266,16 +266,17 @@ function img_src_replace(domain) {
     }
 	
 }
-function get_url(map, lat, lon, zoom, pin_lat, pin_lon, changeset){
+function get_url(map, lat, lon, zoom, extra){
 
-	//console.log(map.name, lat, lon, zoom, pin_lat, pin_lon, changeset);
-	if (changeset) {
+	//console.log(map.name, lat, lon, zoom, extra);
+	if (extra && extra.changeset) {
+		
 		if (!map.hasOwnProperty('getChangesetUrl')) return false;
-		return map.getChangesetUrl(changeset);
+		return map.getChangesetUrl(extra.changeset);
 	}
 	if (!map.hasOwnProperty('getUrl')) return false;
 	if (lat) {
-		return map.getUrl(lat, lon, zoom, pin_lat, pin_lon, changeset);
+		return map.getUrl(lat, lon, zoom, extra);
 	}
 
 	return false;
@@ -283,10 +284,11 @@ function get_url(map, lat, lon, zoom, pin_lat, pin_lon, changeset){
 function update_map_links(latlonzoom){
 	if (!latlonzoom){
 		document.getElementById("sorry").innerHTML = "<strong>Sorry, this URL is not supported.</strong>";
-		[lat, lon, zoom, pin_lat, pin_lon, changeset] = [51.5129, 0.1, 13, null, null, null];
+		[lat, lon, zoom] = [51.5129, 0.1, 13];
+		extra = {};
 	} else {
 		document.getElementById("sorry").innerHTML = "";
-		[lat, lon, zoom, pin_lat, pin_lon, changeset] = latlonzoom;
+		[lat, lon, zoom, extra] = latlonzoom;
 		lon = normalizeLon(lon);
 		zoom = normalizeZoom(zoom);
 	}
@@ -295,7 +297,7 @@ function update_map_links(latlonzoom){
 		const elem_a = document.getElementById(`a_${map.name}`);
 		if (!elem_a) continue;
 		//if (!map.hasOwnProperty('getUrl')) continue;
-		const url = get_url(map, lat, lon, zoom, pin_lat, pin_lon, changeset);
+		const url = get_url(map, lat, lon, zoom, extra);
 		if (url){
 			elem_a.setAttribute('href',url);
 			set_error_element_by_id(`item_${map.name}`, false);
@@ -306,7 +308,7 @@ function update_map_links(latlonzoom){
 	}
 }
 
-function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon, changeset){
+function setMaps(lat, lon, zoom, maps, extra){
 
 	let columns = groupBy(maps, 'category');
 	
@@ -349,7 +351,7 @@ function setMaps(lat, lon, zoom, maps, pin_lat, pin_lon, changeset){
 				
 				maplist += `
 					<tr id="item_${map.name}">
-						<td><input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${get_url(map, map_lat,map_lon, zoom, pin_lat, pin_lon, changeset)}" id="a_${map.name}">${map.name}${oneway_note}</a></td>
+						<td><input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${get_url(map, map_lat,map_lon, zoom, extra)}" id="a_${map.name}">${map.name}${oneway_note}</a></td>
 						<td class="td_description"><small>${map.hasOwnProperty('description') ? map.description : ''}</small></td>
 					</tr>
 				`;
@@ -382,6 +384,7 @@ function button_refresh_links(){
 
 function update_from_url(url){
 	const latlonzoom = getLatLonZoom(url, maps);
+	console.log(latlonzoom);
 	update_map_links(latlonzoom); 
 	setAddress(latlonzoom[0], latlonzoom[1]);
 }
@@ -435,7 +438,7 @@ function get_prev_url(){
 	return false;
 }
 function init_maps(){
-	setMaps(lat, lon, zoom, maps, pin_lat, pin_lon, changeset);
+	setMaps(lat, lon, zoom, maps, extra);
 
 	//地図表示・非表示設定を読み込む
 	load_display_maps_setting();
@@ -588,8 +591,12 @@ function normalizeZoom(zoom){
 
 //Global variables
 let lat = 51.5129, lon = 0.1, zoom = 13;
-let pin_lat, pin_lon;
-let changeset = 100000000;
+let extra = {
+	pin_lat: null,
+	pin_lon: null,
+	changeset: null,
+}
+
 let country_code;
 let is_gcj_in_china = false;
 

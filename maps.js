@@ -41,7 +41,7 @@ const maps = [
 		default_check: true,
 		domain: "www.google.com",
 		is_gcj_in_china: true,
-		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
+		getUrl(lat, lon, zoom, extra) {
 			
 			function Num2DMS(num){
 				
@@ -63,7 +63,7 @@ const maps = [
 				let dms_lon = Num2DMS(Math.abs(num_lon)) + '%22' + ((num_lon > 0) ? 'E' : 'W');
 				return `${dms_lat}+${dms_lon}`;
 			}
-			return `https://www.google.com/maps/${pin_lat ? 'place/' + LatLon2DMS(pin_lat, pin_lon) +'/': ''}@${lat},${lon},${zoom}z`;
+			return `https://www.google.com/maps/${extra && extra.pin_lat ? 'place/' + LatLon2DMS(extra.pin_lat, extra.pin_lon) +'/': ''}@${lat},${lon},${zoom}z`;
 		},
 		getLatLonZoom(url) {
 			let match, lat, lon, zoom;
@@ -94,8 +94,11 @@ const maps = [
 				*/
 				let pin_match = url.match(/google.*maps\/place\/.*!3d(-?\d[0-9.]*)!4d(-?\d[0-9.]*)/);
 				if (pin_match){
-					const [,pin_lat, pin_lon] = pin_match;
-					return [lat, lon, zoom, pin_lat, pin_lon];
+					const extra = {
+						pin_lat: pin_match[1],
+						pin_lon: pin_match[2],
+					};
+					return [lat, lon, zoom, extra];
 				}
 				
 				//unpinned map
@@ -134,21 +137,21 @@ const maps = [
 		category: MAIN_CATEGORY,
 		default_check: true,
 		domain: "www.openstreetmap.org",
-		getUrl(lat, lon, zoom, pin_lat, pin_lon, changeset) {
-			return `https://www.openstreetmap.org/${changeset ? 'changeset/' + changeset : ''}${pin_lat ? '?mlat=' + pin_lat : ''}${pin_lon ? '&mlon=' + pin_lon : ''}#map=${zoom}/${lat}/${lon}`;
+		getUrl(lat, lon, zoom, extra) {
+			return `https://www.openstreetmap.org/${extra && extra.changeset ? 'changeset/' + extra.changeset : ''}${extra && extra.pin_lat ? '?mlat=' + extra.pin_lat : ''}${extra && extra.pin_lon ? '&mlon=' + extra.pin_lon : ''}#map=${zoom}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
 			//for changeset 
 			const changeset_match = url.match(/www\.openstreetmap\.org\/changeset\/(\d[0-9.]*)/);
 			if (changeset_match) {
 				const [, changeset] = changeset_match;
-				return [ null, null, null, null, null, changeset];
+				return [ null, null, null, {changeset}];
 			}
 			//for pinned map
 			const pin_match = url.match(/www\.openstreetmap\.org\/.*mlat=(-?\d[0-9.]*)&mlon=(-?\d[0-9.]*).*map=(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (pin_match) {
 				const [, pin_lat, pin_lon, zoom, lat, lon] = pin_match;
-				return [lat, lon, zoom, pin_lat, pin_lon];
+				return [lat, lon, zoom, {pin_lat, pin_lon}];
 			}
 
 			//for unpinned map
@@ -270,18 +273,21 @@ const maps = [
 		default_check: true,
 		domain: "www.bing.com",
 		is_gcj_in_china: true,
-		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
+		getUrl(lat, lon, zoom, extra) {
 			// https://learn.microsoft.com/en-us/bingmaps/articles/create-a-custom-map-url#collections-categories 
 			let pin = ''
-			if (pin_lat != null) {
-				pin = `&sp=point.${pin_lat}_${pin_lon}` // + `${name}_${note}`;
+			if (extra && extra.pin_lat) {
+				pin = `&sp=point.${extra.pin_lat}_${extra.pin_lon}` // + `${name}_${note}`;
 			}
 			return "https://www.bing.com/maps?cp=" + lat + "~" + lon + "&lvl=" + zoom + pin;
 		},
+		
 		getLatLonZoom(url) {
 			// https://www.bing.com/maps?osid=7b4e7fbd-4878-44fa-8302-421100f0d920&cp=23.295311~120.807682&lvl=13&v=2&sV=2&form=S00027
-			const u = new URL(url);
+			const urlobj = new URL(url);
+			const u = new URLSearchParams(urlobj.search);
 			const center = u.get('cp');
+
 			if (!center) return;
 			const [lat, lon] = center.split('~')
 			let zoom = '14';
@@ -291,10 +297,11 @@ const maps = [
 			const pin = u.get('sp');
 			if (pin) {
 				const scan = pin.match(/point\.([\d.]+)_([\d.]+)/);
-				if (scan) ret.push(scan[1], scan[2]);
+				if (scan) ret.push({pin_lat: scan[1], pin_lon: scan[2]});
 			}
 			return ret;
 		}
+		
 	},
 	{
 		name: "Overpass-turbo",
@@ -2595,12 +2602,12 @@ const maps = [
 		default_check: false,
 		domain: "",
 		description: "A URI schema to represent a point in a coordinate reference system, which may show the location on the default map application.",
-		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
+		getUrl(lat, lon, zoom, extra) {
 			// Usually, geo uri represent a point(pin),
 			// not a map view. Therefore, if the source have pin, 
 			// use the pin and discard the lat and lon.
-			if (pin_lat != null) {
-				[lat, lon] = [pin_lat, pin_lon];
+			if (extra && extra.pin_lat != null) {
+				[lat, lon] = [extra.pin_lat, extra.pin_lon];
 			}
 			return `geo:${lat},${lon}?z=${zoom}`;
 		},
@@ -2629,7 +2636,7 @@ const maps = [
 			lon = normalizeLon(lon);
 			return [
 				lat, lon, zoom,
-				lat, lon // treat geo uri as a pin url
+				{pin_lat: lat, pin_lon: lon} // treat geo uri as a pin url
 			];
 		},
 
@@ -2840,7 +2847,7 @@ const maps = [
 			const changeset_match = url.match(/osmcha\.org\/changesets\/(\d[0-9.]*)/);
 			if (changeset_match) {
 				const [, changeset] = changeset_match;
-				return [ null, null, null, null, null, changeset];
+				return [ null, null, null, {changeset}];
 			}
 
 		},
@@ -2859,10 +2866,12 @@ const maps = [
 		},
 		getLatLonZoom(url) {
 			//for changeset 
+			console.log(url);
 			const changeset_match = url.match(/overpass-api\.de\/achavi\/\?changeset=(\d[0-9.]*)/);
 			if (changeset_match) {
+				
 				const [, changeset] = changeset_match;
-				return [ null, null, null, null, null, changeset];
+				return [ null, null, null, {changeset}];
 			}
 
 		},
@@ -2875,7 +2884,6 @@ const maps = [
 	{ 
 		name: "resultmaps",
 		category: UTILITY_CATEGORY,
-		default_check: false,
 		domain: "neis-one.org",
 		getUrl(lat, lon, zoom) {
 			return ;//'https://resultmaps.neis-one.org/osm-change-viz';//dummy
@@ -2886,7 +2894,7 @@ const maps = [
 			const changeset_match = url.match(/resultmaps\.neis-one\.org\/osm-change-viz\?c=(\d[0-9.]*)/);
 			if (changeset_match) {
 				const [, changeset] = changeset_match;
-				return [ null, null, null, null, null, changeset];
+				return [ null, null, null, {changeset}];
 			}
 
 		},
