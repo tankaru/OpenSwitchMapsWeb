@@ -2843,6 +2843,7 @@ const maps = [
 		name: "OpenStreetMap Americana",
 		category: OTHER_CATEGORY,
 		domain: "github.io",
+		description: "American style vector map",
 		getUrl(lat, lon, zoom) {
 			return `https://zelonewolf.github.io/openstreetmap-americana/#map=${zoom}/${lat}/${lon}`;
 		},
@@ -2858,6 +2859,7 @@ const maps = [
 		name: "OpenAEDMap",
 		category: OTHER_CATEGORY,
 		domain: "openaedmap.org",
+		description: "AED map",
 		getUrl(lat, lon, zoom) {
 			return `https://openaedmap.org/#map=${zoom}/${lat}/${lon}`;
 		},
@@ -2873,6 +2875,7 @@ const maps = [
 		name: "Surveillance under Surveillance",
 		category: OTHER_CATEGORY,
 		domain: "uber.space",
+		description: "Survey camera map",
 		getUrl(lat, lon, zoom) {
 			return `https://sunders.uber.space/?lat=${lat}&lon=${lon}&zoom=${zoom}`;
 		},
@@ -2889,6 +2892,7 @@ const maps = [
 		name: "geojson.io",
 		category: UTILITY_CATEGORY,
 		domain: "geojson.io",
+		description: "geojson viewer/editor",
 		getUrl(lat, lon, zoom) {
 			return `https://geojson.io/#map=${zoom}/${lat}/${lon}`;
 		},
@@ -2905,6 +2909,7 @@ const maps = [
 		name: "Weather Underground",
 		category: SPECIAL_CATEGORY,
 		domain: "wunderground.com",
+		description: "Local weather information",
 		getUrl(lat, lon, zoom) {
 			return `https://www.wunderground.com/weather/${lat},${lon}`;
 		},
