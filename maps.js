@@ -2885,6 +2885,21 @@ const maps = [
 		},
 	},
 
+	{//https://geojson.io/#map=13.62/35.68351/139.74025
+		name: "geojson.io",
+		category: UTILITY_CATEGORY,
+		domain: "geojson.io",
+		getUrl(lat, lon, zoom) {
+			return `https://geojson.io/#map=${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/geojson\.io\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
 
 
 	//--------------OSM changeset analyzers, Only for web version ---------------------------------------
