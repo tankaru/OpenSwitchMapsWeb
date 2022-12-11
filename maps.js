@@ -2842,6 +2842,21 @@ const maps = [
 			}
 		},
 	},
+		{//https://openaedmap.org/#map=12/35.67503/139.80664
+			name: "OpenAEDMap",
+			category: OTHER_CATEGORY,
+			domain: "openaedmap.org",
+			getUrl(lat, lon, zoom) {
+				return `https://openaedmap.org/#map=${zoom}/${lat}/${lon}`;
+			},
+			getLatLonZoom(url) {
+				const match = url.match(/openaedmap\.org\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+				if (match) {
+					const [, zoom, lat, lon] = match;
+					return [lat, lon, zoom];
+				}
+			},
+		},
 
 
 
