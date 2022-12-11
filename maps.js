@@ -234,18 +234,23 @@ const maps = [
 			}
 		},
 	},
-	{
+	{ //https://yandex.com/maps/?ll=139.588169%2C35.424138&whatshere%5Bpoint%5D=139.576626%2C35.417882&z=15.8
 		name: "Yandex",
 		category: MAIN_CATEGORY,
 		default_check: true,
 		domain: "yandex.com",
-		getUrl(lat, lon, zoom) {
-			return "https://yandex.com/maps/?ll=" + lon + "%2C" + lat + "&z=" + zoom;
+		getUrl(lat, lon, zoom, extra) {
+			return `https://yandex.com/maps/?ll=${lon}%2C${lat}${extra && extra.pin_lat ? '&whatshere%5Bpoint%5D=' + extra.pin_lon + '%2C' + extra.pin_lat : ''}&z=${zoom}`;
 		},
 		getLatLonZoom(url) {
+			//https://yandex.com/maps/21433/yokohama/?ll=139.579830%2C35.423841&mode=whatshere&whatshere%5Bpoint%5D=139.576626%2C35.417882&whatshere%5Bzoom%5D=null&z=15.6
 			const match = url.match(/yandex.*maps.*ll=(-?\d[0-9.]*)%2C(-?\d[0-9.]*).*&z=(\d{1,2})/);
 			if (match) {
 				const [, lon, lat, zoom] = match;
+				const pin_match = url.match(/whatshere%5Bpoint%5D=(-?\d[0-9.]*)%2C(-?\d[0-9.]*)/);
+				if (pin_match){
+					return [lat, lon, zoom, {pin_lat: pin_match[2], pin_lon: pin_match[1]}];
+				}
 				return [lat, lon, zoom];
 			}
 		},
