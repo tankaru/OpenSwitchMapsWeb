@@ -270,9 +270,31 @@ const maps = [
 		default_check: true,
 		domain: "www.bing.com",
 		is_gcj_in_china: true,
-		getUrl(lat, lon, zoom) {
-			return "https://www.bing.com/maps?cp=" + lat + "~" + lon + "&lvl=" + zoom;
+		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
+			// https://learn.microsoft.com/en-us/bingmaps/articles/create-a-custom-map-url#collections-categories 
+			let pin = ''
+			if (pin_lat != null) {
+				pin = `&sp=point.${pin_lat}_${pin_lon}` // + `${name}_${note}`;
+			}
+			return "https://www.bing.com/maps?cp=" + lat + "~" + lon + "&lvl=" + zoom + pin;
 		},
+		getLatLonZoom(url) {
+			// https://www.bing.com/maps?osid=7b4e7fbd-4878-44fa-8302-421100f0d920&cp=23.295311~120.807682&lvl=13&v=2&sV=2&form=S00027
+			const u = new URL(url);
+			const center = u.get('cp');
+			if (!center) return;
+			const [lat, lon] = center.split('~')
+			let zoom = '14';
+			if (u.has('lvl')) zoom = u.get('lvl');
+			const ret = [lat, lon, zoom];
+			
+			const pin = u.get('sp');
+			if (pin) {
+				const scan = pin.match(/point\.([\d.]+)_([\d.]+)/);
+				if (scan) ret.push(scan[1], scan[2]);
+			}
+			return ret;
+		}
 	},
 	{
 		name: "Overpass-turbo",
