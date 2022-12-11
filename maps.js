@@ -255,19 +255,26 @@ const maps = [
 			}
 		},
 	},
-	{
+
+	//https://www.qwant.com/maps/#map=15.76/35.4256258/139.5906212
+	//https://www.qwant.com/maps/place/latlon:35.42128:139.57313#map=16.16/35.4229916/139.5795312
+	{ 
 		name: "Qwant Maps",
 		category: MAIN_CATEGORY,
 		default_check: true,
 		domain: "qwant.com",
 		description: "Vector map based on OpenStreetMap data",
-		getUrl(lat, lon, zoom) {
-			return "https://www.qwant.com/maps/#map=" + zoom + "/" + lat + "/" + lon;
+		getUrl(lat, lon, zoom, extra) {
+			return `https://www.qwant.com/maps/${extra && extra.pin_lat ? 'place/latlon:' + extra.pin_lat + ':' + extra.pin_lon : ''}#map=${zoom}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
 			const match = url.match(/www\.qwant\.com.*#map=(\d{1,2})[0-9.]*\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
 				const [, zoom, lat, lon] = match;
+				const pin_match = url.match(/latlon:(-?\d[0-9.]*):(-?\d[0-9.]*)/);
+				if (pin_match){
+					return [lat, lon, zoom, {pin_lat: pin_match[1], pin_lon: pin_match[2]}];
+				}
 				return [lat, lon, zoom];
 			}
 		},
