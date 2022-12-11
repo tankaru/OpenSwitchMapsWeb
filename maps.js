@@ -2827,6 +2827,21 @@ const maps = [
 			}
 		},
 	},
+	{//https://zelonewolf.github.io/openstreetmap-americana/#map=15.76/37.90132/139.073283
+		name: "OpenStreetMap Americana",
+		category: OTHER_CATEGORY,
+		domain: "github.io",
+		getUrl(lat, lon, zoom) {
+			return `https://zelonewolf.github.io/openstreetmap-americana/#map=${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/zelonewolf\.github\.io\/.*\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
 
 
 
