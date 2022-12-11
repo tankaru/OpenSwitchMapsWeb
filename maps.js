@@ -2901,6 +2901,15 @@ const maps = [
 		},
 	},
 
+	{//https://www.wunderground.com/weather/35.45,139.62
+		name: "Weather Underground",
+		category: SPECIAL_CATEGORY,
+		domain: "wunderground.com",
+		getUrl(lat, lon, zoom) {
+			return `https://www.wunderground.com/weather/${lat},${lon}`;
+		},
+	},
+
 
 	//--------------OSM changeset analyzers, Only for web version ---------------------------------------
 
