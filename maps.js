@@ -872,19 +872,19 @@ const maps = [
 		},
 	},
 
-	{
+	{//https://macrostrat.org/map/#x=139.835&y=35.886&z=7.44
 		name: "Macrostrat",
 		category: SPECIAL_CATEGORY,
 		default_check: true,
 		domain: "macrostrat.org",
 		description: "Geological map",
 		getUrl(lat, lon, zoom) {
-			return "https://macrostrat.org/map/#/z=" + zoom + "/x=" + lon + "/y=" + lat + "/bedrock/lines/";
+			return `https://macrostrat.org/map/#x=${lon}&y=${lat}&z=${zoom}`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/macrostrat\.org\/map\/#\/z=([0-9.]+)\/x=(-?\d[0-9.]+)\/y=(-?\d[0-9.]+)/);
+			const match = url.match(/macrostrat\.org\/map\/#x=(-?\d[0-9.]*)&y=(-?\d[0-9.]*)&z=(\d[0-9.]*)/);
 			if (match) {
-				let [, zoom, lon, lat] = match;
+				const [, lon, lat, zoom] = match;
 				return [lat, lon, zoom];
 			}
 		},
