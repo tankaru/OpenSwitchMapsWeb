@@ -2910,6 +2910,23 @@ const maps = [
 		},
 	},
 
+	{//https://www.ventusky.com/?p=36.41;139.21;6
+		name: "Ventusky",
+		category: SPECIAL_CATEGORY,
+		domain: "ventusky.com",
+		description: "Weather map",
+		getUrl(lat, lon, zoom) {
+			return `https://www.ventusky.com/?p=${lat};${lon};${Math.min(10, Number(zoom))}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/ventusky\.com\/?p=(-?\d[0-9.]*);(-?\d[0-9.]*);(-?\d[0-9.]*)/);
+			if (match) {
+				const [, lat, lon, zoom] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
+
 
 	//--------------OSM changeset analyzers, Only for web version ---------------------------------------
 
