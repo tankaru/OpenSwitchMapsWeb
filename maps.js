@@ -2842,22 +2842,36 @@ const maps = [
 			}
 		},
 	},
-		{//https://openaedmap.org/#map=12/35.67503/139.80664
-			name: "OpenAEDMap",
-			category: OTHER_CATEGORY,
-			domain: "openaedmap.org",
-			getUrl(lat, lon, zoom) {
-				return `https://openaedmap.org/#map=${zoom}/${lat}/${lon}`;
-			},
-			getLatLonZoom(url) {
-				const match = url.match(/openaedmap\.org\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
-				if (match) {
-					const [, zoom, lat, lon] = match;
-					return [lat, lon, zoom];
-				}
-			},
+	{//https://openaedmap.org/#map=12/35.67503/139.80664
+		name: "OpenAEDMap",
+		category: OTHER_CATEGORY,
+		domain: "openaedmap.org",
+		getUrl(lat, lon, zoom) {
+			return `https://openaedmap.org/#map=${zoom}/${lat}/${lon}`;
 		},
-
+		getLatLonZoom(url) {
+			const match = url.match(/openaedmap\.org\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
+	{//https://sunders.uber.space/?lat=34.76737826&lon=134.84250069&zoom=16
+		name: "Surveillance under Surveillance",
+		category: OTHER_CATEGORY,
+		domain: "uber.space",
+		getUrl(lat, lon, zoom) {
+			return `https://sunders.uber.space/?lat=${lat}&lon=${lon}&zoom=${zoom}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/unders\.uber\.space\/\?lat=(-?\d[0-9.]*)&lon=(-?\d[0-9.]*)&zoom=(\d[0-9.]*)/);
+			if (match) {
+				const [, lat, lon, zoom] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
 
 
 
