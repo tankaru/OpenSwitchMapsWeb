@@ -1438,20 +1438,20 @@ const maps = [
 			return "https://map.meurisse.org/?lon=" + lon + "&lng=" + lon + "&lat=" + lat + "&zoom=" + Math.min(Number(zoom), 18);
 		},
 	},
-	{
+	{ //https://disaster.ninja/active/?map=11.162/35.622/139.786
 		name: "Kontur",
 		category: UTILITY_CATEGORY,
 		default_check: true,
 		domain: "disaster.ninja",
 		description: "The most active OSM contributor",
 		getUrl(lat, lon, zoom) {
-			return "https://disaster.ninja/live/#overlays=bivariate-custom_kontur_openstreetmap_quantity,osm-users;id=GDACS_TC_1000654_2;position=" + lon + "," + lat + ";zoom=" + zoom;
+			return `https://disaster.ninja/active/?map=${zoom}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/disaster\.ninja\/live\/#.*position=(-?\d[0-9.]*),(-?\d[0-9.]*);zoom=(\d{1,2})/);
+			const match = url.match(/disaster\.ninja\/.*?map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 
 			if (match) {
-				const [, lon, lat, zoom] = match;
+				const [, zoom, lat, lon] = match;
 				return [lat, lon, zoom];
 			}
 		},
