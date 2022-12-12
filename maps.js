@@ -2499,14 +2499,27 @@ const maps = [
 		default_check: false,
 		domain: "osmapp.org",
 		description: "",
-		getUrl(lat, lon, zoom) {
-			return `https://osmapp.org/#${zoom}/${lat}/${lon}`;
+		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
+			let pin = ''
+			if (pin_lat != null) {
+				pin = '?pin=' + encodeURIComponent(`${pin_lat},${pin_lon}`);
+			}
+			return `https://osmand.net/map${pin}#${zoom}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/osmapp\.org\/#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			let array;
+			const match = url.match(/osmand\.net\/map.*?#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
 				const [, zoom, lat, lon] = match;
-				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+				array = [lat, normalizeLon(lon), Math.round(Number(zoom))];
+				const u = new URL(url);
+				if (u.search && u.searchParams.has('pin')) {
+					const pin = decodeURIComponent(
+						u.searchParams.get('pin')
+					);
+					array.push(...(pin.split(',')))
+				}
+				return array;
 			}
 		},
 	},
