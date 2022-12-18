@@ -351,8 +351,16 @@ function setMaps(lat, lon, zoom, maps, extra){
 				
 				maplist += `
 					<tr id="item_${map.name}">
-						<td><input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();"><img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16"><a href="${get_url(map, map_lat,map_lon, zoom, extra)}" id="a_${map.name}">${map.name}${oneway_note}</a></td>
-						<td class="td_description"><small>${map.hasOwnProperty('description') ? map.description : ''}</small></td>
+						<td>
+							<input type="checkbox" id="checkbox_show_${map.name}" onchange="save_settings();">
+							<img class="${map.domain.replace( /\./g , "" )}" src="favicons/${map.domain}.png" width="16" height="16" id="icon_${map.name}">
+							<a href="${get_url(map, map_lat,map_lon, zoom, extra)}" id="a_${map.name}">
+								<span id="label_${map.name}">${map.name}</span>${oneway_note}
+							</a>
+						</td>
+						<td class="td_description" id="description_${map.name}">
+							<small>${map.hasOwnProperty('description') ? map.description : ''}</small>
+						</td>
 					</tr>
 				`;
 
@@ -437,8 +445,95 @@ function get_prev_url(){
 	}
 	return false;
 }
+
+let custom_maps =[
+	{
+		name: "Custom map 1", //shoud be unique, used as id
+		category: "Custom maps",
+		domain: "",
+		label: "Map Name 1",
+		getUrl(lat, lon, zoom, extra) {
+			let url = this.map_format;
+			url = url.replace('{zoom}', zoom).replace('{latitude}', lat).replace('{longitude}', lon);
+			return url;
+		},
+		map_format:'https://#{zoom}/{latitude}/{longitude}',
+	},
+	{
+		name: "Custom map 2",
+		category: "Custom maps",
+		domain: "",
+		label: "Map Name 2",
+		getUrl(lat, lon, zoom, extra) {
+			let url = this.map_format;
+			url = url.replace('{zoom}', zoom).replace('{latitude}', lat).replace('{longitude}', lon);
+			return url;
+		},
+		map_format:'https://#{zoom}/{latitude}/{longitude}',
+	},
+];
+function custom_maps_set_domains(){
+	for (const map of custom_maps){
+		custom_maps_set_domain(map);
+	}
+}
+function custom_maps_set_domain(map){
+	const match = map.map_format.match(/([^./]*\.[^./]*)\//);//extract domain from map_format url
+	if (match) {
+		map.domain = match[1];
+	}
+}
+function custom_maps_init(){
+	custom_maps_set_domains();
+	maps = maps.concat(custom_maps);
+}
+//
+function custom_maps_setup(){
+	for (const custom_map of custom_maps){
+		//set label
+		const elem_label = document.getElementById(`label_${custom_map.name}`);
+		elem_label.innerHTML = custom_map.label;
+
+		//temporal UI
+		//put input boxes in description cell
+		const description_cell = document.getElementById(`description_${custom_map.name}`);
+		if (!description_cell) continue;
+		description_cell.innerHTML = `
+		<input type="text" name="label" id="input_label_${custom_map.name}" value="${custom_map.label}" placeholder="">
+		<input type="text" name="url" id="input_url_${custom_map.name}" value="${custom_map.map_format}" placeholder="">
+		<button type="button" id="input_button_${custom_map.name}" onclick="custom_maps_update('${custom_map.name}')">↺</button>
+		`;
+
+
+	}
+}
+function custom_maps_update(map_name){
+	//apply label
+	const elem_label = document.getElementById(`label_${map_name}`);
+	const elem_input_label = document.getElementById(`input_label_${map_name}`);
+	elem_label.innerText = elem_input_label.value;
+
+	//apply url
+	const elem_input_url = document.getElementById(`input_url_${map_name}`);
+	const map = custom_maps.find(element => element.name === map_name);
+	//console.log(map_name, elem_input_url);
+	map.map_format = elem_input_url.value;
+	map.label = elem_input_label.value;
+	custom_maps_set_domain(map);
+
+	//update icon
+	const elem_icon = document.getElementById(`icon_${map_name}`);
+	elem_icon.src = 'http://www.google.com/s2/favicons?domain=' + map.domain;
+	//$(`#icon_${map_name}`).attr('src', 'http://www.google.com/s2/favicons?domain=' + map.domain);
+
+	//refresh links
+	button_refresh_links();
+
+}
 function init_maps(){
+	custom_maps_init();
 	setMaps(lat, lon, zoom, maps, extra);
+	custom_maps_setup();
 
 	//地図表示・非表示設定を読み込む
 	load_display_maps_setting();
