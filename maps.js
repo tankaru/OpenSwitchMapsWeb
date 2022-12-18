@@ -2576,10 +2576,10 @@ const maps = [
 		default_check: false,
 		domain: "osmand.net",
 		description: "",
-		getUrl(lat, lon, zoom, pin_lat, pin_lon) {
+		getUrl(lat, lon, zoom, extra) {
 			let pin = ''
-			if (pin_lat != null) {
-				pin = '?pin=' + encodeURIComponent(`${pin_lat},${pin_lon}`);
+			if (extra != null && extra.pin_lat != null) {
+				pin = '?pin=' + encodeURIComponent(`${extra.pin_lat},${extra.pin_lon}`);
 			}
 			return `https://osmand.net/map${pin}#${zoom}/${lat}/${lon}`;
 		},
@@ -2594,7 +2594,8 @@ const maps = [
 					const pin = decodeURIComponent(
 						u.searchParams.get('pin')
 					);
-					array.push(...(pin.split(',')));
+					const pin_latlon = pin.split(',');
+					array.push({pin_lat: pin_latlon[0], pin_lon:pin_latlon[1]});
 				}
 				return array;
 			}
