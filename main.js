@@ -446,17 +446,19 @@ function get_prev_url(){
 	return false;
 }
 
+function commonGetUrl(lat, lon, zoom, extra) {
+	let url = this.map_format;
+	url = url.replace('{zoom}', zoom).replace('{latitude}', lat).replace('{longitude}', lon);
+	return url;
+}
 let custom_maps =[
+	/*
 	{
 		name: "Custom map 1", //shoud be unique, used as id
 		category: "Custom maps",
 		domain: "",
 		label: "Map Name 1",
-		getUrl(lat, lon, zoom, extra) {
-			let url = this.map_format;
-			url = url.replace('{zoom}', zoom).replace('{latitude}', lat).replace('{longitude}', lon);
-			return url;
-		},
+		getUrl: commonGetUrl,
 		map_format:'https://#{zoom}/{latitude}/{longitude}',
 	},
 	{
@@ -464,14 +466,22 @@ let custom_maps =[
 		category: "Custom maps",
 		domain: "",
 		label: "Map Name 2",
-		getUrl(lat, lon, zoom, extra) {
-			let url = this.map_format;
-			url = url.replace('{zoom}', zoom).replace('{latitude}', lat).replace('{longitude}', lon);
-			return url;
-		},
+		getUrl: commonGetUrl,
 		map_format:'https://#{zoom}/{latitude}/{longitude}',
 	},
+	*/
 ];
+for (let i=1; i<=10; i++){
+	custom_maps.push({
+		name: `Custom${('00'+i).slice(-2)}`,
+		category: "Custom maps",
+		domain: "",
+		label: `Map Name ${('00'+i).slice(-2)}`,
+		getUrl: commonGetUrl,
+		map_format:'https://#{zoom}/{latitude}/{longitude}',
+	});
+}
+
 function custom_maps_set_domains(){
 	for (const map of custom_maps){
 		custom_maps_set_domain(map);
@@ -484,8 +494,38 @@ function custom_maps_set_domain(map){
 	}
 }
 function custom_maps_init(){
+	custom_maps_load();
 	custom_maps_set_domains();
 	maps = maps.concat(custom_maps);
+	//console.log(custom_maps);
+}
+function custom_maps_load(){
+	const loaded_maps = JSON.parse(localStorage.getItem('OpenSwitchMapsCustomMaps'));
+	if (loaded_maps) {
+		/*
+		for (const map of loaded_maps){
+			const name = map.name;
+			const custom_map = custom_maps.find(element => element.name === name);
+			if (custom_map){
+				for (const key in map){
+					custom_map[key] = map[key];
+				}
+			}
+		}
+		*/
+		//保存したカスタム地図の数と初期設定したカスタム地図の数が違うこともあるので。
+		for (let i=0;i<loaded_maps.length;i++){
+			custom_maps[i] = loaded_maps[i];
+		}
+		
+		//stringifyだと関数は保存されないようなので、別途くっつける。
+		for (const map of custom_maps){
+			map.getUrl = commonGetUrl;
+		}
+	}
+}
+function custom_maps_save(){
+	localStorage.setItem('OpenSwitchMapsCustomMaps', JSON.stringify(custom_maps));
 }
 //
 function custom_maps_setup(){
@@ -508,6 +548,8 @@ function custom_maps_setup(){
 	}
 }
 function custom_maps_update(map_name){
+
+
 	//apply label
 	const elem_label = document.getElementById(`label_${map_name}`);
 	const elem_input_label = document.getElementById(`input_label_${map_name}`);
@@ -528,6 +570,8 @@ function custom_maps_update(map_name){
 
 	//refresh links
 	button_refresh_links();
+
+	custom_maps_save();
 
 }
 function init_maps(){
@@ -658,13 +702,14 @@ function load_display_maps_setting(){
 		const id = document.getElementById(`checkbox_show_${map.name}`);
 		if (id){
 			const setting = settings[map.name];
-			if (setting == false){
+			if (setting === false){
 				id.checked = false;
-			} else if (setting == true){
+			} else if (setting === true){
 				id.checked = true;
 			} else {
 				//保存された設定がない場合は、表示しない
-				id.checked = false;
+				//No touch seems safer than check off 
+				//id.checked = false;
 			}
 		}
 	}
