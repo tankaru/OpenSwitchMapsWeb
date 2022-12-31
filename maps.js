@@ -34,7 +34,7 @@ const OSM_LOCAL_CATEGORY = "OSM local chapter";
 const APP_CATEGORY = "External App";
 const PORTAL_CATEGORY = "Map portal";
 
-const maps = [
+let maps = [
 	{
 		name: "Google Maps",
 		category: MAIN_CATEGORY,
@@ -51,7 +51,7 @@ const maps = [
 				const m = Math.trunc(dec * 60);
 				const sub_dec = dec*60 - m;
 				const s = sub_dec * 60;
-				console.log(num, d, dec, m, sub_dec, s);
+				//console.log(num, d, dec, m, sub_dec, s);
 				return d + '%C2%B0' + m + "'" + s.toFixed(1);
 			}
 
