@@ -2510,17 +2510,18 @@ let maps = [
 			}
 		},
 	},
-	/* Couldn't find a good converter.
+	
 	{
 		//https://www.geoportal.bayern.de/bayernatlas/?topic=ba&lang=de&bgLayer=atkis&catalogNodes=11&E=604510.08&N=5337130.40&zoom=3
+		//https://geoportal.bayern.de/bayernatlas?lon=11.575556&lat=48.137222&zoom=10
 		name: "BayernAtlas",
 		category: LOCAL_CATEGORY,
-		default_check: false,
 		domain: "geoportal.bayern.de",
 		description: "der Kartenviewer des Freistaates Bayern",
 		getUrl(lat, lon, zoom) {
-			return `https://www.geoportal.bayern.de/bayernatlas/?topic=ba&lang=de&bgLayer=atkis&catalogNodes=11&E=${72721*Number(lon) - 154177}&N=${110681*Number(lat) + 7222}&zoom=${Number(zoom)-5}`;
+			return `https://geoportal.bayern.de/bayernatlas?lon=${lon}&lat=${lat}&zoom=${zoom}`;
 		},
+		/*
 		getLatLonZoom(url) {
 			const match = url.match(/geoportal\.bayern\.de.*E=(\d[0-9.]*)&N=(\d[0-9.]*)&zoom=(\d[0-9.]*)/);
 			if (match) {
@@ -2531,8 +2532,9 @@ let maps = [
 				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
 			}
 		},
+		*/
 	},
-	*/
+	
 	{
 		//https://hgis.pref.miyazaki.lg.jp/hinata/hinata.html#10/35.640127/139.624164
 		name: "ひなたGIS",
@@ -2946,77 +2948,81 @@ let maps = [
 		},
 	},
 
-
-	//--------------OSM changeset analyzers, Only for web version ---------------------------------------
-
-	{ //https://osmcha.org/changesets/128124079
-		name: "OSMCha",
-		category: UTILITY_CATEGORY,
-		default_check: false,
-		domain: "osmcha.org",
-		getUrl(lat, lon, zoom) {
-			return ;//'https://osmcha.org/';//dummy
-			
-		},
-		getLatLonZoom(url) {
-			//for changeset 
-			const changeset_match = url.match(/osmcha\.org\/changesets\/(\d[0-9.]*)/);
-			if (changeset_match) {
-				const [, changeset] = changeset_match;
-				return [ null, null, null, {changeset}];
-			}
-
-		},
-		getChangesetUrl(changeset){
-			return `https://osmcha.org/changesets/${changeset}`;
-		}
-	},
-	{ //https://overpass-api.de/achavi/?changeset=128124079
-		name: "achavi",
-		category: UTILITY_CATEGORY,
-		default_check: false,
-		domain: "overpass-api.de",
-		getUrl(lat, lon, zoom) {
-			return ;//'https://overpass-api.de/achavi/';//dummy
-			
-		},
-		getLatLonZoom(url) {
-			//for changeset 
-			console.log(url);
-			const changeset_match = url.match(/overpass-api\.de\/achavi\/\?changeset=(\d[0-9.]*)/);
-			if (changeset_match) {
-				
-				const [, changeset] = changeset_match;
-				return [ null, null, null, {changeset}];
-			}
-
-		},
-		getChangesetUrl(changeset){
-			return `https://overpass-api.de/achavi/?changeset=${changeset}`;
-		}
-	},
-
-	//https://resultmaps.neis-one.org/osm-change-viz?c=128124079
-	{ 
-		name: "resultmaps",
-		category: UTILITY_CATEGORY,
-		domain: "neis-one.org",
-		getUrl(lat, lon, zoom) {
-			return ;//'https://resultmaps.neis-one.org/osm-change-viz';//dummy
-			
-		},
-		getLatLonZoom(url) {
-			//for changeset 
-			const changeset_match = url.match(/resultmaps\.neis-one\.org\/osm-change-viz\?c=(\d[0-9.]*)/);
-			if (changeset_match) {
-				const [, changeset] = changeset_match;
-				return [ null, null, null, {changeset}];
-			}
-
-		},
-		getChangesetUrl(changeset){
-			return `https://resultmaps.neis-one.org/osm-change-viz?c=${changeset}`;
-		}
-	},
 ];
+
+//--------------OSM changeset analyzers, Only for web version ---------------------------------------
+maps = maps.concat(
+	[
+
+		{ //https://osmcha.org/changesets/128124079
+			name: "OSMCha",
+			category: UTILITY_CATEGORY,
+			default_check: false,
+			domain: "osmcha.org",
+			getUrl(lat, lon, zoom) {
+				return ;//'https://osmcha.org/';//dummy
+				
+			},
+			getLatLonZoom(url) {
+				//for changeset 
+				const changeset_match = url.match(/osmcha\.org\/changesets\/(\d[0-9.]*)/);
+				if (changeset_match) {
+					const [, changeset] = changeset_match;
+					return [ null, null, null, {changeset}];
+				}
+	
+			},
+			getChangesetUrl(changeset){
+				return `https://osmcha.org/changesets/${changeset}`;
+			}
+		},
+		{ //https://overpass-api.de/achavi/?changeset=128124079
+			name: "achavi",
+			category: UTILITY_CATEGORY,
+			default_check: false,
+			domain: "overpass-api.de",
+			getUrl(lat, lon, zoom) {
+				return ;//'https://overpass-api.de/achavi/';//dummy
+				
+			},
+			getLatLonZoom(url) {
+				//for changeset 
+				console.log(url);
+				const changeset_match = url.match(/overpass-api\.de\/achavi\/\?changeset=(\d[0-9.]*)/);
+				if (changeset_match) {
+					
+					const [, changeset] = changeset_match;
+					return [ null, null, null, {changeset}];
+				}
+	
+			},
+			getChangesetUrl(changeset){
+				return `https://overpass-api.de/achavi/?changeset=${changeset}`;
+			}
+		},
+	
+		//https://resultmaps.neis-one.org/osm-change-viz?c=128124079
+		{ 
+			name: "resultmaps",
+			category: UTILITY_CATEGORY,
+			domain: "neis-one.org",
+			getUrl(lat, lon, zoom) {
+				return ;//'https://resultmaps.neis-one.org/osm-change-viz';//dummy
+				
+			},
+			getLatLonZoom(url) {
+				//for changeset 
+				const changeset_match = url.match(/resultmaps\.neis-one\.org\/osm-change-viz\?c=(\d[0-9.]*)/);
+				if (changeset_match) {
+					const [, changeset] = changeset_match;
+					return [ null, null, null, {changeset}];
+				}
+	
+			},
+			getChangesetUrl(changeset){
+				return `https://resultmaps.neis-one.org/osm-change-viz?c=${changeset}`;
+			}
+		},
+	]
+);
 
