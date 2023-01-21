@@ -457,6 +457,7 @@ let maps = [
 			return "http://bigmap.osmz.ru/index.html#map=" + zoom + "/" + lat + "/" + lon;
 		},
 	},
+	/* Pic4Carto obsoleted
 	{
 		name: "Pic4Carto",
 		category: UTILITY_CATEGORY,
@@ -474,6 +475,7 @@ let maps = [
 			}
 		},
 	},
+	*/
 
 	{
 		name: "JapanMapCompare",
@@ -1284,6 +1286,16 @@ let maps = [
 		getUrl(lat, lon, zoom) {
 			//https://www.mediawiki.org/wiki/GeoHack
 			return "https://tools.wmflabs.org/geohack/geohack.php?params=" + lat + "_N_" + lon + "_E_scale:" + Math.round(100000 * Math.pow(2, 12 - Number(zoom)));
+		},
+	},
+	{ //https://geohack.toolforge.org/geohack.php?language=de&params=48.137222222222_N_11.575555555556_E
+		name: "GeoHack(local)",
+		category: PORTAL_CATEGORY,
+		default_check: false,
+		domain: "wmflabs.org",
+		description: "Map links for Wikipedia articles with lang support",
+		getUrl(lat, lon, zoom) {
+			return `https://tools.wmflabs.org/geohack/geohack.php?${navigator.language ? 'language='+ navigator.language + '&' : ''}params=${lat}_N_${lon}_E_scale:${Math.round(100000 * Math.pow(2, 12 - Number(zoom)))}`;
 		},
 	},
 
@@ -2519,7 +2531,7 @@ let maps = [
 		domain: "geoportal.bayern.de",
 		description: "der Kartenviewer des Freistaates Bayern",
 		getUrl(lat, lon, zoom) {
-			return `https://geoportal.bayern.de/bayernatlas?lon=${lon}&lat=${lat}&zoom=${zoom}`;
+			return `https://geoportal.bayern.de/bayernatlas?lon=${lon}&lat=${lat}&zoom=${Number(zoom)-5}`;
 		},
 		/*
 		getLatLonZoom(url) {
@@ -2848,7 +2860,7 @@ let maps = [
 			return `https://www.google.com/maps/d/u/0/viewer?mid=180u1IkUjtjpdJWnIC0AxTKSiqK4G6Pez&ll=${lat}%2C${lon}&z=${zoom}`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/www\.google\.com\/maps\/d\/u\/0\/viewer\?mid=180u1IkUjtjpdJWnIC0AxTKSiqK4G6Pez&ll=(-?\d[0-9.]*)%2C(-?\d[0-9.]*)&z=(\d[0-9]*)/);
+			const match = url.match(/www\.google\.com\/maps\S{2,6}\/viewer\?mid=180u1IkUjtjpdJWnIC0AxTKSiqK4G6Pez&ll=(-?\d[0-9.]*)%2C(-?\d[0-9.]*)&z=(\d[0-9]*)/);
 			if (match) {
 				const [, lat, lon, zoom] = match;
 				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
