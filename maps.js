@@ -2338,6 +2338,24 @@ let maps = [
 		  }
 		},
 	  },
+		  { https://web.locusmap.app/en/?lat=3.020978&lng=-152.929688&z=2
+		name: "locusmap",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "locusmap.app",
+		description: "Draw and drag the route line and navigate for trip using LocusMap webapp.",
+		getUrl(lat, lon, zoom) {
+		  return `https://web.locusmap.app/en/?lat=${lat}&lng=${lon}&z=${zoom}`;
+  
+		},
+		getLatLonZoom(url) {
+		  const match = url.match(/web.\locusmap\.app\/en/\?lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&z=(\d[0-9.]*)/);
+		  if (match) {
+			const [, lat, lon, zoom] = match;
+			return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+		  }
+		},
+	  },
 
 
 	{
