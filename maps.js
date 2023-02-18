@@ -193,7 +193,14 @@ let maps = [
 			const match = url.match(/www\.mapillary\.com.*lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&z=(\d{1,2})/);
 			if (match) {
 				const [, lat, lon, zoom] = match;
-				return [lat, lon, zoom];
+				// add pin information for photo view mode
+				const is_photoview = url.match(/focus=photo/);
+				if (is_photoview) {
+					return [lat, lon, zoom, {pin_lat: lat, pin_lon: lon}];
+				} else {
+					return [lat, lon, zoom];
+				}
+				
 			}
 		},
 	},
