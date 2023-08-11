@@ -64,7 +64,7 @@ let maps = [
 			return `https://www.google.com/maps/${extra && extra.pin_lat ? "place/" + LatLon2DMS(extra.pin_lat, extra.pin_lon) + "/" : ""}@${lat},${lon},${zoom}z`;
 		},
 		getLatLonZoom(url) {
-			let match, lat, lon, zoom;
+			let match, lat, lon, zoom, extra;
 			if ((match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})[.z]/))) {
 				[, lat, lon, zoom] = match;
 			} else if ((match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9.]*)[m]/))) {
@@ -73,6 +73,12 @@ let maps = [
 			} else if ((match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),([0-9]*)[a],[0-9.]*y/))) {
 				[, lat, lon, zoom] = match;
 				zoom = Math.round(-1.44 * Math.log(zoom) + 27.5);
+				//add pin for street view
+				extra = {
+					pin_lat: lat,
+					pin_lon: lon,
+				};
+
 			}
 			if (match) {
 				//pinned map
@@ -92,15 +98,14 @@ let maps = [
 				*/
 				let pin_match = url.match(/google.*maps\/place\/.*!3d(-?\d[0-9.]*)!4d(-?\d[0-9.]*)/);
 				if (pin_match) {
-					const extra = {
+					extra = {
 						pin_lat: pin_match[1],
 						pin_lon: pin_match[2],
 					};
-					return [lat, lon, zoom, extra];
 				}
 
 				//unpinned map
-				return [lat, lon, zoom];
+				return [lat, lon, zoom, extra];
 			}
 		},
 	},
@@ -110,9 +115,19 @@ let maps = [
 		default_check: false,
 		domain: "www.google.com",
 		is_gcj_in_china: true,
-		getUrl(lat, lon, zoom) {
-			return `https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=${lat},${lon}`;
+		getUrl(lat, lon, zoom, extra) {
+			//if with pin, set street view at pin.
+			let map_lat, map_lon;
+			if (extra && extra.pin_lat && extra.pin_lon){
+				map_lat = extra.pin_lat;
+				map_lon = extra.pin_lon;
+			} else {
+				map_lat = lat;
+				map_lon = lon;
+			}
+			return `https://www.google.com/maps/@?api=1&map_action=pano&parameters&viewpoint=${map_lat},${map_lon}`;
 		},
+		/*
 		getLatLonZoom(url) {
 			let match;
 			if ((match = url.match(/google.*maps.*@(-?\d[0-9.]*),(-?\d[0-9.]*),(\d{1,2})[.z]/))) {
@@ -128,6 +143,7 @@ let maps = [
 				return [lat, lon, zoom];
 			}
 		},
+		*/
 	},
 
 	{
@@ -177,7 +193,14 @@ let maps = [
 			const match = url.match(/www\.mapillary\.com.*lat=(-?\d[0-9.]*)&lng=(-?\d[0-9.]*)&z=(\d{1,2})/);
 			if (match) {
 				const [, lat, lon, zoom] = match;
-				return [lat, lon, zoom];
+				// add pin information for photo view mode
+				const is_photoview = url.match(/focus=photo/);
+				if (is_photoview) {
+					return [lat, lon, zoom, {pin_lat: lat, pin_lon: lon}];
+				} else {
+					return [lat, lon, zoom];
+				}
+				
 			}
 		},
 	},
