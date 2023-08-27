@@ -473,14 +473,14 @@ let maps = [
 		//https://stadiamaps.com/explore-the-map/#map=10.56/37.5697/126.9976
 		name: "Stadia Maps",
 		category: OTHER_CATEGORY,
-		default_check: true,
+		default_check: false,
 		domain: "stadiamaps.com",
 		description: "",
 		getUrl(lat, lon, zoom) {
-			return "https://stadiamaps.com/explore-the-map/#?map=" + zoom + "/" + lat + "/" + lon;
+			return "https://stadiamaps.com/explore-the-map/#map=" + zoom + "/" + lat + "/" + lon;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/stadiamaps\.com\/explore-the-map\/#.*\?map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			const match = url.match(/stadiamaps\.com\/explore-the-map\/#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
 				const [, zoom, lat, lon] = match;
 				return [lat, lon, zoom];
