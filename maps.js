@@ -1192,7 +1192,10 @@ let maps = [
 		category: APP_CATEGORY,
 		default_check: false,
 		domain: "apple.com",
-		getUrl(lat, lon, zoom) {
+		getUrl(lat, lon, zoom, extra) {
+			if (extra){
+				return "http://maps.apple.com/place?ll=" + extra.pin_lat + "," + extra.pin_lon;
+			}
 			return "http://maps.apple.com/?ll=" + lat + "," + lon + "&z=" + zoom;
 		},
 	},
