@@ -3023,6 +3023,18 @@ let maps = [
 			}
 		},
 	},
+	{
+		//https://www.arcgis.com/home/webmap/viewer.html?webmap=86265e5a4bbb4187a59719cf134e0018&find=35.46141,139.62938
+		name: "ESRI hybrid map",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "arcgis.com",
+		description: "Satellite and high-resolution aerial imagery for the world with political boundaries, roads, and labels for places and roads.",
+		getUrl(lat, lon, zoom) {
+			const bbox = latLonZoomToBbox(lat, lon, zoom)
+			return `https://www.arcgis.com/home/webmap/viewer.html?webmap=86265e5a4bbb4187a59719cf134e0018&extent=${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`;
+		},
+	},
 ];
 
 //--------------OSM changeset analyzers, Only for web version ---------------------------------------
