@@ -3040,6 +3040,24 @@ let maps = [
 			return `https://www.arcgis.com/home/webmap/viewer.html?webmap=86265e5a4bbb4187a59719cf134e0018&extent=${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`;
 		},
 	},
+	{
+		//http://fieldpapers.org/compose#14/35.6865/139.7505
+		name: "Field Papers",
+		category: UTILITY_CATEGORY,
+		default_check: false,
+		domain: "fieldpapers.org",
+		description: "Field Papers is a tool to help you create a multi-page atlas of anywhere in the world.",
+		getUrl(lat, lon, zoom) {
+			return `http://fieldpapers.org/compose#${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/fieldpapers\.org\/.*#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
 ];
 
 //--------------OSM changeset analyzers, Only for web version ---------------------------------------
