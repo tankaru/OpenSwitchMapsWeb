@@ -78,7 +78,9 @@ let maps = [
 					pin_lat: lat,
 					pin_lon: lon,
 				};
-
+			} else if ((match = url.match(/google.*maps.*ll=(-?\d[0-9.]*)%2C(-?\d[0-9.]*)&z=(\d[0-9.]*)/))){
+				//https://www.google.com/maps/d/u/0/viewer?mid=1EpC-GTEzYFLFL8kPS1kqT7znfsU&ll=36.06634784473271%2C139.87667246610306&z=9
+				[, lat, lon, zoom] = match;
 			}
 			if (match) {
 				//pinned map
