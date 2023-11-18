@@ -3058,6 +3058,24 @@ let maps = [
 			}
 		},
 	},
+	{
+		//https://maps.vk.com/ru/?lng=139.599084&lat=35.458337&zoom=11&style=main
+		name: "VK maps",
+		category: LOCAL_CATEGORY,
+		default_check: false,
+		domain: "vk.com",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://maps.vk.com/ru/?lng=${lon}&lat=${lat}&zoom=${zoom}&style=main`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/maps\.vk\.com\/.*\/?lng=(-?\d[0-9.]*)&lat=(-?\d[0-9.]*)&zoom=(\d[0-9.]*)/);
+			if (match) {
+				const [, lon, lat, zoom] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
 ];
 
 //--------------OSM changeset analyzers, Only for web version ---------------------------------------
