@@ -1087,6 +1087,17 @@ let maps = [
 	},
 
 	{
+		//https://waterwaymap.org/#map=14.42/36.63977/118.34716
+		name: "WaterwayMap",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "waterwaymap.org",
+		getUrl(lat, lon, zoom) {
+			return "https://waterwaymap.org/?zoom=" + zoom + "&lat=" + lat + "&lon=" + lon;
+		},
+	},
+
+	{
 		name: "聖地巡礼マップ",
 		category: SPECIAL_CATEGORY,
 		default_check: false,
