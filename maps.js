@@ -159,24 +159,31 @@ let maps = [
 		},
 		getLatLonZoom(url) {
 			//for changeset
+			let lat, lon, zoom, pin_lat, pin_lon, changeset;
+			let matched = false;
 			const changeset_match = url.match(/www\.openstreetmap\.org\/changeset\/(\d[0-9.]*)/);
 			if (changeset_match) {
-				const [, changeset] = changeset_match;
-				return [null, null, null, { changeset }];
+				[, changeset] = changeset_match;
+				matched = true;
 			}
-			//for pinned map
-			const pin_match = url.match(/www\.openstreetmap\.org\/.*mlat=(-?\d[0-9.]*)&mlon=(-?\d[0-9.]*).*map=(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			//for pin position
+			const pin_match = url.match(/www\.openstreetmap\.org\/.*mlat=(-?\d[0-9.]*)&mlon=(-?\d[0-9.]*)/);
 			if (pin_match) {
-				const [, pin_lat, pin_lon, zoom, lat, lon] = pin_match;
-				return [lat, lon, zoom, { pin_lat, pin_lon }];
+				[, pin_lat, pin_lon] = pin_match;
+				matched = true;
 			}
 
-			//for unpinned map
+			//for map position
 			const match = url.match(/www\.openstreetmap\.org.*map=(\d{1,2})\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
-				const [, zoom, lat, lon] = match;
-				return [lat, lon, zoom];
+				[, zoom, lat, lon] = match;
+				matched = true;
 			}
+
+			if (matched){
+				return [lat, lon, zoom, {pin_lat, pin_lon, changeset}];
+			}
+
 		},
 		getChangesetUrl(changeset) {
 			return `https://www.openstreetmap.org/changeset/${changeset}`;
