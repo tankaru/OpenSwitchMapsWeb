@@ -3130,6 +3130,17 @@ let maps = [
 			}
 		},
 	},
+	{
+		//https://sharaku.eorc.jaxa.jp/GSMaP/index.htm?lon=139.683918&lat=35.584940&zoom=11
+		name: "JAXA Global Rainfall Watch",
+		category: SPECIAL_CATEGORY,
+		default_check: false,
+		domain: "jaxa.jp",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://sharaku.eorc.jaxa.jp/GSMaP/index.htm?lon=${lon}&lat=${lat}&zoom=${zoom}`;
+		},
+	},
 ];
 
 //--------------OSM changeset analyzers, Only for web version ---------------------------------------
