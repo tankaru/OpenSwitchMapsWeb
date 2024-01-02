@@ -3083,6 +3083,24 @@ let maps = [
 			}
 		},
 	},
+	{
+		//https://www.openstreetmap.app/#map=13/35.6827/139.7660
+		name: "OpenStreetMap Nederland",
+		category: OSM_LOCAL_CATEGORY,
+		default_check: false,
+		domain: "openstreetmap.app",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://www.openstreetmap.app/#map=${zoom}/${lat}/${lon}`;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/www\.openstreetmap\.app\/.*#map=(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
 ];
 
 //--------------OSM changeset analyzers, Only for web version ---------------------------------------
