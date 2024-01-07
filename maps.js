@@ -1087,6 +1087,17 @@ let maps = [
 	},
 
 	{
+		//https://openlandmap.org/?center=25%2C39&zoom=7.15395439922849&opacity=72&base=OpenStreetMap&layer=lc_glc.fcs30d&time=2022
+		name: "OpenLandMap",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "openlandmap.org",
+		getUrl(lat, lon, zoom) {
+			return "https://openrailwaymap.org/?center=" + lon + "%2C" + lat + "&zoom=" + zoom + "&opacity=72&base=OpenStreetMap&layer=lc_glc.fcs30d&time=2022";
+		},
+	},
+
+	{
 		//https://waterwaymap.org/#map=14.42/36.63977/118.34716
 		name: "WaterwayMap",
 		category: OTHER_CATEGORY,
