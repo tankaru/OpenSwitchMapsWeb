@@ -1093,7 +1093,7 @@ let maps = [
 		default_check: false,
 		domain: "openlandmap.org",
 		getUrl(lat, lon, zoom) {
-			return "https://openrailwaymap.org/?center=" + lon + "%2C" + lat + "&zoom=" + zoom + "&opacity=72&base=OpenStreetMap&layer=lc_glc.fcs30d&time=2022";
+			return "https://openlandmap.org/?center=" + lon + "%2C" + lat + "&zoom=" + zoom + "&opacity=72&base=OpenStreetMap&layer=lc_glc.fcs30d&time=2022";
 		},
 	},
 
