@@ -1646,6 +1646,25 @@ let maps = [
 		},
 	},
 	{
+		//https://www.norgeskart.no/#!?project=norgeskart&layers=1002&zoom=13&lat=6649044.14&lon=262775.36
+		name: "Norgeskart",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "www.norgeskart.no",
+		description: "experimental vector map in Norge",
+		getUrl(lat, lon, zoom) {
+			return "https://www.norgeskart.no/#!?project=norgeskart&layers=1002&zoom=" + zoom + "&lat=" + lat + "&lon=" + lon;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/www\.norgeskart\.no.*#.*layers=1002.*([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+	{
 		//https://labs.mapple.com/mapplevt.html?#8.47/35.7472/139.9546
 		name: "MαPPLE",
 		category: OTHER_CATEGORY,
