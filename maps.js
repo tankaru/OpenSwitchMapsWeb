@@ -1094,6 +1094,28 @@ let maps = [
 	},
 
 	{
+		//https://openlandmap.org/?center=25%2C39&zoom=7.15395439922849&opacity=72&base=OpenStreetMap&layer=lc_glc.fcs30d&time=2022
+		name: "OpenLandMap",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "openlandmap.org",
+		getUrl(lat, lon, zoom) {
+			return "https://openlandmap.org/?center=" + lon + "%2C" + lat + "&zoom=" + zoom + "&opacity=72&base=OpenStreetMap&layer=lc_glc.fcs30d&time=2022";
+		},
+	},
+
+	{
+		//https://waterwaymap.org/#map=14.42/36.63977/118.34716
+		name: "WaterwayMap",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "waterwaymap.org",
+		getUrl(lat, lon, zoom) {
+			return "https://waterwaymap.org/?zoom=" + zoom + "&lat=" + lat + "&lon=" + lon;
+		},
+	},
+
+	{
 		name: "聖地巡礼マップ",
 		category: SPECIAL_CATEGORY,
 		default_check: false,
@@ -1623,6 +1645,25 @@ let maps = [
 		},
 		getLatLonZoom(url) {
 			const match = url.match(/tracesmap.*\/#([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+
+			if (match) {
+				const [, zoom, lat, lon] = match;
+				return [lat, normalizeLon(lon), Math.round(Number(zoom))];
+			}
+		},
+	},
+	{
+		//https://www.norgeskart.no/#!?project=norgeskart&layers=1002&zoom=13&lat=6649044.14&lon=262775.36
+		name: "Norgeskart",
+		category: OTHER_CATEGORY,
+		default_check: false,
+		domain: "www.norgeskart.no",
+		description: "experimental vector map in Norge",
+		getUrl(lat, lon, zoom) {
+			return "https://www.norgeskart.no/#!?project=norgeskart&layers=1002&zoom=" + zoom + "&lat=" + lat + "&lon=" + lon;
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/www\.norgeskart\.no.*#.*layers=1002.*([0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 
 			if (match) {
 				const [, zoom, lat, lon] = match;
