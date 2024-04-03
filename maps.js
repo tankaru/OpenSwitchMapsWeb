@@ -1435,17 +1435,17 @@ let maps = [
 		},
 	},
 
-	{
+	{//https://plan.tomtom.com/en/?p=35.68504,139.7515,14.16z
 		name: "TomTom MyDrive",
 		category: OTHER_CATEGORY,
 		default_check: false,
 		domain: "tomtom.com",
 		description: "Traffic map",
 		getUrl(lat, lon, zoom) {
-			return "https://mydrive.tomtom.com/en_gb/#mode=viewport+viewport=" + lat + "," + lon + "," + zoom + ",0,-0+ver=3";
+			return `https://plan.tomtom.com/en/?p=${lat},${lon},${zoom}z`;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/mydrive\.tomtom\.com\/[a-z_]*\/#mode=viewport\+viewport=(-?\d[0-9.]*),(-?\d[0-9.]*),(-?\d[0-9.]*)/);
+			const match = url.match(/\.tomtom\.com\/.*p=(-?\d[0-9.]*),(-?\d[0-9.]*),(\d[0-9.]*)z/);
 			if (match) {
 				const [, lat, lon, zoom] = match;
 				return [lat, lon, Math.round(Number(zoom))];
