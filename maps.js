@@ -3184,6 +3184,17 @@ let maps = [
 			return `https://sharaku.eorc.jaxa.jp/GSMaP/index.htm?lon=${lon}&lat=${lat}&zoom=${zoom}`;
 		},
 	},
+	{
+		//https://map.osm.wikidata.link/map/16/35.4407/139.6275?radius=5
+		name: "OWL Map",
+		category: SPECIAL_CATEGORY,
+		default_check: false,
+		domain: "wikidata.link",
+		description: "Link Wikidata and OpenStreetMap",
+		getUrl(lat, lon, zoom) {
+			return `https://map.osm.wikidata.link/map/${zoom}/${lat}/${lon}?radius=5`;
+		},
+	},
 ];
 
 //--------------OSM changeset analyzers, Only for web version ---------------------------------------
