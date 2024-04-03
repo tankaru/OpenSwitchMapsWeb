@@ -1092,7 +1092,7 @@ let maps = [
 			return "https://www.openrailwaymap.org/?lat=" + lat + "&lon=" + lon + "&zoom=" + zoom;
 		},
 	},
-
+/* Doesnt work
 	{
 		//https://openlandmap.org/?center=25%2C39&zoom=7.15395439922849&opacity=72&base=OpenStreetMap&layer=lc_glc.fcs30d&time=2022
 		name: "OpenLandMap",
@@ -1103,7 +1103,7 @@ let maps = [
 			return "https://openlandmap.org/?center=" + lon + "%2C" + lat + "&zoom=" + zoom + "&opacity=72&base=OpenStreetMap&layer=lc_glc.fcs30d&time=2022";
 		},
 	},
-
+*/
 	{
 		//https://waterwaymap.org/#map=14.42/36.63977/118.34716
 		name: "WaterwayMap",
@@ -1111,7 +1111,7 @@ let maps = [
 		default_check: false,
 		domain: "waterwaymap.org",
 		getUrl(lat, lon, zoom) {
-			return "https://waterwaymap.org/?zoom=" + zoom + "&lat=" + lat + "&lon=" + lon;
+			return `https://waterwaymap.org/#map=${zoom}/${lat}/${lon}`;
 		},
 	},
 
@@ -1652,6 +1652,7 @@ let maps = [
 			}
 		},
 	},
+	/*
 	{
 		//https://www.norgeskart.no/#!?project=norgeskart&layers=1002&zoom=13&lat=6649044.14&lon=262775.36
 		name: "Norgeskart",
@@ -1671,6 +1672,7 @@ let maps = [
 			}
 		},
 	},
+	*/
 	{
 		//https://labs.mapple.com/mapplevt.html?#8.47/35.7472/139.9546
 		name: "MαPPLE",
