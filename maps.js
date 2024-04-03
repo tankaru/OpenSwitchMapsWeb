@@ -1731,19 +1731,19 @@ let maps = [
 		},
 	},
 	{
-		//https://www.strava.com/heatmap#9.41/139.72884/35.84051/hot/all
+		//https://www.strava.com/maps/global-heatmap#18/35.6837/139.75355
 		name: "STRAVA",
 		category: SPECIAL_CATEGORY,
 		default_check: false,
 		domain: "strava.com",
 		description: "Heatmap of athletes activities",
 		getUrl(lat, lon, zoom) {
-			return "https://www.strava.com/heatmap#" + zoom + "/" + lon + "/" + lat + "/hot/all";
+			return "https://www.strava.com/maps/global-heatmap#" + zoom + "/" + lat + "/" + lon ;
 		},
 		getLatLonZoom(url) {
-			const match = url.match(/www\.strava\.com\/heatmap#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
+			const match = url.match(/www\.strava\.com\/.*#(\d[0-9.]*)\/(-?\d[0-9.]*)\/(-?\d[0-9.]*)/);
 			if (match) {
-				const [, zoom, lon, lat] = match;
+				const [, zoom, lat, lon] = match;
 				return [lat, lon, Math.round(Number(zoom))];
 			}
 		},
