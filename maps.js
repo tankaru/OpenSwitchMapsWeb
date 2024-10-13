@@ -2365,9 +2365,11 @@ let maps = [
 		description: "Maplibre version of Qchizu",
 		getUrl(lat, lon, zoom, extra) {
 
-			if (Object.hasOwn(extra, 'bearing') && Object.hasOwn(extra, 'pitch')){
+			/*
+			if (!extra && Object.hasOwn(extra, 'bearing') && Object.hasOwn(extra, 'pitch')){
 				return `https://maps.qchizu.xyz/maplibre/#${Number(zoom)-1}/${lat}/${lon}${'/' + extra.bearing + '/' + extra.pitch}`;
 			}
+			*/
 			return `https://maps.qchizu.xyz/maplibre/#${Number(zoom)-1}/${lat}/${lon}`;
 		},
 		getLatLonZoom(url) {
