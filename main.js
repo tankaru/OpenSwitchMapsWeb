@@ -392,9 +392,10 @@ function button_refresh_links(){
 
 function update_from_url(url){
 	const latlonzoom = getLatLonZoom(url, maps);
+	if (!latlonzoom) return;
 	console.log(latlonzoom);
 	update_map_links(latlonzoom); 
-	setAddress(latlonzoom[0], latlonzoom[1]);
+	if (latlonzoom.length > 1) setAddress(latlonzoom[0], latlonzoom[1]);
 }
 
 window.addEventListener('popstate', function (event) {
