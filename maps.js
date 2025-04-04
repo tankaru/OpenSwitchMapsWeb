@@ -3254,6 +3254,26 @@ let maps = [
 			return `https://map.osm.wikidata.link/map/${zoom}/${lat}/${lon}?radius=5`;
 		},
 	},
+	
+	{ 
+		//https://rekichizu.jp/map?center=139.75933526607616%2C35.68325051444688&zoom=14.347098277890403&pitch=0&bearing=0
+		name: "れきちず",
+		category: LOCAL_CATEGORY,
+		default_check: false,
+		domain: "rekichizu.jp",
+		description: "",
+		getUrl(lat, lon, zoom) {
+			return `https://rekichizu.jp/map?center=${lon}%2C${lat}&zoom=${zoom}&pitch=0&bearing=0`;
+			
+		},
+		getLatLonZoom(url) {
+			const match = url.match(/rekichizu\.jp\/map\?center=(\d[0-9.]*)%2C(\d[0-9.]*)&zoom=(\d[0-9.]*)/);
+			if (match) {
+				const [, lon, lat, zoom] = match;
+				return [lat, lon, zoom];
+			}
+		},
+	},
 ];
 
 //--------------OSM changeset analyzers, Only for web version ---------------------------------------
@@ -3329,6 +3349,7 @@ maps = maps.concat(
 				return `https://resultmaps.neis-one.org/osm-change-viz?c=${changeset}`;
 			}
 		},
+
 	]
 );
 
